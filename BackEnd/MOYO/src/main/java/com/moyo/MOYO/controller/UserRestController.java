@@ -36,33 +36,33 @@ public class UserRestController {
 		}
 	}
 	
-	@PostMapping("user/registerUser")
-	public ResponseEntity<Map<String, Object>> registerUser(@RequestBody User user) {
+	@PostMapping("user/register")
+	public ResponseEntity<Map<String, Object>> register(@RequestBody User user) {
 		try {
-			log.trace("UserRestController - registerUser");
-			return response(uService.registerUser(user), HttpStatus.OK, true);
+			log.trace("UserRestController - register");
+			return response(uService.register(user), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			return response(uService.registerUser(user), HttpStatus.CONFLICT, false);
+			return response(uService.register(user), HttpStatus.CONFLICT, false);
 		}
 	}
 	
-	@DeleteMapping("user/deleteUser")
-	public ResponseEntity<Map<String, Object>> deleteUser(@RequestParam int uId) {
+	@DeleteMapping("user/delete/?uId={}")
+	public ResponseEntity<Map<String, Object>> delete(@RequestParam int uId) {
 		try {
-			log.trace("UserRestController - deleteUser");
-			return response(uService.deleteUser(uId), HttpStatus.OK, true);
+			log.trace("UserRestController - delete");
+			return response(uService.delete(uId), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			return response(uService.deleteUser(uId), HttpStatus.CONFLICT, false);
+			return response(uService.delete(uId), HttpStatus.CONFLICT, false);
 		}
 	}
 	
-	@PutMapping("user/updateUser")
-	public ResponseEntity<Map<String, Object>> updateUser(@RequestBody User user) {
+	@PutMapping("user/update")
+	public ResponseEntity<Map<String, Object>> update(@RequestBody User user) {
 		try {
-			log.trace("UserRestController - updateUser");
-			return response(uService.updateUser(user), HttpStatus.OK, true);
+			log.trace("UserRestController - update");
+			return response(uService.update(user), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			return response(uService.updateUser(user), HttpStatus.CONFLICT, false);
+			return response(uService.update(user), HttpStatus.CONFLICT, false);
 		}
 	}
 	

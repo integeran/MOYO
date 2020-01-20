@@ -24,21 +24,21 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public int registerUser(User user) {
-		log.trace("UserService - registerUser");
-		return uRepo.registerUser(user);
+	public int register(User user) {
+		log.trace("UserService - register");
+		return uRepo.register(user);
 	}
 	
 	@Override
-	public int deleteUser(int uId) {
-		log.trace("UserService - deleteUser");
-		return uRepo.deleteUser(uId);
+	public int delete(int uId) {
+		log.trace("UserService - delete");
+		return uRepo.delete(uId);
 	}
 	
 	@Override
-	public int updateUser(User user) {
-		log.trace("UserService - updateUser");
-		return uRepo.updateUser(user);
+	public int update(User user) {
+		log.trace("UserService - update");
+		return uRepo.update(user);
 	}
 
 }

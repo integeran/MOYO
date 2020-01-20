@@ -7,9 +7,9 @@ import com.moyo.MOYO.dto.User;
 public interface UserRepository {
 	public List<User> selectAll();
 	
-	public int registerUser(User user);
+	public int register(User user);
+
+	public int delete(int uId);
 	
-	public int deleteUser(int uId);
-	
-	public int updateUser(User user);
+	public int update(User user);
 }

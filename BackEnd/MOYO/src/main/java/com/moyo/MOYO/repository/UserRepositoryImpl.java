@@ -25,20 +25,20 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public int registerUser(User user) {
-		log.trace("UserRepository - registerUser");
+	public int register(User user) {
+		log.trace("UserRepository - register");
 		return session.insert(ns + "registerUser", user);
 	}
 	
     @Override
-    public int deleteUser(int uId) {
-    	log.trace("UserRepository - deleteUser");
+    public int delete(int uId) {
+    	log.trace("UserRepository - delete");
 		return session.delete(ns + "deleteUser", uId);
     }
     
     @Override
-    public int updateUser(User user) {
-    	log.trace("UserRepository - updateUser");
+    public int update(User user) {
+    	log.trace("UserRepository - update");
     	return session.update(ns + "updateUser", user);
     }
 	
