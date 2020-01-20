@@ -9,9 +9,11 @@
 
 	<typeAliases>
 		<typeAlias type="com.moyo.MOYO.dto.Community" alias="community"/>
+		<typeAlias type="com.moyo.MOYO.dto.User" alias="user"/>
 	</typeAliases>
 	
 	<mappers>
 		<mapper resource="mapper/communitymapper.xml" />
+		<mapper resource="mapper/usermapper.xml"/>
 	</mappers>
 </configuration>
