@@ -10,14 +10,15 @@ import lombok.NoArgsConstructor;
 public class User {
 	
 	private int uId;
-	private String token;
 	private String nickname;
 	private int age;
 	private String gender;
 	private String image;
 	private int beforePsId;
 	private int AfterPsId;
-	private String kakaoId;
+	private String socialId;
+	private int provider;
+	private int level;
 	private String registerDate;
 	private String updateDate;
 }

@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AccompanyBoard {
 	private int acBoardId;
+	private String title;
 	private int uId;
 	private int nId;
 	private int cId;
 	private int tTypeId;
-	private String title;
 	private String contents;
 	private String startDate;
 	private String endDate;
