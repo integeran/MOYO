@@ -24,6 +24,12 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
+	public User selectOne(int uId) {
+		log.trace("UserService - selectOne");
+		return uRepo.selectOne(uId);
+	}
+	
+	@Override
 	public int register(User user) {
 		log.trace("UserService - register");
 		return uRepo.register(user);
@@ -39,6 +45,18 @@ public class UserServiceImpl implements UserService {
 	public int update(User user) {
 		log.trace("UserService - update");
 		return uRepo.update(user);
+	}
+
+	@Override
+	public User checkDuplicate(String word) {
+		log.trace("UserService - checkDuplicate");
+		return uRepo.checkDuplicate(word);
+	}
+
+	@Override
+	public List<User> searchByNickname(String word) {
+		log.trace("UserService - searchByNickname");
+		return uRepo.searchByNickname(word);
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.moyo.MOYO.repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -25,6 +26,12 @@ public class AccompanyBoardRepositoryImpl implements AccompanyBoardRepository {
 	}
 	
 	@Override
+	public AccompanyBoard selectOne(int acBoardId) {
+		log.trace("AccompanyBoardRepository - selectOne");
+		return session.selectOne(ns + "selectOne",acBoardId);
+	}
+	
+	@Override
 	public int create(AccompanyBoard accompanyBoard) {
 		log.trace("AccompanyBoardRepository - create");
 		return session.insert(ns + "createAccompanyBoard", accompanyBoard);
@@ -39,7 +46,19 @@ public class AccompanyBoardRepositoryImpl implements AccompanyBoardRepository {
 	@Override
 	public int update(AccompanyBoard accompanyBoard) {
 		log.trace("AccompanyBoardRepository - update");
-		return session.update(ns + "deleteAccompanyBoard", accompanyBoard);
+		return session.update(ns + "updateAccompanyBoard", accompanyBoard);
+	}
+
+	@Override
+	public List<AccompanyBoard> selectFilter(HashMap<String, Object> filter) {
+		log.trace("AccompanyBoardRepository - selectFilter : ", filter);
+		return session.selectList(ns + "selectFilter", filter);
+	}
+
+	@Override
+	public List<AccompanyBoard> search(HashMap<String, Object> filter) {
+		log.trace("AccompanyBoardRepository - search : ", filter);
+		return session.selectList(ns + "search", filter);
 	}
 	
 

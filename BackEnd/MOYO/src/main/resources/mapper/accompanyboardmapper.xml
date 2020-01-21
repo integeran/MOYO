@@ -6,18 +6,58 @@
 	<select id="selectAll" resultType="accompanyBoard">
 		select * from accompany_board
 	</select>
+	
+	<select id="selectOne" parameterType="int" resultType="accompanyBoard">
+		select * from accompany_board where ac_board_id = #{acBoardId}
+	</select>
+	
 	<insert id="createAccompanyBoard" parameterType="accompanyBoard" >
 	    insert into
 	    accompany_board (title, u_id, n_id, c_id, t_type_id, contents, start_date, end_date, want_age, want_gender, deadline_toggle, register_date, update_date)
-	    values (#{title}, #{uId}, #{nId}, #{cId}, #{tTypeId}, #{contents}, #{startDate}, #{endDate}, #{wantAge}, #{wantGender}, #{deadlineToggle}, now(), now())
+	    values (#{title}, #{uId}, #{nId}, #{cId}, #{tTypeId}, #{contents}, #{startDate}, #{endDate}, #{wantAge}, #{wantGender}, #{deadlineToggle}, current_timestamp(), current_timestamp())
 	</insert>
+	
 	<delete id="deleteAccompanyBoard" parameterType="int">
 		delete from accompany_board where ac_board_id = #{acBoardId}
 	</delete>
+	
 	<update id="updateAccompanyBoard" parameterType="accompanyBoard">
 	    update accompany_board
 	    set title = #{title}, n_id = #{nId}, c_id = #{cId}, t_type_id = #{tTypeId}, contents = #{contents}, start_date = #{startDate},
-	    end_date = #{endDate}, want_age = #{wantAge}, want_gender = #{wantGender}, deadline_toggle = #{deadlineToggle}, update_date = now()
+	    end_date = #{endDate}, want_age = #{wantAge}, want_gender = #{wantGender}, deadline_toggle = #{deadlineToggle}, update_date = current_timestamp()
 	    where ac_board_id = #{acBoardId}
 	</update>
+	
+	<select id="selectFilter" resultType="accompanyBoard" parameterType="map">
+		select * from accompany_board where
+			<if test="age!=null">
+				want_age in
+				<foreach collection="age" item="val" open="(" close=")" separator=",">
+					#{val.value}
+				</foreach>
+				or
+			</if>
+			<if test="gender!=null">
+				want_gender = #{gender} or
+			</if>
+			<if test="ttypeid!=null">
+				t_type_id = #{ttypeid} or
+			</if>
+		1 = 1
+	</select>
+	
+	<select id="search" resultType="accompanyBoard" parameterType="map">
+		select ab.* from accompany_board as ab
+		<if test="key!='all'">
+			<if test="key=='title'">
+				where title like concat('%',#{word}, '%')
+			</if>
+			<if test="key=='contents'">
+				where contents like concat('%',#{word}, '%')
+			</if>
+			<if test="key=='user'">
+				join (select * from user where nickname like concat('%', #{word}, '%')) as u using(u_id)
+			</if>
+		</if>
+	</select>
 </mapper>

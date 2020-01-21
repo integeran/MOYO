@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,6 +34,16 @@ public class UserRestController {
 			return response(uService.selectAll(), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
 			return response(uService.selectAll(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
+	@GetMapping("user/selectOne/{uId}")
+	public ResponseEntity<Map<String, Object>> selectOne(@PathVariable int uId) {
+		try {
+			log.trace("UserRestController - selectOne");
+			return response(uService.selectOne(uId), HttpStatus.OK, true);
+		} catch (RuntimeException e) {
+			return response(uService.selectOne(uId), HttpStatus.CONFLICT, false);
 		}
 	}
 	
