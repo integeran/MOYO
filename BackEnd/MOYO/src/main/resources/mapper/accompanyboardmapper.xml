@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="moyo.accompanyboardmapper">
+	<select id="selectAll" resultType="accompanyBoard">
+		select * from accompany_board
+	</select>
+	<insert id="createAccompanyBoard" parameterType="accompanyBoard" >
+	    insert into
+	    accompany_board (title, u_id, n_id, c_id, t_type_id, contents, start_date, end_date, want_age, want_gender, deadline_toggle, register_date, update_date)
+	    values (#{title}, #{uId}, #{nId}, #{cId}, #{tTypeId}, #{contents}, #{startDate}, #{endDate}, #{wantAge}, #{wantGender}, #{deadlineToggle}, now(), now())
+	</insert>
+	<delete id="deleteAccompanyBoard" parameterType="int">
+		delete from accompany_board where ac_board_id = #{acBoardId}
+	</delete>
+	<update id="updateAccompanyBoard" parameterType="accompanyBoard">
+	    update accompany_board
+	    set title = #{title}, n_id = #{nId}, c_id = #{cId}, t_type_id = #{tTypeId}, contents = #{contents}, start_date = #{startDate},
+	    end_date = #{endDate}, want_age = #{wantAge}, want_gender = #{wantGender}, deadline_toggle = #{deadlineToggle}, update_date = now()
+	    where ac_board_id = #{acBoardId}
+	</update>
+</mapper>
