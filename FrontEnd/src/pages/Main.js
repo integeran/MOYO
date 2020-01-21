@@ -1,11 +1,11 @@
 import React from 'react';
-import Category from '../components/Category';
-import ContentsContainer from '../components/ContentsContainer';
+import Category from '../components/common/Category';
+import AccompanyMain from '../components/accompany/AccompanyMain';
 
 const Main = () => {
   return (
     <>
-      {/* <ContentsContainer categroy={category} /> */}
+      <AccompanyMain />
       <Category />
     </>
   );
