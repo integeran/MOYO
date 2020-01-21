@@ -199,7 +199,7 @@ footer{
     outline: none!important;
 }
 .brand-logo.center{
-    width:100%;
+    width:50%;
 }
 #iBtnAttach{
     padding-right:10px;
@@ -218,7 +218,7 @@ nav .brand-logo{
     padding-bottom:100px;
     overflow: hidden;
 }
-#aBackBtn, #aInvite{
+#aBackBtn, #aHomeBtn{
     z-index:10;
 }
 #ulMessageList{
