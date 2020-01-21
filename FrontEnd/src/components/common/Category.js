@@ -8,6 +8,10 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import styled from 'styled-components';
 
 const BottomNavigationStyled = styled(BottomNavigation)`
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
   border-top: 2px solid gray;
 `;
 
