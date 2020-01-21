@@ -2,13 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 import * as serviceWorker from './serviceWorker';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 ReactDOM.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
+  <Router>
+    <div>
+      <Route exact path="/" component={App} />
+      <Route path="/login" component={Login} />
+      <Route path="/signup" component={Signup} />
+    </div>
+  </Router>,
   document.getElementById('root'),
 );
 
