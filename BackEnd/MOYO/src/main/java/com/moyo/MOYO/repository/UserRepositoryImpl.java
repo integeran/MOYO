@@ -23,6 +23,12 @@ public class UserRepositoryImpl implements UserRepository {
 		log.trace("UserRepository - selectAll");
 		return session.selectList(ns + "selectAll");
 	}
+	
+	@Override
+	public User selectOne(int uId) {
+		log.trace("UserRepository - selectOne");
+		return session.selectOne(ns + "selectOne", uId);
+	}
 
 	@Override
 	public int register(User user) {
@@ -41,5 +47,19 @@ public class UserRepositoryImpl implements UserRepository {
     	log.trace("UserRepository - update");
     	return session.update(ns + "updateUser", user);
     }
+
+	@Override
+	public User checkDuplicate(String word) {
+		log.trace("UserRepository - checkDuplicate");
+		return session.selectOne(ns + "checkDuplicate",word);
+	}
+
+	@Override
+	public List<User> searchByNickname(String word) {
+		log.trace("UserRepository - searchByNickname");
+		return session.selectList(ns+"searchByNickname", word);
+	}
+	
+	
 	
 }
