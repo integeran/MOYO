@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Avatar from '@material-ui/core/Avatar';
 import MenuItem from '@material-ui/core/MenuItem';
+import { useDispatch, useSelector } from 'react-redux';
 
 const ageRange = [
   {
@@ -35,6 +36,8 @@ const genders = [
 ];
 
 const Signup = props => {
+  // const auth = useSelector(state => state.auth);
+  // console.log(auth);
   const userProfileImage = props.location.state.userProfileImage;
   const userNickname = props.location.state.userNickname;
   const userAgeRange = props.location.state.userAgeRange;
