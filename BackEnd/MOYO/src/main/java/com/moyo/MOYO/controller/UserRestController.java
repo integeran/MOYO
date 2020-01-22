@@ -41,11 +41,55 @@ public class UserRestController {
 		}
 	}
 	
+	@GetMapping("uset/selectOne/{uId}")
+	public ResponseEntity<Map<String, Object>> selectOne(@PathVariable int uId) {
+		try {
+			log.trace("UserRestController - selectOne");
+			return response(uService.selectOne(uId), HttpStatus.OK, true);
+		} catch (RuntimeException e) {
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
+	@GetMapping("user/selectOneBySocialId")
+	public ResponseEntity<Map<String, Object>> selectOneBySocialId(@RequestParam("socialId") String socialId, @RequestParam("provider") int provider) {
+		try {
+			log.trace("UserRestController - selectOneBySocialId");
+			return response(uService.selectOneBySocialId(socialId, provider), HttpStatus.OK, true);
+		} catch (RuntimeException e) {
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
+	@GetMapping("user/selectOneByNickname/{nickname}")
+	public ResponseEntity<Map<String, Object>> selectOneByNickname(@PathVariable String nickname) {
+		try {
+			log.trace("UserRestController - selectOneByNickname");
+			return response(uService.selectOneByNickname(nickname), HttpStatus.OK, true);
+		} catch (RuntimeException e) {
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
 	@PostMapping("user/register")
 	public ResponseEntity<Map<String, Object>> register(@RequestBody User user) {
+		String token = null;
 		try {
 			log.trace("UserRestController - register");
-			return response(uService.register(user), HttpStatus.OK, true);
+			User registeredUser = uService.selectOneBySocialId(user.getSocialId(), user.getProvider());
+			User nicknameUser = uService.selectOneByNickname(user.getNickname());
+			if (registeredUser != null) {
+				return response("이미 존재하는 회원입니다.", HttpStatus.CONFLICT, false);
+			}
+			if (nicknameUser != null) {
+				return response("이미 존재하는 닉네임입니다.", HttpStatus.CONFLICT, false);
+			}
+			uService.register(user);
+			User loginUser = uService.selectOneBySocialId(user.getSocialId(), user.getProvider());
+			if (loginUser != null) {
+				token = jwtService.createLoginToken(loginUser);
+			}
+			return response(token, HttpStatus.OK, true);
 		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
@@ -72,37 +116,20 @@ public class UserRestController {
 		}
 	}
 	
-	@GetMapping("uset/selectOne/{uId}")
-	public ResponseEntity<Map<String, Object>> selectOne(@PathVariable int uId) {
-		try {
-			log.trace("UserRestController - selectOne");
-			return response(uService.selectOne(uId), HttpStatus.OK, true);
-		} catch (RuntimeException e) {
-			return response(e.getMessage(), HttpStatus.CONFLICT, false);
-		}
-	}
-	
-	@GetMapping("user/selectOneBySocialId")
-	public ResponseEntity<Map<String, Object>> selectOneBySocialId(@RequestParam("socialId") String socialId, @RequestParam("provider") int provider) {
-		try {
-			log.trace("UserRestController - selectOneBySocialId");
-			return response(uService.selectOneBySocialId(socialId, provider), HttpStatus.OK, true);
-		} catch (RuntimeException e) {
-			return response(e.getMessage(), HttpStatus.CONFLICT, false);
-		}
-	}
-	
 	@PostMapping("user/issueToken")
 	public ResponseEntity<Map<String, Object>> issueToken(@RequestBody User user) {
-		String token = null;
 		try {
+			String token = null;
 			User loginUser = uService.selectOneBySocialId(user.getSocialId(), user.getProvider());
 			if (loginUser != null) {
 				token = jwtService.createLoginToken(loginUser);
+				return response(token, HttpStatus.OK, true);
+			} else {
+				token = jwtService.createLoginToken(loginUser);
+				return response(token, HttpStatus.CONFLICT, false);
 			}
-			return response(token, HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			return response(token, HttpStatus.CONFLICT, false);
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 		
 	}

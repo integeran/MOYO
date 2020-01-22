@@ -58,5 +58,11 @@ public class UserRepositoryImpl implements UserRepository {
     	param.put("provider", provider);
     	return session.selectOne(ns + "selectOneBySocialId", param);
     }
+    
+    @Override
+    public User selectOneByNickname(String nickname) {
+    	log.trace("UserRepository - selectOneByNickname");
+    	return session.selectOne(ns + "selectOneByNickname", nickname);
+    }
 	
 }
