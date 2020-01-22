@@ -6,25 +6,29 @@
 	<select id="selectAll" resultType="user">
 		select * from user
 	</select>
+	<select id="selectOne" parameterType="int" resultType="user">
+		select * from user
+		where u_id = #{uId}
+	</select>
+	<select id="selectOneBySocialId" resultType="user">
+		select u_id, nickname, age, gender, image, before_ps_id, after_ps_id, provider, level, register_date, update_date from user
+		where social_id = #{socialId} and provider = #{provider}	
+	</select>
+	<select id="selectOneByNickname" resultType="user">
+		select u_id, nickname, age, gender, image, before_ps_id, after_ps_id, provider, level, register_date, update_date from user
+		where nickname = #{nickname}
+	</select>
 	<insert id="registerUser" parameterType="user" >
 	    insert into
 	    user (nickname, age, gender, before_ps_id, after_ps_id, social_id, provider, level, register_date, update_date)
-	    values (#{nickname}, #{age}, #{gender}, #{beforePsId}, #{afterPsId}, #{socialId}, #{provider}, #{level}, now(), now())
+	    values (#{nickname}, #{age}, #{gender}, #{beforePsId}, #{afterPsId}, #{socialId}, #{provider}, #{level}, current_timestamp(), current_timestamp())
 	</insert>
 	<delete id="deleteUser" parameterType="int">
 		delete from user where u_id = #{uId}
 	</delete>
 	<update id="updateUser" parameterType="user">
 	    update user
-	    set nickname = #{nickname}, image = #{image}, update_date = now()
+	    set nickname = #{nickname}, image = #{image}, update_date = current_timestamp()
 	    where u_id = #{uId}
 	</update>
-	<select id="selectOne" resultType="user">
-		select * from user
-		where u_id = #{uId}
-	</select>
-	<select id="selectOneBySocialId" resultType="user">
-		select * from user
-		where social_id = #{socialId} and provider = #{provider}	
-	</select>
 </mapper>
