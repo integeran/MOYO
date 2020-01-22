@@ -22,4 +22,9 @@ public class AccompanyBoard {
 	private String deadlineToggle;
 	private String registerDate;
 	private String updateDate;
+	
+	private String nickname;
+	private String nation;
+	private String city;
+	private String type;
 }
