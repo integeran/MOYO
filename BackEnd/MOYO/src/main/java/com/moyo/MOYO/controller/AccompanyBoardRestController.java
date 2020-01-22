@@ -33,13 +33,13 @@ public class AccompanyBoardRestController {
 	AccompanyBoardService acService;
 	
 	@GetMapping("accompanyBoard/selectAll")
-	public ResponseEntity<Map<String, Object>> selectAll() {
+	public ResponseEntity<Map<String, Object>> selectAll(String sorting) {
 		try {
 			log.trace("AccompanyBoardRestController - selectAll");
-			return response(acService.selectAll(), HttpStatus.OK, true);
+			return response(acService.selectAll(sorting), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
 			log.error("AccompanyBoardRestController - selectAll");
-			return response(acService.selectAll(), HttpStatus.CONFLICT, false);
+			return response(acService.selectAll(sorting), HttpStatus.CONFLICT, false);
 		}
 	}
 	
@@ -88,12 +88,13 @@ public class AccompanyBoardRestController {
 	}
 	
 	@GetMapping("accompanyBoard/selectFilter")
-	public ResponseEntity<Map<String, Object>> selectFilter(int[] wantAge, String wantGender, String tTypeId) {
+	public ResponseEntity<Map<String, Object>> selectFilter(int[] wantAge, String wantGender, String tTypeId, String sorting) {
 		HashMap<String, Object> filter = new HashMap<String, Object>();
 		try {
 			filter.put("age", wantAge);
 			filter.put("gender", wantGender);
 			filter.put("ttypeid", tTypeId);
+			filter.put("sorting", sorting);
 			log.trace("AccompanyBoardRestController - selectFilter : ",filter);
 			return response(acService.selectFilter(filter), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
@@ -103,11 +104,12 @@ public class AccompanyBoardRestController {
 	}
 	
 	@GetMapping("accompanyBoard/search")
-	public ResponseEntity<Map<String, Object>> search(String key, String word) {
+	public ResponseEntity<Map<String, Object>> search(String key, String word, String sorting) {
 		HashMap<String, Object> filter = new HashMap<String, Object>();
 		try {
 			filter.put("key", key);
 			filter.put("word", word);
+			filter.put("sorting", sorting);
 			log.trace("AccompanyBoardRestController - search : ",filter);
 			return response(acService.search(filter), HttpStatus.OK, true);
 		} catch (RuntimeException e) {

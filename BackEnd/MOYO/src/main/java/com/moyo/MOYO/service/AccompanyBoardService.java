@@ -6,7 +6,7 @@ import java.util.List;
 import com.moyo.MOYO.dto.AccompanyBoard;
 
 public interface AccompanyBoardService {
-	public List<AccompanyBoard> selectAll();
+	public List<AccompanyBoard> selectAll(String sorting);
 	
 	public AccompanyBoard selectOne(int acBoardId);
 	
