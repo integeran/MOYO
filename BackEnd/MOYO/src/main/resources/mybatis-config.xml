@@ -9,9 +9,12 @@
 
 	<typeAliases>
 		<typeAlias type="com.moyo.MOYO.dto.Community" alias="community"/>
+		<typeAlias type="com.moyo.MOYO.dto.Postmap" alias="postmap"/>
+		<typeAlias type="com.moyo.MOYO.dto.Postmaplike" alias="postmaplike"/>
 	</typeAliases>
 	
 	<mappers>
 		<mapper resource="mapper/communitymapper.xml" />
+		<mapper resource="mapper/postmapmapper.xml" />
 	</mappers>
 </configuration>
