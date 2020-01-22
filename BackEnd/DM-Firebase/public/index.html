@@ -16,6 +16,11 @@
                     <a href="#" id="aBackBtn" class="small material-icons left hiddendiv">arrow_back</a>
                     <a href="#" id="aHomeBtn" class="small material-icons left hiddendiv">home</a>
                     <span id="spTitle" class="brand-logo center">Chat List</span>
+                    <ul class="right hide-on-med-and-down">
+                        <li><a href="#" id="Btn1" class="hiddendiv"><i class="material-icons">pan_tool</i></a></li>
+                        <li><a href="#" id="Btn2" class="hiddendiv"><i class="material-icons">notifications</i></a></li>
+                        <li><a href="#" id="Btn3" class="hiddendiv"><i class="material-icons">more_vert</i></a></li>
+                    </ul>
                 </div>
             </nav>
             <br>
@@ -154,6 +159,11 @@
                 this.dvInputChat = document.getElementById("dvInputChat");
                 this.ulRoomList = document.getElementById("ulRoomList");
                 this.iBtnSend = document.getElementById("iBtnSend");
+                this.Btn1 = document.getElementById("Btn1");
+                this.Btn2 = document.getElementById("Btn2");
+                this.Btn3 = document.getElementById("Btn3");
+                this.iBtnAttach = document.getElementById("iBtnAttach");
+                this.attachFile = document.getElementById("attachFile");
             }
 
             /**
@@ -164,6 +174,9 @@
                 this.dvInputChat.addEventListener('paste', this.onPaste.bind(this));
                 this.iBtnSend.addEventListener('click', this.saveMessages.bind(this));
                 this.aBackBtn.addEventListener('click', this.onBackBtnClick.bind(this));
+                this.iBtnAttach.addEventListener('click', this.onBtnAttachClick.bind(this));
+                this.attachFile.addEventListener('change', this.onAttachFile.bind(this));
+                this.Btn1.addEventListener('click', this.DownTest.bind(this));
             }
 
             /**
@@ -194,6 +207,20 @@
                     this.database = firebase.database();
                     this.database.goOnline();
 
+                    // var provider = new firebase.auth.GoogleAuthProvider(); // 구글 로그인
+                    // firebase.auth().signInWithPopup(provider).then(function(result) {
+                    //         console.log("구글Auth 성공!");
+                    //     }).catch(function(error) {
+                    //         console.log(error);
+                    //         alert("구글Auth  에러 발생");
+                    // });
+                    
+                    firebase.auth().signInAnonymously().catch(function(error) { // 익명 사용자 로그인
+                        alert("익명사용자 에러 발생");
+                        var errorCode = error.code;
+                        var errorMessage = error.message;
+                    });
+
                     // sender와 receiver의 정보를 realDB에 저장
                     this.checkAndSaveUser(sender);
                     if(receiver) {
@@ -208,8 +235,77 @@
                 })
             }
 
+            /**
+            * 다운로드 테스트
+            */
+            FirebaseChat.prototype.DownTest = function() {
+                firebase.storage().ref().child("/20200122/@make@5@time@20200121152402737/6/test1.jpg").getDownloadURL().then(function(url) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.responseType = 'blob';
+                    xhr.onload = function(event) {
+                        var blob = xhr.response;
+                    };
+                    xhr.open('GET', url);
+                    xhr.send();
+                }).catch(function(error) {
+                    console.log("DowntestError: ", error);
+                })
+            }
+
+            /**
+            * 첨부파일 버튼 클릭
+            */
+            FirebaseChat.prototype.onBtnAttachClick = function() {
+                this.attachFile.click();
+            }
+
+            /**
+            * 첨부파일 전송
+            */
+            FirebaseChat.prototype.onAttachFile = function(event) {
+                $('#dnModal').modal('open');
+                var files = event.target.files;
+                var filesLength = files.length;
+                var progressBar = document.getElementById('dvProgressBar');
+                var fileName = files[0].name;
+                var path = FirebaseChat.yyyyMMddHHmmsss().substr(0, 8) + '/' + this.roomId + '/' + this.sender.uId + '/' + fileName;
+                var uploadTask = firebase.storage().ref().child(path).put(files[0]);
+
+                var cbProgress = function(snapshot) { // 진행과정
+                    var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    progressBar.style.width = progress + '%';
+                }
+
+                var cbError = function(error) { // 에러발생
+                    console.log(error);
+                    $('#dnModal').modal('close');
+                    alert('업로드 중 에러가 발생했습니다.');
+                }
+
+                var cbComplete = function() { // 완료
+                    // 프로그레스바 닫기
+                    $('#dnModal').modal('close');
+
+                    // 완료 다운로드 링크 메세지 보내기
+                    this.saveMessages(uploadTask.snapshot.downloadURL, fileName);
+
+                    // files 리셋
+                    event.target.value = '';
+                }
+
+                // 프로그레스바
+                uploadTask.on('state_changed', cbProgress.bind(this), cbError.bind(this), cbComplete.bind(this));
+            }
+            
+
+            /**
+            * 초기 연걸된 채팅방 불러오기
+            */
             FirebaseChat.prototype.loadRoom = function() {
                 this.aHomeBtn.classList.add("hiddendiv"); // 홈버튼 삭제
+                this.Btn1.classList.remove("hiddendiv"); // 버튼1 노출
+                this.Btn2.classList.remove("hiddendiv"); // 버튼2 노출
+                this.Btn3.classList.remove("hiddendiv"); // 버튼3 노출
                 this.aBackBtn.classList.remove("hiddendiv"); // 백버튼 노출
 
                 var roomListTarget = document.querySelectorAll('[data-roomType="' + this.ONE_VS_ONE + '"][data-roomOneVSOneTarget="' + this.receiver.uId + '"]')[0];
@@ -295,7 +391,10 @@
             */ 
             FirebaseChat.prototype.onBackBtnClick = function() {
                 this.isOpenRoom = false;
-                this.aHomeBtn.classList.remove("hiddendiv"); // 홈버튼 추가
+                this.aHomeBtn.classList.remove("hiddendiv"); // 홈버튼 노출
+                this.Btn1.classList.add("hiddendiv"); // 버튼1 삭제
+                this.Btn2.classList.add("hiddendiv"); // 버튼2 삭제
+                this.Btn3.classList.add("hiddendiv"); // 버튼3 삭제
                 this.aBackBtn.classList.add("hiddendiv"); // 백버튼 삭제
                 document.getElementById(this.roomFlag).click();
                 console.log("roomFlag: " + this.roomFlag);
@@ -319,16 +418,21 @@
             FirebaseChat.prototype.onEnterKey = function(e) {
                 if(e.keyCode === 13) { // 엔터키 키코드가 입력 될 때
                 e.preventDefault();
-                this.saveMessages();
+                this.saveMessages(null, null);
                 }
             }
             
             /**
             * 메세지 전송
             */
-            FirebaseChat.prototype.saveMessages = function() {
+            FirebaseChat.prototype.saveMessages = function(downloadURL, fileName) {
                 var user = this.sender;
                 var msg = this.dvInputChat.innerHTML.trim();
+
+                // 파일전송 메세지
+                if(downloadURL && fileName) {
+                    msg = "<a class='waves-effect waves-light btn blue' download='" + fileName + "' href='" + downloadURL + "'>다운로드</a></br><span class=''>파일명 : " + fileName + "</span>";
+                }
 
                 if(msg.length > 0) {
                     this.dvInputChat.focus();
@@ -336,7 +440,7 @@
                     var multiUpdates = {};
                     var messageRefKey = this.messageRef.push().key; // 메세지 키 값 구하기 => push는 자동으로 키값을 생성하면서 데이터를 저장
                                                                     //                        즉, 여기서는 자동으로 키를 생성해서 받을 수 있음
-                    var convertMsg = FirebaseChat.convertMsg(msg);
+                    var convertMsg = downloadURL ? msg : FirebaseChat.convertMsg(msg); // 다운로드 URL일 경우 convert 하지 않기
 
                     if(this.ulMessageList.getElementsByTagName("li").length === 0) { // 메세지 처음 입력 할 경우
                     var roomUserlistLength = this.roomUserlist.length;
@@ -370,7 +474,7 @@
                                 roomOneVSOneTarget: roomUserListLength == 2 && i == 0 ? this.roomUserlist[1] : // 1:1대화이고 i값이 0일 때 타겟은 i값이 1인 유저
                                                     roomUserListLength == 2 && i == 1 ? this.roomUserlist[0] : // 1:1대화이고 i값이 1일 때 타겟은 i값이 0인 유저
                                                     '', // 나머지
-                                lastMessage: convertMsg,
+                                lastMessage: downloadURL ? '다운로드' : convertMsg,
                                 image: user.image !== null ? user.image : '',
                                 timestamp: firebase.database.ServerValue.TIMESTAMP
                             };
@@ -456,7 +560,10 @@
             */
             FirebaseChat.prototype.onRoomListClick = function(event) {
                 this.aHomeBtn.classList.add("hiddendiv"); // 홈버튼 삭제
-                this.aBackBtn.classList.remove("hiddendiv"); // 백버튼 추가
+                this.Btn1.classList.remove("hiddendiv"); // 버튼1 노출
+                this.Btn2.classList.remove("hiddendiv"); // 버튼2 노출
+                this.Btn3.classList.remove("hiddendiv"); // 버튼3 노출
+                this.aBackBtn.classList.remove("hiddendiv"); // 백버튼 노출
                 // 메세지 로드
                 this.roomId = event.currentTarget.getAttribute("data-roomId");
                 this.roomTitle = event.currentTarget.getAttribute("data-roomTitle");
