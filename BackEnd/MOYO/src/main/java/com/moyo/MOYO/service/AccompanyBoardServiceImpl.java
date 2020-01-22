@@ -19,9 +19,9 @@ public class AccompanyBoardServiceImpl implements AccompanyBoardService {
 	AccompanyBoardRepository acRepo;
 	
 	@Override
-	public List<AccompanyBoard> selectAll() {
+	public List<AccompanyBoard> selectAll(String sorting) {
 		log.trace("AccompanyBoardService - selectAll");
-		return acRepo.selectAll();
+		return acRepo.selectAll(sorting);
 	}
 	
 	@Override

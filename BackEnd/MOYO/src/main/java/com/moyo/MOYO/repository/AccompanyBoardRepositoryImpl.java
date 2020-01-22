@@ -20,9 +20,9 @@ public class AccompanyBoardRepositoryImpl implements AccompanyBoardRepository {
 	SqlSession session;
 	
 	@Override
-	public List<AccompanyBoard> selectAll() {
+	public List<AccompanyBoard> selectAll(String sorting) {
 		log.trace("AccompanyBoardRepository - selectAll");
-		return session.selectList(ns + "selectAll");
+		return session.selectList(ns + "selectAll",sorting);
 	}
 	
 	@Override
