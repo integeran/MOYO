@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.moyo.MOYO.dto.AccompanyBoard;
@@ -24,6 +25,7 @@ import com.moyo.MOYO.service.UserService;
 import com.moyo.MOYO.service.UserServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.build.HashCodeAndEqualsPlugin.Sorted;
 
 @RestController
 @Slf4j
@@ -33,13 +35,27 @@ public class AccompanyBoardRestController {
 	AccompanyBoardService acService;
 	
 	@GetMapping("accompanyBoard/selectAll")
-	public ResponseEntity<Map<String, Object>> selectAll(String sorting) {
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> selectAll(@RequestParam String searchDate, @RequestParam int nId, @RequestParam int cId,
+														@RequestParam(required=false) int[] wantAge, @RequestParam(required=false) String wantGender,
+														@RequestParam(required=false) int[] tType, @RequestParam(required=false) String searchCondition,
+														@RequestParam(required=false)  String searchWord, @RequestParam(required=false) String sortingCondition) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("searchDate", searchDate);
+		map.put("nId", nId);
+		map.put("cId", cId);
+		map.put("wantAge", wantAge);
+		map.put("wantGender", wantGender);
+		map.put("tType", tType);
+		map.put("searchCondition", searchCondition);
+		map.put("searchWord", searchWord);
+		map.put("sortingCondition", sortingCondition);
 		try {
-			log.trace("AccompanyBoardRestController - selectAll");
-			return response(acService.selectAll(sorting), HttpStatus.OK, true);
+			log.trace("AccompanyBoardRestController - selectAll : ",map);
+			return response(acService.selectAll(map), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			log.error("AccompanyBoardRestController - selectAll");
-			return response(acService.selectAll(sorting), HttpStatus.CONFLICT, false);
+			log.error("AccompanyBoardRestController - selectAll : ",map);
+			return response(acService.selectAll(map), HttpStatus.CONFLICT, false);
 		}
 	}
 	
@@ -86,38 +102,7 @@ public class AccompanyBoardRestController {
 			return response(acService.update(accompanyBoard), HttpStatus.CONFLICT, false);
 		}
 	}
-	
-	@GetMapping("accompanyBoard/selectFilter")
-	public ResponseEntity<Map<String, Object>> selectFilter(int[] wantAge, String wantGender, String tTypeId, String sorting) {
-		HashMap<String, Object> filter = new HashMap<String, Object>();
-		try {
-			filter.put("age", wantAge);
-			filter.put("gender", wantGender);
-			filter.put("ttypeid", tTypeId);
-			filter.put("sorting", sorting);
-			log.trace("AccompanyBoardRestController - selectFilter : ",filter);
-			return response(acService.selectFilter(filter), HttpStatus.OK, true);
-		} catch (RuntimeException e) {
-			log.error("AccompanyBoardRestController - selectFilter : ",filter);
-			return response(acService.selectFilter(filter), HttpStatus.CONFLICT, false);
-		}
-	}
-	
-	@GetMapping("accompanyBoard/search")
-	public ResponseEntity<Map<String, Object>> search(String key, String word, String sorting) {
-		HashMap<String, Object> filter = new HashMap<String, Object>();
-		try {
-			filter.put("key", key);
-			filter.put("word", word);
-			filter.put("sorting", sorting);
-			log.trace("AccompanyBoardRestController - search : ",filter);
-			return response(acService.search(filter), HttpStatus.OK, true);
-		} catch (RuntimeException e) {
-			log.error("AccompanyBoardRestController - search : ",filter);
-			return response(acService.search(filter), HttpStatus.CONFLICT, false);
-		}
-	}
-	
+
 	public ResponseEntity<Map<String, Object>> response(Object data, HttpStatus httpstatus, boolean status) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("data", data);

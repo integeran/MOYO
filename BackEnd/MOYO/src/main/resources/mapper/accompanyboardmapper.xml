@@ -6,53 +6,63 @@
 
 	<sql id="sortingCondition">
 		<choose>
-			<when test="sorting=='startdate'">
-				order by start_date asc
+			<when test="sortingCondition=='startDate'">
+				order by start_date
 			</when>
-			<when test="sorting=='enddate'">
-				order by end_date asc
+			<when test="sortingCondition=='endDate'">
+				order by end_date
 			</when>
 			<otherwise>
-				order by register_date asc
+				order by register_date
 			</otherwise>
 		</choose>
 	</sql>
-	
-<!-- 	<select id="selectAll" resultType="accompanyBoard" parameterType="String">
-		select * from accompany_board
-		<include refid="sortingCondition" />
-	</select> -->
-	
+
 	<select id="selectOne" parameterType="int" resultType="accompanyBoard">
-		select * from accompany_board where ac_board_id = #{acBoardId}
+		select u.nickname nickname, ab.*, c.name city, na.name nation, tt.name type
+		  FROM accompany_board ab
+		  left outer join user u on ab.u_id = u.u_id
+		  left outer join city c on ab.c_id = c.c_id
+		  left outer join nation na on ab.n_id = na.n_id
+		  left outer join travel_type tt on ab.t_type_id = tt.t_type_id 
+		 where ac_board_id = #{acBoardId}
 	</select>
 	
 	<select id="selectAll" parameterType="map" resultType="accompanyBoard">
-		select u.nickname nickname, ab.*, c.name city, na.name nation, tt.name type
-		  from accompany_board ab
-		  left outer join user u
-						on ab.u_id = u.u_id
-		  left outer join city c
-						on ab.c_id = c.c_id
-		  left outer join nation na
-						on ab.n_id = na.n_id
-		  left outer join travel_type tt
-						on ab.t_type_id = tt.t_type_id
-		 where #{searchDate} between ab.start_date and ab.end_date
+		SELECT u.nickname nickname, ab.*, c.name city, na.name nation, tt.name type
+		  FROM accompany_board ab
+		  left outer join user u on ab.u_id = u.u_id
+		  left outer join city c on ab.c_id = c.c_id
+		  left outer join nation na on ab.n_id = na.n_id
+		  left outer join travel_type tt on ab.t_type_id = tt.t_type_id
+		 WHERE #{searchDate} between ab.start_date and ab.end_date
 		   and #{nId} = ab.n_id
 		   and (case when #{cId}=0 then 1=1
 		             else #{cId}=ab.c_id end)
-		   and (case when ifNull(#{wantAge},0)=0 then 1=1
-		             else ab.want_age in <foreach collection="wantAge" item="value" open="(" close=")" separator=",">
+ 		   and (case when ifNull(#{wantAge},0)=0 then 1=1
+		             else ab.want_age in <foreach collection="#{wantAge}" item="value" open="(" close=")" separator=",">
 					               					#{value}
 				          				 </foreach> end)
-		   and (case when ifNull(#{wantGender},"N")="N" then 1=1
+		    and (case when ifNull(#{wantGender},"N")="N" then 1=1
 		             else #{wantGender}=ab.want_gender end)
-		             
 		   and (case when ifNull(#{tType},0)=0 then 1=1
-		             else ab.t_type_id in <foreach collection="tType" item="value" open="(" close=")" separator=",">
+		             else ab.t_type_id in <foreach collection="#{tType}" item="value" open="(" close=")" separator=",">
 					               					#{value}
-				          				 </foreach> end)				             
+				          				 </foreach> end)
+		   <if test="searchCondition!=null">
+		   		and
+				<if test="searchCondition=='title'">
+					title like concat('%',#{searchWord}, '%')
+				</if>
+				<if test="searchCondition=='contents'">
+					contents like concat('%',#{searchWord}, '%')
+				</if>
+				<if test="searchCondition=='all'">
+					(title like concat('%',#{searchWord}, '%') or contents like concat('%',#{searchWord}, '%'))
+				</if>
+		  </if>
+		  and deadline_toggle = 'n'
+		   <include refid="sortingCondition"></include>		             
 	</select>
 	
 	<insert id="createAccompanyBoard" parameterType="accompanyBoard" >
@@ -72,7 +82,7 @@
 	    where ac_board_id = #{acBoardId}
 	</update>
 	
-	<select id="selectFilter" resultType="accompanyBoard" parameterType="map">
+<!-- 	<select id="selectFilter" resultType="accompanyBoard" parameterType="map">
 		select * from accompany_board where
 			<if test="age!=null">
 				want_age in
@@ -104,5 +114,5 @@
 			</if>
 		</if>
 		<include refid="sortingCondition" />
-	</select>
+	</select> -->
 </mapper>

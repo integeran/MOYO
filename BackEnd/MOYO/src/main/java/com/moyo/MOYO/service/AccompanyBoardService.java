@@ -2,11 +2,12 @@ package com.moyo.MOYO.service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.moyo.MOYO.dto.AccompanyBoard;
 
 public interface AccompanyBoardService {
-	public List<AccompanyBoard> selectAll(String sorting);
+	public List<AccompanyBoard> selectAll(Map<String, Object> map);
 	
 	public AccompanyBoard selectOne(int acBoardId);
 	
