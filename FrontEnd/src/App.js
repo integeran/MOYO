@@ -13,6 +13,9 @@ import Signup from './pages/Signup';
 const Div = styled.div`
   width: inherit;
   height: inherit;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 const App = () => {
