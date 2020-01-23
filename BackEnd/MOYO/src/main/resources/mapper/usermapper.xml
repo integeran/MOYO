@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="moyo.usermapper">
+	<select id="selectAll" resultType="user">
+		select * from user
+	</select>
+	
+	<select id="selectOne" resultType="user" parameterType="int">
+		select * from user where u_id=#{uId}
+	</select>
+	
+	<insert id="registerUser" parameterType="user" >
+	    insert into
+	    user (nickname, age, gender, before_ps_id, after_ps_id, social_id, provider, level, register_date, update_date)
+	    values (#{nickname}, #{age}, #{gender}, #{beforePsId}, #{afterPsId}, #{socialId}, #{provider}, #{level}, now(), now())
+	</insert>
+	
+	<delete id="deleteUser" parameterType="int">
+		delete from user where u_id = #{uId}
+	</delete>
+	
+	<update id="updateUser" parameterType="user">
+	    update user
+	    set nickname = #{nickname}, image = #{image}, update_date = now()
+	    where u_id = #{uId}
+	</update>
+	
+	<select id="checkDuplicate" parameterType="String" resultType="user">
+		select * from user where nickname = #{word}
+	</select>
+	
+	<select id="searchByNickname" parameterType="String" resultType="user">
+		select * from user where nickname like concat('%',#{word}, '%')
+	</select>
+</mapper>
