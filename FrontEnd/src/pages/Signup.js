@@ -1,12 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Avatar from '@material-ui/core/Avatar';
 import MenuItem from '@material-ui/core/MenuItem';
-import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, withRouter } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { changeField } from '../modules/auth';
-import loading from '../modules/loading';
 
 const ageRange = [
   {
@@ -39,31 +38,6 @@ const genders = [
 ];
 
 const Signup = props => {
-  // const auth = useSelector(state => state.auth);
-  // const { userNickname, userAge, userGender, userImage } = useSelector(
-  //   ({ auth }) => ({
-  //     userNickname: auth.userData.nickname,
-  //     userAge: auth.userData.age,
-  //     userGender: auth.userData.gender,
-  //     userImage: auth.userData.image,
-  //   }),
-  // );
-
-  // const checkToken = async () => {
-  //   const jwtToken = await jwtDecode(localStorage.token);
-  //   pushUserData('nickname', jwtToken.user.nickname);
-  //   pushUserData('age', jwtToken.user.age);
-  //   pushUserData('gender', jwtToken.user.gender);
-  //   pushUserData('image', jwtToken.user.image);
-  // };
-
-  // useEffect(() => {
-  //   if (localStorage.token) {
-  //     console.log('check');
-  //     checkToken();
-  //   }
-  // });
-
   const userSocialId = props.location.state.userSocialId;
   let userImage = props.location.state.userProfileImage;
   let userNickname = props.location.state.userNickname;

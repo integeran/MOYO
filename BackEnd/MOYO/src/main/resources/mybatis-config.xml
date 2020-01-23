@@ -9,9 +9,21 @@
 
 	<typeAliases>
 		<typeAlias type="com.moyo.MOYO.dto.Community" alias="community"/>
+		<typeAlias type="com.moyo.MOYO.dto.CommunityComment" alias="communityComment"/>
+		<typeAlias type="com.moyo.MOYO.dto.User" alias="user"/>
+		<typeAlias type="com.moyo.MOYO.dto.AccompanyBoard" alias="accompanyBoard"/>
+		<typeAlias type="com.moyo.MOYO.dto.ScheduleList" alias="scheduleList"/>
+		<typeAlias type="com.moyo.MOYO.dto.DailyAccompany" alias="dailyAccompany"/>
+		<typeAlias type="com.moyo.MOYO.dto.DailyMemo" alias="dailyMemo"/>
 	</typeAliases>
 	
 	<mappers>
 		<mapper resource="mapper/communitymapper.xml" />
+		<mapper resource="mapper/communitycommentmapper.xml"/>
+		<mapper resource="mapper/usermapper.xml"/>
+		<mapper resource="mapper/accompanyboardmapper.xml"/>
+		<mapper resource="mapper/schedulelistmapper.xml"/>
+		<mapper resource="mapper/dailyaccompanymapper.xml"/>
+		<mapper resource="mapper/dailymemomapper.xml"/>
 	</mappers>
 </configuration>

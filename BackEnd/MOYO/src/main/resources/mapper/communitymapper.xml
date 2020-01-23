@@ -6,4 +6,27 @@
 	<select id="selectAll" resultType="community">
 		select * from community
 	</select>
+	<select id="selectAllByUser" parameterType="int" resultType="community">
+		select * from community
+		where u_id = #{uId}
+	</select>
+	<select id="selectOne" parameterType="int" resultType="community">
+		select * from community
+		where cm_id = #{cmId}
+	</select>
+	<insert id="createCommunity" parameterType="community">
+		insert into
+		community (u_id, c_id, cm_type_id, title, contents, views, register_date, update_date)
+		values (#{uId}, #{cId}, #{cmTypeId}, #{title}, #{contents}, #{views}, current_timestamp(), current_timestamp())
+	</insert>
+	<delete id="deleteCommunity" parameterType="int">
+		delete from community
+		where cm_id = #{cmId}
+	</delete>
+	<update id="updateCommunity" parameterType="community">
+		update community
+		set c_id = #{cId}, cm_type_id = #{cmTypeId}, title = #{title}, contents = #{contents}, update_date = current_timestamp()
+		where cm_id = #{cmId}
+	</update>
+	
 </mapper>
