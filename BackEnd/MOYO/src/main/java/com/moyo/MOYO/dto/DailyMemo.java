@@ -14,5 +14,6 @@ public class DailyMemo {
 	private String day;
 	private String registerDate;
 	private String updateDate;
+	private String nickname;
 	
 }
