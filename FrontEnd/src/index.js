@@ -32,9 +32,6 @@ ReactDOM.render(
       </div>
     </Router>
   </Provider>,
-  // <Router>
-  //   <App />
-  // </Router>,
   document.getElementById('root'),
 );
 
