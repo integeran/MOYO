@@ -7,14 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Community {
+public class CommunityComment {
+	private int cmCommentId;
 	private int cmId;
 	private int uId;
-	private int cId;
-	private int cmTypeId;
-	private String title;
 	private String contents;
-	private int views;
 	private String registerDate;
 	private String updateDate;
+
 }

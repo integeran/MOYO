@@ -1,6 +1,8 @@
 package com.moyo.MOYO.repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +27,26 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 	
 	@Override
-	public User selectOne(int uId) {
-		log.trace("UserRepository - selectOne");
-		return session.selectOne(ns + "selectOne", uId);
-	}
-
+    public User selectOne(int uId) {
+    	log.trace("UserRepository - selectOne");
+    	return session.selectOne(ns + "selectOne", uId);
+    }
+    
+    @Override
+    public User selectOneBySocialId(String socialId, int provider) {
+    	log.trace("UserRepository - selectOneBySocialId");
+    	Map<String, Object> param = new HashMap<String, Object>();
+    	param.put("socialId", socialId);
+    	param.put("provider", provider);
+    	return session.selectOne(ns + "selectOneBySocialId", param);
+    }
+    
+    @Override
+    public User selectOneByNickname(String nickname) {
+    	log.trace("UserRepository - selectOneByNickname");
+    	return session.selectOne(ns + "selectOneByNickname", nickname);
+    }
+    
 	@Override
 	public int register(User user) {
 		log.trace("UserRepository - register");
@@ -47,19 +64,4 @@ public class UserRepositoryImpl implements UserRepository {
     	log.trace("UserRepository - update");
     	return session.update(ns + "updateUser", user);
     }
-
-	@Override
-	public User checkDuplicate(String word) {
-		log.trace("UserRepository - checkDuplicate");
-		return session.selectOne(ns + "checkDuplicate",word);
-	}
-
-	@Override
-	public List<User> searchByNickname(String word) {
-		log.trace("UserRepository - searchByNickname");
-		return session.selectList(ns+"searchByNickname", word);
-	}
-	
-	
-	
 }
