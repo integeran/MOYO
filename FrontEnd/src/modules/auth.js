@@ -41,18 +41,7 @@ export function* authSaga() {
 }
 
 const initialState = {
-  loginCheck: {
-    userId: '',
-    userNickname: '',
-  },
-  register: {
-    provider: '',
-    socialId: '',
-    age: '',
-    gender: '',
-    nickname: '',
-  },
-  login: {
+  userDataId: {
     provider: '',
     socialId: '',
   },
