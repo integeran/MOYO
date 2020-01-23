@@ -11,7 +11,7 @@ public class Community {
 	private int cmId;
 	private int uId;
 	private int cId;
-	private int tTypeId;
+	private int cmTypeId;
 	private String title;
 	private String contents;
 	private int views;

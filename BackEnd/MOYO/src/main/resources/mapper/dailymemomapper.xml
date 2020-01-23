@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="moyo.dailymemomapper">
+	<select id="selectAll" resultType="dailyMemo">
+		select * from daily_memo
+	</select>
+	<select id="selectAllByUser" parameterType="int" resultType="dailyMemo">
+		select * from daily_memo
+		where u_id = #{uId}
+		order by day
+	</select>
+	<select id="selectOne" parameterType="int" resultType="dailyMemo">
+		select * from daily_memo
+		where d_memo_id = #{dMemoId}
+	</select>
+	<insert id="createDailyMemo" parameterType="dailyMemo">
+		insert into
+		daily_memo (u_id, contents, day, register_date, update_date)
+		values (#{uId}, #{contents}, #{day}, current_timestamp(), current_timestamp())
+	</insert>
+	<delete id="deleteDailyMemo">
+		delete from daily_memo
+		where d_memo_id = #{dMemoId}
+	</delete>
+	<update id="updateDailyMemo">
+		update daily_memo
+		set contents = #{contents}, day = #{day}, update_date = current_timestamp()
+		where d_memo_id = #{dMemoId}
+	</update>
+</mapper>
