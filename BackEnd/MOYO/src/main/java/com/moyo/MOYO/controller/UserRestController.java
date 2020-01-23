@@ -41,7 +41,7 @@ public class UserRestController {
 		}
 	}
 	
-	@GetMapping("uset/selectOne/{uId}")
+	@GetMapping("user/selectOne/{uId}")
 	public ResponseEntity<Map<String, Object>> selectOne(@PathVariable int uId) {
 		try {
 			log.trace("UserRestController - selectOne");
@@ -79,10 +79,10 @@ public class UserRestController {
 			User registeredUser = uService.selectOneBySocialId(user.getSocialId(), user.getProvider());
 			User nicknameUser = uService.selectOneByNickname(user.getNickname());
 			if (registeredUser != null) {
-				return response("이미 존재하는 회원입니다.", HttpStatus.CONFLICT, false);
+				return response("이미 존재하는 회원입니다.", HttpStatus.OK, false);
 			}
 			if (nicknameUser != null) {
-				return response("이미 존재하는 닉네임입니다.", HttpStatus.CONFLICT, false);
+				return response("이미 존재하는 닉네임입니다.", HttpStatus.OK, false);
 			}
 			uService.register(user);
 			User loginUser = uService.selectOneBySocialId(user.getSocialId(), user.getProvider());

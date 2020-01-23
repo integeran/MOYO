@@ -25,26 +25,8 @@ public class UserRepositoryImpl implements UserRepository {
 		log.trace("UserRepository - selectAll");
 		return session.selectList(ns + "selectAll");
 	}
-
-	@Override
-	public int register(User user) {
-		log.trace("UserRepository - register");
-		return session.insert(ns + "registerUser", user);
-	}
 	
-    @Override
-    public int delete(int uId) {
-    	log.trace("UserRepository - delete");
-		return session.delete(ns + "deleteUser", uId);
-    }
-    
-    @Override
-    public int update(User user) {
-    	log.trace("UserRepository - update");
-    	return session.update(ns + "updateUser", user);
-    }
-    
-    @Override
+	@Override
     public User selectOne(int uId) {
     	log.trace("UserRepository - selectOne");
     	return session.selectOne(ns + "selectOne", uId);
@@ -64,5 +46,23 @@ public class UserRepositoryImpl implements UserRepository {
     	log.trace("UserRepository - selectOneByNickname");
     	return session.selectOne(ns + "selectOneByNickname", nickname);
     }
+
+	@Override
+	public int register(User user) {
+		log.trace("UserRepository - register");
+		return session.insert(ns + "registerUser", user);
+	}
 	
+    @Override
+    public int delete(int uId) {
+    	log.trace("UserRepository - delete");
+		return session.delete(ns + "deleteUser", uId);
+    }
+    
+    @Override
+    public int update(User user) {
+    	log.trace("UserRepository - update");
+    	return session.update(ns + "updateUser", user);
+    }
+    
 }
