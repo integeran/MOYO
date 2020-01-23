@@ -32,13 +32,12 @@ public class PostmapRestController {
 	PostmapService pService;
 	
 	@GetMapping("postmap/selectAll")
-	private ResponseEntity<Map<String, Object>> selectAll(@RequestParam double latitude, double longitude) {
+	private ResponseEntity<Map<String, Object>> selectAll(@RequestParam double latitude, @RequestParam double longitude) {
 		HashMap<String, Double> map = new HashMap<String, Double>();
+		map.put("latitude", latitude);
+		map.put("longitude", longitude);
 		try {
 			log.trace("PostmapRestController - selectAll : ", latitude,longitude);
-			map.put("latitude", latitude);
-			map.put("longitude", longitude);
-			
 			return response(pService.selectAll(map), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
 			log.error("PostmapRestController - selectAll : ", latitude,longitude);
