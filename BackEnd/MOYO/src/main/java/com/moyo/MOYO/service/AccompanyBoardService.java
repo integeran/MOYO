@@ -20,5 +20,4 @@ public interface AccompanyBoardService {
 	public List<AccompanyBoard> selectFilter(HashMap<String, Object> filter);
 	
 	public List<AccompanyBoard> search(HashMap<String, Object> filter);
-
 }

@@ -3,7 +3,6 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="moyo.accompanyboardmapper">
-
 	<sql id="sortingCondition">
 		<choose>
 			<when test="sortingCondition=='startDate'">
@@ -81,38 +80,4 @@
 	    end_date = #{endDate}, want_age = #{wantAge}, want_gender = #{wantGender}, deadline_toggle = #{deadlineToggle}, update_date = current_timestamp()
 	    where ac_board_id = #{acBoardId}
 	</update>
-	
-<!-- 	<select id="selectFilter" resultType="accompanyBoard" parameterType="map">
-		select * from accompany_board where
-			<if test="age!=null">
-				want_age in
-				<foreach collection="age" item="val" open="(" close=")" separator=",">
-					#{val.value}
-				</foreach>
-				or
-			</if>
-			<if test="gender!=null">
-				want_gender = #{gender} or
-			</if>
-			<if test="ttypeid!=null">
-				t_type_id = #{ttypeid} or
-			</if>
-		1 = 1 <include refid="sortingCondition" />
-	</select>
-	
-	<select id="search" resultType="accompanyBoard" parameterType="map">
-		select ab.* from accompany_board as ab
-		<if test="key!='all'">
-			<if test="key=='title'">
-				where title like concat('%',#{word}, '%')
-			</if>
-			<if test="key=='contents'">
-				where contents like concat('%',#{word}, '%')
-			</if>
-			<if test="key=='user'">
-				join (select * from user where nickname like concat('%', #{word}, '%')) as u using(u_id)
-			</if>
-		</if>
-		<include refid="sortingCondition" />
-	</select> -->
 </mapper>
