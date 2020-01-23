@@ -9,6 +9,7 @@
 	<select id="selectAllByUser" parameterType="int" resultType="dailyMemo">
 		select * from daily_memo
 		where u_id = #{uId}
+		order by day
 	</select>
 	<select id="selectOne" parameterType="int" resultType="dailyMemo">
 		select * from daily_memo
