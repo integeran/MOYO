@@ -1,25 +1,12 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import KakaoLogin from 'react-kakao-login';
-import { useHistory, withRouter } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { changeField, register, login } from '../modules/auth';
-import { makeStyles } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { changeField } from '../modules/auth';
 
 const Login = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   if (authError) {
-  //     console.log('오류');
-  //     console.log(authError);
-  //     return;
-  //   }
-  //   if (auth) {
-  //     console.log('성공');
-  //     console.log(auth);
-  //   }
-  // }, [auth, authError]);
 
   const axios = require('axios');
   const jwtDecode = require('jwt-decode');
@@ -41,10 +28,6 @@ const Login = () => {
 
   const getToken = async res => {
     const resData = await getResponse(res);
-    // pushUserData('nickname', res.profile.properties.nickname);
-    // pushUserData('age', res.profile.kakao_account.age_range);
-    // pushUserData('gender', res.profile.kakao_account.gender);
-    // pushUserData('image', res.profile.properties.profile_image);
     if (resData.data.status) {
       const jwtData = jwtDecode(resData.data.data);
       pushUserData('userToken', resData.data.data);
@@ -54,7 +37,7 @@ const Login = () => {
       pushUserData('image', jwtData.user.image);
       localStorage.setItem('token', resData.data.data);
       history.push({
-        pathname: '/main',
+        pathname: '/acc',
       });
     } else {
       history.push({
