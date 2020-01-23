@@ -6,6 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, withRouter } from 'react-router-dom';
 import { changeField } from '../modules/auth';
+import loading from '../modules/loading';
 
 const ageRange = [
   {
@@ -47,6 +48,21 @@ const Signup = props => {
   //     userImage: auth.userData.image,
   //   }),
   // );
+
+  // const checkToken = async () => {
+  //   const jwtToken = await jwtDecode(localStorage.token);
+  //   pushUserData('nickname', jwtToken.user.nickname);
+  //   pushUserData('age', jwtToken.user.age);
+  //   pushUserData('gender', jwtToken.user.gender);
+  //   pushUserData('image', jwtToken.user.image);
+  // };
+
+  // useEffect(() => {
+  //   if (localStorage.token) {
+  //     console.log('check');
+  //     checkToken();
+  //   }
+  // });
 
   const userSocialId = props.location.state.userSocialId;
   let userImage = props.location.state.userProfileImage;
@@ -111,6 +127,7 @@ const Signup = props => {
       pushUserData('age', jwtData.user.age);
       pushUserData('gender', jwtData.user.gender);
       pushUserData('image', jwtData.user.image);
+      localStorage.setItem('token', resData.data.data);
       history.push({
         pathname: '/main',
       });
