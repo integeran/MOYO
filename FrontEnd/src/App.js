@@ -1,16 +1,22 @@
 import React from 'react';
-import Main from './pages/Main';
+import { Route } from 'react-router-dom';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import styled from 'styled-components';
+
+const Div = styled.div`
+  width: 100%;
+  height: 100%;
+`;
 
 const App = () => {
-  /**  TODO:
-   * 로그인이 된 상태 >> 바로 메인 페이지로 이동
-   * 로그인이 안된 상태 >> 최초 로그인/회원가입 페이지로 이동
-   */
-
   return (
-    <>
-      <Main />
-    </>
+    <Div>
+      <Login />
+      {/* <Route exact path="/" component={App} /> */}
+      {/* <Route path="/" component={Login} />
+      <Route path="/signup" component={Signup} /> */}
+    </Div>
   );
 };
 
