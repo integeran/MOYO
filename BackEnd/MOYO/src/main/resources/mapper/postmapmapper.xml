@@ -13,7 +13,8 @@
 	<select id="selectAll" resultType="postmap" parameterType="map">
 		  select post.*, count(pm_like_id) as likes , <include refid="distance" />
 		  from postmap post
-		  left join postmap_like using(pm_id)
+		  left outer join postmap_like like
+		  				on post.pm_id = like.pm_id
 		  group by post.pm_id
 <![CDATA[ having distance <= 5	]]>
 		  order by distance;
