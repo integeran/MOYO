@@ -2,6 +2,7 @@ package com.moyo.MOYO.repository;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,9 @@ public class AccompanyBoardRepositoryImpl implements AccompanyBoardRepository {
 	SqlSession session;
 	
 	@Override
-	public List<AccompanyBoard> selectAll(String sorting) {
-		log.trace("AccompanyBoardRepository - selectAll");
-		return session.selectList(ns + "selectAll",sorting);
+	public List<AccompanyBoard> selectAll(Map<String, Object> map) {
+		log.trace("AccompanyBoardRepository - selectAll : ",map);
+		return session.selectList(ns + "selectAll", map);
 	}
 	
 	@Override

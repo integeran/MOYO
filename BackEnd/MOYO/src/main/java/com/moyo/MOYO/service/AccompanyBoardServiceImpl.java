@@ -2,6 +2,7 @@ package com.moyo.MOYO.service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,9 +20,9 @@ public class AccompanyBoardServiceImpl implements AccompanyBoardService {
 	AccompanyBoardRepository acRepo;
 	
 	@Override
-	public List<AccompanyBoard> selectAll(String sorting) {
-		log.trace("AccompanyBoardService - selectAll");
-		return acRepo.selectAll(sorting);
+	public List<AccompanyBoard> selectAll(Map<String, Object> map) {
+		log.trace("AccompanyBoardService - selectAll : ",map);
+		return acRepo.selectAll(map);
 	}
 	
 	@Override
