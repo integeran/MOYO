@@ -17,4 +17,7 @@ public class Community {
 	private int views;
 	private String registerDate;
 	private String updateDate;
+	private String nickname;
+	private String city;
+	private String communityType;
 }
