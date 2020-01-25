@@ -4,6 +4,8 @@ import AccompanyLonationSelect from './pages/acc/AccompanyLocationSelect';
 import AccompanyDateSelect from './pages/acc/AccompanyDateSelect';
 import AccompanyList from './pages/acc/AccompanyList';
 import AccompanyListDetail from './pages/acc/AccompanyListDetail';
+import MoreMain from './pages/more/MoreMain';
+import MorePlan from './pages/more/MorePlan';
 import CategoryNav from './components/common/CategoryNav';
 import styled from 'styled-components';
 import { Route } from 'react-router-dom';
@@ -28,6 +30,8 @@ const App = () => {
       <Route path="/acc/accSetDate" component={AccompanyDateSelect} />
       <Route exact path="/acc/accList" component={AccompanyList} />
       <Route path="/acc/accList/:id" component={AccompanyListDetail} />
+      <Route exact path="/more" component={MoreMain} />
+      <Route path="/more/morePlan" component={MorePlan} />
       <CategoryNav />
     </Div>
   );
