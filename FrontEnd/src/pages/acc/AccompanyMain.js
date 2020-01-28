@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import Header from '../../components/common/Header';
+import { useHistory } from 'react-router';
 
 const MainButtonDiv = styled.div`
   display: flex;
@@ -14,9 +15,13 @@ const MainButton = styled(Button)`
   border: 1px solid black;
 `;
 
-const AccompanyMain = ({ history }) => {
+const AccompanyMain = () => {
+  const history = useHistory();
   const handleAccompanyFindClick = () => {
-    history.push('/acc/accSetLoc');
+    history.push({
+      pathname: '/acc/accSetLoc',
+      state: { prevpath: history.location.pathname },
+    });
   };
   return (
     <div>

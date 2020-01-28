@@ -1,78 +1,84 @@
 import React, { useState } from 'react';
 import Paper from '@material-ui/core/Paper';
 import styled from 'styled-components';
-import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
+import Typography from '@material-ui/core/Typography';
 import IU from '../../assets/img/iu.jpg';
 
 const DivStyled = styled.div`
-  width: 100%;
-  height: max-content;
-
+  flex-grow: 1;
   & + & {
-    margin-top: 10px;
+    margin-top: 2rem;
   }
 `;
 
-const PaperStyled = styled(Paper)`
+const CenterGrid = styled(Grid)`
   display: flex;
-  min-height: 6rem;
-  padding: 10px;
+  align-items: center;
+  justify-content: center;
 `;
 
-const ContentsBox = styled.div`
-  flex-grow: 4;
-  display: flex;
-  flex-direction: column;
-  background: gray;
-`;
-const HeaderBox = styled.div`
-  display: flex;
-  margin: 5px;
-  height: 3rem;
-  background: green;
-`;
-const DescBox = styled.div`
-  margin: 2px;
-  height: 2rem;
-  background: coral;
+const StyledAvatar = styled(Avatar)`
+  min-width: 3.5rem;
+  min-height: 3.5rem;
 `;
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'flex',
-    position: 'absolute',
-    '& > *': {
-      margin: theme.spacing(1),
-    },
-  },
-  large: {
-    width: theme.spacing(10),
-    height: theme.spacing(10),
-  },
-}));
+const MultiLineTypography = styled(({ ...other }) => <Typography {...other} />)`
+  min-height: 2.7rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`;
+
+const StyledPaper = styled(({ ...other }) => <Paper {...other} />)``;
 
 const AccompanyListPaper = ({ boardInfo, onClick }) => {
-  const classes = useStyles();
   return (
     <DivStyled onClick={onClick}>
-      <PaperStyled>
-        <Avatar alt="IU" src={IU} className={classes.large} />
-        <ContentsBox>
-          {/*title, type*/}
-          <HeaderBox>
-            <div style={{ flexGrow: '4' }}>{boardInfo.title}</div>
-            <div style={{ flexGrow: '1' }}>{boardInfo.type}</div>
-          </HeaderBox>
-          {/*nick, date*/}
-          <DescBox>
-            <div style={{ flexGrow: '4' }}>{boardInfo.nickname}</div>
-            <div style={{ flexGrow: '1' }}>
-              {boardInfo.startDate}~{boardInfo.endDate}
-            </div>
-          </DescBox>
-        </ContentsBox>
-      </PaperStyled>
+      <StyledPaper>
+        <Grid container spacing={2}>
+          <CenterGrid item xs={2}>
+            <StyledAvatar alt="IU" src={IU} xs />
+          </CenterGrid>
+          <Grid item container xs direction="column" spacing={2}>
+            <Grid item container xs spacing={2}>
+              <Grid item xs={10}>
+                <MultiLineTypography variant="subtitle1">
+                  {boardInfo.title}
+                </MultiLineTypography>
+              </Grid>
+              <CenterGrid item xs={2}>
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                  align="center"
+                >
+                  {boardInfo.type}
+                </Typography>
+              </CenterGrid>
+            </Grid>
+            <Grid item container xs>
+              <Grid item xs={5}>
+                <Typography variant="body2" align="left">
+                  {boardInfo.nickname}
+                </Typography>
+              </Grid>
+              <Grid item xs={7}>
+                <Typography
+                  variant="body2"
+                  align="right"
+                  style={{ paddingRight: '1rem' }}
+                >
+                  {boardInfo.startDate}~{boardInfo.endDate}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </StyledPaper>
     </DivStyled>
   );
 };

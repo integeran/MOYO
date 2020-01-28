@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
 import {
   accompanyNation,
   accompanyCity,
@@ -45,8 +46,10 @@ const CityList = styled(List)`
   flex-grow: 3;
 `;
 
-const AccompanyLonationSelect = ({ history }) => {
+const AccompanyLocationSelect = () => {
+  const history = useHistory();
   const [cityList, setCityList] = useState([]);
+  const reduxDate = useSelector(state => state.accompanyCondition.date);
   const dispatch = useDispatch();
 
   const onNationClick = nationItem => {
@@ -56,7 +59,14 @@ const AccompanyLonationSelect = ({ history }) => {
 
   const onCityClick = cityItem => {
     dispatch(accompanyCity({ code: cityItem.cid, name: cityItem.name }));
-    history.push('/acc/accSetDate');
+    const path =
+      history.location.state.prevpath === '/acc' || !reduxDate
+        ? '/acc/accSetDate'
+        : '/acc/accList';
+    history.push({
+      pathname: path,
+      state: { prevpath: history.location.pathname },
+    });
   };
 
   return (
@@ -88,4 +98,4 @@ const AccompanyLonationSelect = ({ history }) => {
   );
 };
 
-export default AccompanyLonationSelect;
+export default AccompanyLocationSelect;
