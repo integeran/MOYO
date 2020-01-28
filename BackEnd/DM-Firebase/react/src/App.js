@@ -1,16 +1,37 @@
 import React from 'react';
-import Main from './pages/Main';
+import styled from 'styled-components';
+import { Route, Switch } from 'react-router-dom';
+import { useLocation } from 'react-router';
+import DmRoom from './pages/DmRoom';
+import DmRoomList from './pages/DmRoomList';
+import Container from '@material-ui/core/Container';
+
+const StyledContainer = styled(Container)`
+  height: inherit;
+`;
+const StyledDiv = styled.div`
+  width: inherit;
+  height: inherit;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
 
 const App = () => {
-  /**  TODO:
-   * 로그인이 된 상태 >> 바로 메인 페이지로 이동
-   * 로그인이 안된 상태 >> 최초 로그인/회원가입 페이지로 이동
-   */
-
+  const location = useLocation();
   return (
-    <>
-      <Main />
-    </>
+    <StyledDiv>
+      <StyledContainer>
+        <Switch>
+          <Route
+            path="/DmRoom/:receiverId/:receiverName/:receiverImage"
+            component={DmRoom}
+          />
+          <Route path="/DmRoom/" component={DmRoom} />
+        </Switch>
+        <Route path="/DmRoomList" component={DmRoomList} />
+      </StyledContainer>
+    </StyledDiv>
   );
 };
 
