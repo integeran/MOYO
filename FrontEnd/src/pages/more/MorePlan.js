@@ -1,21 +1,39 @@
 import React, { useState } from 'react';
-import Calendar from 'react-calendar';
-import styled from 'styled-components';
-
-const CalendarStyled = styled(Calendar)`
-  border: 0;
-  margin: 0 auto;
-  width: 90%;
-  margin-bottom: 2rem;
-`;
+import moment from 'moment';
+import Divider from '@material-ui/core/Divider';
+import Planner from '../../components/more/Planner';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import './styles.css';
+import '@fullcalendar/core/main.css';
+import '@fullcalendar/daygrid/main.css';
+import { useDispatch } from 'react-redux';
+import { changeField } from '../../modules/planDate';
 
 const MorePlan = () => {
-  const [date, setDate] = useState(null);
-  const onChange = date => setDate(date);
+  const dispatch = useDispatch();
+  const pushSelectedDate = d => {
+    dispatch(changeField({ key: 'selectedDate', value: d }));
+  };
+
+  const [selectedDate, setSelectedDate] = useState('');
+
+  const handleChangeSelectedDate = value => {
+    setSelectedDate(value);
+    pushSelectedDate(moment(value.date).format());
+  };
+
   return (
     <div>
-      <h1>일정 관리 페이지입니다.</h1>
-      <CalendarStyled calendarType="US" onChange={onChange} value={date} />
+      <h1>일정 관리</h1>
+      <Divider />
+      <FullCalendar
+        defaultView="dayGridMonth"
+        plugins={[dayGridPlugin, interactionPlugin]}
+        dateClick={date => handleChangeSelectedDate(date)}
+      />
+      {selectedDate && <Planner />}
     </div>
   );
 };
