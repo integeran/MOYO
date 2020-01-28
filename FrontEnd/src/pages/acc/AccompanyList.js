@@ -1,38 +1,41 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import AccompanySearchBar from '../../components/accompany/AccompanySearchBar';
 import AccompanyListSet from '../../components/accompany/AccompanyListSet';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Fab from '@material-ui/core/Fab';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import AccompanyFilterDialog from '../../components/accompany/AccompanyFilterDialog';
+import {
+  accompanyFilterGender,
+  accompanyFilterAge,
+  accompanyFilterType,
+} from '../../modules/accompanyFilter';
 
 const LocationDiv = styled.div`
+  position: sticky;
   text-align: center;
   padding-top: 1rem;
   padding-bottom: 1rem;
   margin: 0 auto;
 `;
 const DateDiv = styled.div`
+  position: sticky;
   text-align: center;
   padding-top: 1rem;
   padding-bottom: 1rem;
   margin: 0 auto;
 `;
 const CenterFab = styled(Fab)`
-  position: absolute !important;
-  left: 85%;
-  bottom: 5%;
+  position: fixed !important;
+  right: 8%;
+  bottom: 12%;
 `;
 
 const AccompanyList = () => {
   let history = useHistory();
+  const dispatch = useDispatch();
   const { accNation, accCity, accDate } = useSelector(
     state => ({
       accNation: state.accompanyCondition.nation,
@@ -41,7 +44,24 @@ const AccompanyList = () => {
     }),
     [],
   );
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+
+  const { filterGender, filterAge, filterType } = useSelector(state => ({
+    filterGender: state.accompanyFilter.gender,
+    filterAge: state.accompanyFilter.age,
+    filterType: state.accompanyFilter.type,
+  }));
+
+  const handleFilterGenderChange = e =>
+    dispatch(accompanyFilterGender(e.target.value));
+  const handleFilterAgeChange = name => e =>
+    dispatch(
+      accompanyFilterAge({ ...filterAge, [name.age]: e.target.checked }),
+    );
+  const handleFilterTypeChange = name => e =>
+    dispatch(
+      accompanyFilterType({ ...filterType, [name.type]: e.target.checked }),
+    );
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -73,30 +93,24 @@ const AccompanyList = () => {
       <DateDiv onClick={handleDateSelect}>{accDate}</DateDiv>
       <AccompanySearchBar />
       <AccompanyListSet />
-      <CenterFab aria-label="filter" onClick={handleClickOpen}>
+      <CenterFab
+        variant="extended"
+        aria-label="filter"
+        onClick={handleClickOpen}
+      >
         <FilterListIcon />
+        필터
       </CenterFab>
-      <Dialog open={open} maxWidth="md" fullWidth="true" onClose={handleClose}>
-        <DialogTitle>필터링</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Email Address"
-            type="email"
-            fullWidth
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            취소
-          </Button>
-          <Button onClick={handleClose} color="primary">
-            적용
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <AccompanyFilterDialog
+        filterGender={filterGender}
+        filterAge={filterAge}
+        filterType={filterType}
+        onGenderChange={handleFilterGenderChange}
+        onAgeChange={handleFilterAgeChange}
+        onTypeChange={handleFilterTypeChange}
+        open={open}
+        handleClose={() => handleClose()}
+      />
     </div>
   );
 };

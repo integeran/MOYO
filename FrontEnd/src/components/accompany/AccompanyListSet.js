@@ -10,6 +10,7 @@ const ListComponent = styled.div`
   margin-top: 1rem;
   display: flex;
   flex-direction: column;
+  margin-bottom: 7rem;
 `;
 
 const AccompanyListSet = () => {
