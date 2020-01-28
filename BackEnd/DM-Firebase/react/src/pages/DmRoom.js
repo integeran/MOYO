@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -16,9 +16,13 @@ import {
   isOpenRoomAction,
   roomList_updateAction,
   messageList_updateAction,
+  changeReceiverAction,
 } from '../reducers/Dm';
 import axios from 'axios';
 import Room from '../components/dm/Room';
+import Message from '../components/dm/Message';
+import TelegramIcon from '@material-ui/icons/Telegram';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,34 +36,59 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const DmRoom = () => {
+const DmRoom = ({ match }) => {
   const dispatch = useDispatch();
 
   const INDEXDB_DB_NAME = useSelector(state => state.Dm.INDEXDB_DB_NAME);
   const INDEXDB_VERSION = useSelector(state => state.Dm.INDEXDB_VERSION);
   const INDEXDB_STORE = useSelector(state => state.Dm.INDEXDB_STORE);
-  const SPLIT_CHAR = useSelector(state => state.Dm.SPLIT_CHAR);
+  const MAKEID_CHAR = useSelector(state => state.Dm.MAKEID_CHAR);
+  const DATETIME_CHAR = useSelector(state => state.Dm.DATETIME_CHAR);
 
   const sender = useSelector(state => state.Dm.sender);
   const receiver = useSelector(state => state.Dm.receiver);
   const initUpload = useSelector(state => state.Dm.initUpload);
-  const isOpenRoom = useSelector(state => state.Dm.isOpenRoom);
   const messageList = useSelector(state => state.Dm.messageList);
+  const waitTest = useSelector(state => state.Dm.waitTest);
 
   const [title, setTitle] = useState('Hong Gildong');
   const [curRoomId, setCurRoomId] = useState('');
+  const [ivalue, setIvalue] = useState('');
 
   const onChangeTitle = useCallback(e => {
     setTitle(e.target.value);
   }, []);
 
   const onChangeCurRoomId = useCallback(e => {
-    setCurRoomId(e.target.value);
+    setCurRoomId(e);
   }, []);
+
+  const onChangeIvalue = useCallback(e => {
+    setIvalue(e.target.value);
+  }, []);
+
+  var tempsender = {};
+  var tempreceiver = {};
 
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
+  useEffect(() => {
+    if (match.params.receiverId) {
+      tempsender = sender;
+      tempreceiver.uId = match.params.receiverId;
+      tempreceiver.nickname = match.params.receiverName;
+      tempreceiver.image = match.params.receiverImage;
+
+      dispatch(changeReceiverAction(tempreceiver));
+
+      loadRoom();
+    } else {
+      console.log('불가능');
+      onInit();
+    }
+  }, []);
 
   /**
    * 초기 실행
@@ -78,6 +107,9 @@ const DmRoom = () => {
 
         var sender = res.data.data.sender;
         var receiver = res.data.data.receiver;
+        tempsender = sender;
+        tempreceiver = receiver;
+        // temp와 타협하고 싶지 않았지만 최선의 방법이다...
 
         if (!receiver) {
           dispatch(initUpload_updateAction);
@@ -116,7 +148,7 @@ const DmRoom = () => {
    * 채팅방 목록리스트 호출
    */
   const loadRoomList = sender => {
-    var roomRef = this.database.ref('UserRooms/' + sender.uId);
+    var roomRef = firebase.database().ref('UserRooms/' + sender.uId);
     roomRef.off();
     roomRef.orderByChild('timestamp').on('value', getRoomList.bind(this)); // 메세지를 받을 때 마다 목록을 갱신시키기 위해 once메소드가 아닌 on메소드 사용
   };
@@ -143,20 +175,41 @@ const DmRoom = () => {
       arrRoomList.push(RoomInfo);
     };
     snapshot.forEach(cbDisplayRoomList.bind(this));
-    dispatch(roomList_updateAction(arrRoomList.reverse().join(''))); // 역순 정렬
+    dispatch(roomList_updateAction(arrRoomList.reverse())); // 역순 정렬
 
     // RoomList ClickEvent 만들어야 됨
 
     if (initUpload === true) {
-      // sender와 receiver에 알맞은 채팅방 불러오기
-      // 리스트가 다 불려진 뒤 방을 로드
-      var RoomInfo = firebase
-        .database()
-        .ref('UserRooms/' + sender.uId + '/' + receiver.uId);
-
-      dispatch(initUpload_updateAction);
-      openChatRoom(RoomInfo.roomId, RoomInfo.roomTitle);
+      loadRoom();
     }
+  };
+
+  /*
+   * 방 로드하기
+   */
+  const loadRoom = () => {
+    // sender와 receiver에 알맞은 채팅방 불러오기
+    // 리스트가 다 불려진 뒤 방을 로드
+    console.log('initUpload true');
+    var RoomInfo = {};
+    console.log(tempsender.uId + ' : ' + tempreceiver.uId);
+    firebase
+      .database()
+      .ref('UserRooms/' + tempsender.uId + '/' + tempreceiver.uId)
+      .on('value', snapshot => {
+        if (snapshot.val()) {
+          RoomInfo.roomId = snapshot.val().roomId;
+          RoomInfo.roomTitle = snapshot.val().roomTitle;
+        } else {
+          RoomInfo.roomId =
+            MAKEID_CHAR + tempsender.uId + MAKEID_CHAR + tempreceiver.uId;
+          RoomInfo.roomTitle = tempsender.nickname;
+        }
+      });
+
+    dispatch(initUpload_updateAction);
+    console.log('RoomId??,', RoomInfo.roomId);
+    openChatRoom(RoomInfo.roomId, RoomInfo.roomTitle);
   };
 
   /**
@@ -170,7 +223,9 @@ const DmRoom = () => {
    * 메세지 로드
    */
   const loadMessageList = roomId => {
+    console.log('loadMessageList');
     if (roomId) {
+      console.log('loadMessageList, roomId, ', roomId);
       dispatch(messageList_updateAction([]));
       var messageRef = firebase.database().ref('Messages/' + roomId);
       var arrMessageList = [];
@@ -178,16 +233,16 @@ const DmRoom = () => {
 
       var cbDisplayMessages = function(data) {
         var val = data.val();
+        console.log('DisplayMessages: ', val);
 
         var MessageInfo = {
-          messageId: val.messageId,
           userImage: val.userImage,
           userName: val.userName,
           message: val.message,
           timeStamp: timestampToTime(val.timeStamp),
         };
 
-        if (val.userName === sender.nickname) {
+        if (val.userName === tempsender.nickname) {
           MessageInfo.direct = 'right';
         } else {
           MessageInfo.direct = 'left';
@@ -199,6 +254,9 @@ const DmRoom = () => {
       messageRef
         .limitToLast(50)
         .on('child_added', cbDisplayMessages.bind(this));
+
+      console.log('arrMessageList: ', arrMessageList);
+      dispatch(messageList_updateAction(arrMessageList));
     }
   };
 
@@ -343,9 +401,7 @@ const DmRoom = () => {
    * 메세지 전송
    */
 
-  const saveMessages = (fileName, path) => {
-    var msg = '입력한 채팅 값 연동해서 가져오기';
-
+  const saveMessages = (fileName, path, msg) => {
     // 파일전송 메세지
     if (fileName && path) {
       // var templateDownloadMsg = document.getElementById('templateDownloadMsg')
@@ -362,48 +418,49 @@ const DmRoom = () => {
       var multiUpdates = {};
       var messageId = firebase.database().ref('Messages/' + curRoomId).key; // 메세지 키 값 구하기 => push는 자동으로 키값을 생성하면서 데이터를 저장
       //                        즉, 여기서는 자동으로 키를 생성해서 받을 수 있음
+      messageId = messageId + DATETIME_CHAR + yyyyMMddHHmmsss();
+      console.log('receiver의 아이디:', receiver.uId);
 
       if (messageList.length === 0) {
         // 메세지 처음 입력 할 경우
-        this.loadMessageList(curRoomId); // 방에 메세지를 처음 입력할 경우 권한 때문에 다시 메세지를 로드
+        console.log('messageList length is 0');
+        loadMessageList(curRoomId); // 방에 메세지를 처음 입력할 경우 권한 때문에 다시 메세지를 로드
       }
 
       // 메세지 저장
       multiUpdates['Messages/' + curRoomId + '/' + messageId] = {
-        userImage: user.image !== null ? user.image : '',
-        userName: user.nickname,
+        userImage: sender.image !== null ? sender.image : '',
+        userName: sender.nickname,
         message: msg,
         timeStamp: firebase.database.ServerValue.TIMESTAMP, // 서버시간 등록
       };
 
-      // 아~~~~~~~~~~~~~~~~~~여기까지했습니다.!!!
-
       // 유저별 룸 리스트 저장
-      var roomUserListLength = this.roomUserlist.length;
-      if (this.roomUserlist && roomUserListLength > 0) {
-        for (var i = 0; i < roomUserListLength; i++) {
-          multiUpdates[
-            'UserRooms/' + this.roomUserlist[i] + '/' + this.roomId
-          ] = {
-            roomId: this.roomId,
-            roomUserName: this.roomUserName.join(this.SPLIT_CHAR),
-            roomUserlist: this.roomUserlist.join(this.SPLIT_CHAR),
-            roomType: roomUserListLength > 2 ? this.MULTI : this.ONE_VS_ONE,
-            roomOneVSOneTarget:
-              roomUserListLength == 2 && i == 0
-                ? this.roomUserlist[1] // 1:1대화이고 i값이 0일 때 타겟은 i값이 1인 유저
-                : roomUserListLength == 2 && i == 1
-                ? this.roomUserlist[0] // 1:1대화이고 i값이 1일 때 타겟은 i값이 0인 유저
-                : '', // 나머지
-            lastMessage: downloadURL ? '다운로드' : convertMsg,
-            image: user.image !== null ? user.image : '',
-            timestamp: firebase.database.ServerValue.TIMESTAMP,
-          };
-        }
-      }
+      multiUpdates['UserRooms/' + sender.uId + '/' + receiver.uId] = {
+        roomId: curRoomId,
+        roomTitle: receiver.nickname,
+        userId: receiver.uId,
+        userName: receiver.nickname,
+        userImage: receiver.image !== null ? receiver.image : '',
+        lastMessage: path ? '다운로드' : msg,
+        timeStamp: firebase.database.ServerValue.TIMESTAMP,
+      };
+
+      multiUpdates['UserRooms/' + receiver.uId + '/' + sender.uId] = {
+        roomId: curRoomId,
+        roomTitle: sender.nickname,
+        userId: sender.uId,
+        userName: sender.nickname,
+        userImage: sender.image !== null ? sender.image : '',
+        lastMessage: path ? '다운로드' : msg,
+        timeStamp: firebase.database.ServerValue.TIMESTAMP,
+      };
 
       console.log('모든 업데이트: ', JSON.stringify(multiUpdates));
-      this.database.ref().update(multiUpdates);
+      firebase
+        .database()
+        .ref()
+        .update(multiUpdates);
     }
   };
 
@@ -497,6 +554,22 @@ const DmRoom = () => {
     setAnchorEl(null);
   };
 
+  const Test = e => {
+    console.log('Test: ', e);
+  };
+
+  const loadMessage = e => {
+    saveMessages(null, null, ivalue);
+    setIvalue('');
+  };
+
+  const onEnterKey = e => {
+    if (e.key === 'Enter') {
+      saveMessages(null, null, ivalue);
+      setIvalue('');
+    }
+  };
+
   return (
     <>
       <div className={classes.root}>
@@ -546,7 +619,35 @@ const DmRoom = () => {
         </AppBar>
       </div>
 
-      <div onClick={onInit}>여기를 클릭해보세요</div>
+      <Link to="/DmRoomList">RoomList로</Link>
+
+      <div id="chatdiv">
+        <input
+          type="text"
+          placeholder="텍스트를 입력하세요"
+          value={ivalue}
+          onChange={onChangeIvalue}
+          onKeyPress={onEnterKey}
+        ></input>
+        <TelegramIcon
+          color="primary"
+          style={{ cursor: 'pointer' }}
+          onClick={loadMessage}
+        />
+      </div>
+
+      {messageList.map((message, index) => {
+        return (
+          <Message
+            key={index}
+            userImage={message.userImage}
+            userName={message.userName}
+            message={message.message}
+            timeStamp={message.timeStamp}
+            direct={message.direct}
+          ></Message>
+        );
+      })}
     </>
   );
 };

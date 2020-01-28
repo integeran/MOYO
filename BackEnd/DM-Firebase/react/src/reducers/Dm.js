@@ -15,6 +15,7 @@ export const initialState = {
   isOpenRoom: false,
   roomList: [],
   messageList: [],
+  waitTest: true,
 };
 
 export const DM_INIT = 'DM_INIT';
@@ -22,6 +23,7 @@ export const DM_INITUPLAOD_UPDATE = 'DM_INITUPLOAD_UPDATE';
 export const DM_ISOPENROOM = 'DM_ISOPENROOM';
 export const DM_ROOMLIST_UPDATE = 'DM_ROOMLIST_UPDATE';
 export const DM_MESSAGELIST_UPDATE = 'DM_MESSAGELIST_UPDATE';
+export const DM_CHANGE_RECEIVER = 'DM_CHANGE_RECEIVER';
 
 export const initAction = res => {
   return {
@@ -55,6 +57,13 @@ export const messageList_updateAction = res => {
   };
 };
 
+export const changeReceiverAction = res => {
+  return {
+    type: DM_CHANGE_RECEIVER,
+    payload: res,
+  };
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case DM_INIT: {
@@ -62,6 +71,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         sender: action.payload.data.data.sender,
         receiver: action.payload.data.data.receiver,
+        waitTest: false,
       };
     }
 
@@ -80,6 +90,7 @@ const reducer = (state = initialState, action) => {
     }
 
     case DM_ROOMLIST_UPDATE: {
+      console.log(action.payload);
       return {
         ...state,
         roomList: action.payload,
@@ -87,9 +98,17 @@ const reducer = (state = initialState, action) => {
     }
 
     case DM_MESSAGELIST_UPDATE: {
+      console.log('DM_MESSAGELIST_UPADTE: ', action.payload);
       return {
         ...state,
         messageList: action.payload,
+      };
+    }
+
+    case DM_CHANGE_RECEIVER: {
+      return {
+        ...state,
+        receiver: action.payload,
       };
     }
 

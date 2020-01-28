@@ -5,6 +5,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles({
   card: {
@@ -28,7 +29,7 @@ const Room = ({
   roomId,
   roomTitle,
   userId,
-  UserName,
+  userName,
   userImage,
   lastMessage,
   timeStamp,
@@ -47,7 +48,7 @@ const Room = ({
           {roomTitle}
         </Typography>
         <Typography variant="h5" component="h2">
-          {userImage}
+          <img src={userImage} style={{ width: '40px', height: '40px' }}></img>
         </Typography>
         <Typography className={classes.pos} color="textSecondary">
           {lastMessage}
@@ -56,6 +57,7 @@ const Room = ({
           {timeStamp}
         </Typography>
       </CardContent>
+      <Link to={`/DmRoom/${userId}/${userName}/${userImage}`}>방 들어가기</Link>
     </Card>
   );
 };

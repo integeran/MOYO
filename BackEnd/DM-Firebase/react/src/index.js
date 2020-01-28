@@ -30,8 +30,6 @@ const store = createStore(reducer, composeWithDevTools());
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
-      <Route path="/DmRoom" component={DmRoom} />
-      <Route path="/DmRoomList" component={DmRoomList} />
       <App />
     </BrowserRouter>
   </Provider>,
