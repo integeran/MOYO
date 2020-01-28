@@ -1,4 +1,5 @@
 import React from 'react';
+import Divider from '@material-ui/core/Divider';
 
 const MoreMain = ({ history }) => {
   const handlePlanClick = () => {
@@ -7,8 +8,8 @@ const MoreMain = ({ history }) => {
   return (
     <div>
       <h1>일정</h1>
-      <button onClick={handlePlanClick}>일정 관리</button>
-      <br />
+      <Divider />
+      <h2 onClick={handlePlanClick}>일정 관리</h2>
     </div>
   );
 };
