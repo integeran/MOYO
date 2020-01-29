@@ -5,8 +5,17 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import FileMessage from './FileMessage';
 
-const Message = ({ userImage, userName, message, timeStamp, direct }) => {
+const Message = ({
+  userImage,
+  userName,
+  message,
+  timeStamp,
+  direct,
+  fileName,
+  path,
+}) => {
   const useStyles = makeStyles({
     card: {
       minWidth: 275,
@@ -36,27 +45,36 @@ const Message = ({ userImage, userName, message, timeStamp, direct }) => {
 
   return (
     <>
-      <Card className={classes.card}>
-        <CardContent>
-          <Typography
-            className={classes.title}
-            color="textSecondary"
-            gutterBottom
-          >
-            {userImage}
-          </Typography>
-          <Typography variant="h5" component="h2">
-            {userName}
-          </Typography>
-          <Typography className={classes.pos} color="textSecondary">
-            {message}
-          </Typography>
-          <Typography variant="body2" component="p">
-            {timeStamp}
-          </Typography>
-        </CardContent>
-      </Card>
-      {gab}
+      <div>
+        <Card className={classes.card}>
+          <CardContent>
+            <Typography
+              className={classes.title}
+              color="textSecondary"
+              gutterBottom
+            >
+              <img
+                src={userImage}
+                style={{ width: '40px', height: '40px' }}
+              ></img>
+            </Typography>
+            <Typography variant="h5" component="h2">
+              {userName}
+            </Typography>
+            {path ? (
+              <FileMessage path={path} fileName={fileName} />
+            ) : (
+              <Typography className={classes.pos} color="textSecondary">
+                {message}
+              </Typography>
+            )}
+            <Typography variant="body2" component="p">
+              {timeStamp}
+            </Typography>
+          </CardContent>
+        </Card>
+        {gab}
+      </div>
     </>
   );
 };

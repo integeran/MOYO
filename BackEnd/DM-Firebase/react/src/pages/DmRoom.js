@@ -1,15 +1,9 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import * as firebase from 'firebase';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import * as firebase from 'firebase';
+import { Link } from 'react-router-dom';
+
 import {
   initAction,
   initUpload_updateAction,
@@ -18,11 +12,24 @@ import {
   messageList_updateAction,
   changeReceiverAction,
 } from '../reducers/Dm';
-import axios from 'axios';
 import Room from '../components/dm/Room';
 import Message from '../components/dm/Message';
+import FileMessage from '../components/dm/FileMessage';
+import UploadModal from '../components/dm/UploadModal';
+
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
 import TelegramIcon from '@material-ui/icons/Telegram';
-import { Link } from 'react-router-dom';
+import AttachFileIcon from '@material-ui/icons/AttachFile';
+import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Container from '@material-ui/core/Container';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -54,9 +61,10 @@ const DmRoom = ({ match }) => {
   const [title, setTitle] = useState('Hong Gildong');
   const [curRoomId, setCurRoomId] = useState('');
   const [ivalue, setIvalue] = useState('');
+  const [uploadModal, setUploadModal] = useState(false);
 
   const onChangeTitle = useCallback(e => {
-    setTitle(e.target.value);
+    setTitle(e);
   }, []);
 
   const onChangeCurRoomId = useCallback(e => {
@@ -66,6 +74,18 @@ const DmRoom = ({ match }) => {
   const onChangeIvalue = useCallback(e => {
     setIvalue(e.target.value);
   }, []);
+
+  const onChangeUploadModal = useCallback(e => {
+    setUploadModal(e);
+  }, []);
+
+  const modalOpen = () => {
+    onChangeUploadModal(true);
+  };
+
+  const modalClose = () => {
+    onChangeUploadModal(false);
+  };
 
   var tempsender = {};
   var tempreceiver = {};
@@ -193,6 +213,7 @@ const DmRoom = ({ match }) => {
     console.log('initUpload true');
     var RoomInfo = {};
     console.log(tempsender.uId + ' : ' + tempreceiver.uId);
+    onChangeTitle(tempreceiver.nickname);
     firebase
       .database()
       .ref('UserRooms/' + tempsender.uId + '/' + tempreceiver.uId)
@@ -233,13 +254,15 @@ const DmRoom = ({ match }) => {
 
       var cbDisplayMessages = function(data) {
         var val = data.val();
-        console.log('DisplayMessages: ', val);
+        console.log('DisplayMessages: ', val.message);
 
         var MessageInfo = {
           userImage: val.userImage,
           userName: val.userName,
           message: val.message,
           timeStamp: timestampToTime(val.timeStamp),
+          fileName: val.fileName,
+          path: val.path,
         };
 
         if (val.userName === tempsender.nickname) {
@@ -403,18 +426,16 @@ const DmRoom = ({ match }) => {
 
   const saveMessages = (fileName, path, msg) => {
     // 파일전송 메세지
-    if (fileName && path) {
-      // var templateDownloadMsg = document.getElementById('templateDownloadMsg')
-      //   .innerHTML;
-      // msg = _.template(templateDownloadMsg)({
-      //   fileName: fileName,
-      //   downloadURL: downloadURL,
-      //   path: path,
-      // });
-      // console.log(msg);
-    }
+    // if (fileName && path) {
+    //   msg = {
+    //     fileName: { fileName },
+    //     path: { path },
+    //   };
+    // }
 
-    if (msg.length > 0) {
+    console.log(msg);
+
+    if (msg && msg !== '') {
       var multiUpdates = {};
       var messageId = firebase.database().ref('Messages/' + curRoomId).key; // 메세지 키 값 구하기 => push는 자동으로 키값을 생성하면서 데이터를 저장
       //                        즉, 여기서는 자동으로 키를 생성해서 받을 수 있음
@@ -427,14 +448,18 @@ const DmRoom = ({ match }) => {
         loadMessageList(curRoomId); // 방에 메세지를 처음 입력할 경우 권한 때문에 다시 메세지를 로드
       }
 
+      console.log('1', msg);
       // 메세지 저장
       multiUpdates['Messages/' + curRoomId + '/' + messageId] = {
-        userImage: sender.image !== null ? sender.image : '',
+        userImage: sender.image !== null ? sender.image : 'img/noprofile.png',
         userName: sender.nickname,
         message: msg,
         timeStamp: firebase.database.ServerValue.TIMESTAMP, // 서버시간 등록
+        fileName: fileName,
+        path: path,
       };
 
+      console.log('2');
       // 유저별 룸 리스트 저장
       multiUpdates['UserRooms/' + sender.uId + '/' + receiver.uId] = {
         roomId: curRoomId,
@@ -446,6 +471,7 @@ const DmRoom = ({ match }) => {
         timeStamp: firebase.database.ServerValue.TIMESTAMP,
       };
 
+      console.log('3');
       multiUpdates['UserRooms/' + receiver.uId + '/' + sender.uId] = {
         roomId: curRoomId,
         roomTitle: sender.nickname,
@@ -554,10 +580,6 @@ const DmRoom = ({ match }) => {
     setAnchorEl(null);
   };
 
-  const Test = e => {
-    console.log('Test: ', e);
-  };
-
   const loadMessage = e => {
     saveMessages(null, null, ivalue);
     setIvalue('');
@@ -567,6 +589,64 @@ const DmRoom = ({ match }) => {
     if (e.key === 'Enter') {
       saveMessages(null, null, ivalue);
       setIvalue('');
+    }
+  };
+
+  const onAttachButton = () => {
+    var attachButton = document.getElementById('attachfile');
+    attachButton.click();
+  };
+
+  const onAttachFile = e => {
+    var files = e.target.files;
+    if (files) {
+      modalOpen();
+      var fileName = files[0].name;
+      var path =
+        yyyyMMddHHmmsss().substr(0, 8) +
+        '/' +
+        curRoomId +
+        '/' +
+        sender.uId +
+        '/' +
+        fileName;
+
+      var cbProgress = function(snapshot) {
+        // 진행과정
+      };
+
+      var cbError = function(error) {
+        // 에러발생
+        console.log(error);
+        modalClose();
+        alert('업로드 중 에러가 발생했습니다.');
+      };
+
+      var cbComplete = function() {
+        // 완료
+        // 프로그레스바 닫기
+        modalClose();
+
+        // 완료 다운로드 링크 메세지 보내기
+        saveMessages(fileName, path, '다운로드');
+
+        // files 리셋
+        console.log('업로드 완료!');
+      };
+
+      var uploadTask = firebase
+        .storage()
+        .ref()
+        .child(path)
+        .put(files[0]);
+
+      // 프로그레스바
+      uploadTask.on(
+        'state_changed',
+        cbProgress.bind(this),
+        cbError.bind(this),
+        cbComplete.bind(this),
+      );
     }
   };
 
@@ -619,9 +699,33 @@ const DmRoom = ({ match }) => {
         </AppBar>
       </div>
 
-      <Link to="/DmRoomList">RoomList로</Link>
+      <Link to="/DmRoomList">
+        <KeyboardBackspaceIcon />
+      </Link>
+      <UploadModal isOpen={uploadModal} close={modalClose} />
 
-      <div id="chatdiv">
+      <div
+        id="messageList"
+        style={{ border: '1px solid', width: '100%', height: '600px' }}
+      >
+        {messageList.map((message, index) => {
+          console.log(message.userImage);
+          return (
+            <Message
+              key={index}
+              userImage={message.userImage}
+              userName={message.userName}
+              message={message.message}
+              timeStamp={message.timeStamp}
+              direct={message.direct}
+              fileName={message.fileName}
+              path={message.path}
+            />
+          );
+        })}
+      </div>
+
+      <div id="chatdiv" style={{ marginBottom: '40px' }}>
         <input
           type="text"
           placeholder="텍스트를 입력하세요"
@@ -634,20 +738,18 @@ const DmRoom = ({ match }) => {
           style={{ cursor: 'pointer' }}
           onClick={loadMessage}
         />
+        <AttachFileIcon
+          color="primary"
+          style={{ cursor: 'pointer' }}
+          onClick={onAttachButton}
+        />
+        <input
+          type="file"
+          id="attachfile"
+          style={{ display: 'none' }}
+          onChange={onAttachFile}
+        ></input>
       </div>
-
-      {messageList.map((message, index) => {
-        return (
-          <Message
-            key={index}
-            userImage={message.userImage}
-            userName={message.userName}
-            message={message.message}
-            timeStamp={message.timeStamp}
-            direct={message.direct}
-          ></Message>
-        );
-      })}
     </>
   );
 };

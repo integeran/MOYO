@@ -37,9 +37,9 @@ public class CommunityRestController {
 		try {
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 
-			resultMap.put("sender", tempObject(5, "INDONG", 28, "m", null, 1, 2, "kunder@kakao.com", 0, 1, "2020-01-20 06:28:47", "2020-01-20 06:28:47"));
+			resultMap.put("receiver", tempObject(5, "INDONG", 28, "m", null, 1, 2, "kunder@kakao.com", 0, 1, "2020-01-20 06:28:47", "2020-01-20 06:28:47"));
 			//resultMap.put("receiver", tempObject(6, "SUNGCHAN", 25, "m", null, 2, 5, "tjdcksdl00@kakao.com", 0, 2, "2020-01-22 16:28:47", "2020-01-23 19:21:43"));
-			resultMap.put("receiver", tempObject(3, "SOOAN", 22, "w", null, 3, 7, "jmiha@kakao.com", 0, 2, "2020-01-23 15:22:37", "2020-01-24 19:22:15"));
+			resultMap.put("sender", tempObject(3, "SOOAN", 22, "w", null, 3, 7, "jmiha@kakao.com", 0, 2, "2020-01-23 15:22:37", "2020-01-24 19:22:15"));
 			return response(resultMap, HttpStatus.OK, true);
 		} catch(RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
