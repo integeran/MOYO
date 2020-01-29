@@ -57,7 +57,7 @@ const Login = () => {
     <div
       style={{
         display: 'flex',
-        height: '100vh',
+        height: 'inherit',
         alignItems: 'center',
         justifyContent: 'center',
       }}

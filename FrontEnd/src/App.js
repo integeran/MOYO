@@ -7,10 +7,15 @@ import AccompanyListDetail from './pages/acc/AccompanyListDetail';
 import CategoryNav from './components/common/CategoryNav';
 import styled from 'styled-components';
 import { Route } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import Container from '@material-ui/core/Container';
 
-const Div = styled.div`
+const StyledContainer = styled(Container)`
+  height: inherit;
+`;
+const StyledDiv = styled.div`
   width: inherit;
   height: inherit;
   display: flex;
@@ -19,17 +24,22 @@ const Div = styled.div`
 `;
 
 const App = () => {
+  const location = useLocation();
   return (
-    <Div>
-      <Route exact path="/" component={Login} />
-      <Route path="/signup" component={Signup} />
-      <Route exact path="/acc" component={AccompanyMain} />
-      <Route path="/acc/accSetLoc" component={AccompanyLonationSelect} />
-      <Route path="/acc/accSetDate" component={AccompanyDateSelect} />
-      <Route exact path="/acc/accList" component={AccompanyList} />
-      <Route path="/acc/accList/:id" component={AccompanyListDetail} />
-      <CategoryNav />
-    </Div>
+    <StyledDiv>
+      <StyledContainer>
+        <Route exact path="/" component={Login} />
+        <Route path="/signup" component={Signup} />
+        <Route exact path="/acc" component={AccompanyMain} />
+        <Route path="/acc/accSetLoc" component={AccompanyLonationSelect} />
+        <Route path="/acc/accSetDate" component={AccompanyDateSelect} />
+        <Route exact path="/acc/accList" component={AccompanyList} />
+        <Route path="/acc/accList/:id" component={AccompanyListDetail} />
+      </StyledContainer>
+      {!(location.pathname === '/' || location.pathname === '/signup') && (
+        <CategoryNav />
+      )}
+    </StyledDiv>
   );
 };
 

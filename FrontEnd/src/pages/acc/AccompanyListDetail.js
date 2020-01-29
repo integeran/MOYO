@@ -1,5 +1,4 @@
 import React from 'react';
-import Container from '@material-ui/core/Container';
 import styled from 'styled-components';
 
 const date = {
@@ -25,17 +24,8 @@ const date = {
   wantGender: 'N',
 };
 
-const ContainerStyled = styled(Container)`
-  height: inherit;
-  background: #eeeeee;
-`;
-
 const AccompanyListDetail = () => {
-  return (
-    <>
-      <ContainerStyled maxWidth="sm"></ContainerStyled>
-    </>
-  );
+  return <div></div>;
 };
 
 export default AccompanyListDetail;

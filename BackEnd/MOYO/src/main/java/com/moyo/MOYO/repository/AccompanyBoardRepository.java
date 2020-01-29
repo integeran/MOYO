@@ -5,9 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.moyo.MOYO.dto.AccompanyBoard;
+import com.moyo.MOYO.dto.Filter;
 
 public interface AccompanyBoardRepository {
-	public List<AccompanyBoard> selectAll(Map<String, Object> map);
+	public List<AccompanyBoard> selectAll(Filter filter);
 	
 	public AccompanyBoard selectOne(int acBoardId);
 	
