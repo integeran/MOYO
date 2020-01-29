@@ -29,7 +29,7 @@
 	</select>
 	
 	<select id="selectAll" parameterType="map" resultType="accompanyBoard">
-		SELECT u.nickname nickname, ab.*, c.name city, na.name nation, tt.name type
+		SELECT u.nickname, u.age, u.gender, u.image, ab.*, c.name city, na.name nation, tt.name type
 		  FROM accompany_board ab
 		  left outer join user u on ab.u_id = u.u_id
 		  left outer join city c on ab.c_id = c.c_id
