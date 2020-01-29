@@ -23,6 +23,12 @@ const AccompanyMain = () => {
       state: { prevpath: history.location.pathname },
     });
   };
+  const handleAccompanyWriteClick = () => {
+    history.push({
+      pathname: '/acc/write',
+      state: { prevpath: history.location.pathname },
+    });
+  };
   return (
     <div>
       <Header leftSet="뒤로" midTitle="메인" rightSet="채팅" />
@@ -31,7 +37,9 @@ const AccompanyMain = () => {
         <MainButton variant="outlined" onClick={handleAccompanyFindClick}>
           동행 구하기
         </MainButton>
-        <MainButton variant="outlined">동행 글 작성</MainButton>
+        <MainButton variant="outlined" onClick={handleAccompanyWriteClick}>
+          동행 글 작성
+        </MainButton>
       </MainButtonDiv>
       <p>일정</p>
     </div>

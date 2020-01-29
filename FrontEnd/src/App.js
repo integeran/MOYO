@@ -11,6 +11,7 @@ import { useLocation } from 'react-router';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Container from '@material-ui/core/Container';
+import AccompanyWrite from './pages/acc/AccompanyWrite';
 
 const StyledContainer = styled(Container)`
   position: relative;
@@ -40,6 +41,7 @@ const App = () => {
         <Route path="/acc/accSetDate" component={AccompanyDateSelect} />
         <Route exact path="/acc/accList" component={AccompanyList} />
         <Route path="/acc/accList/:id" component={AccompanyDetail} />
+        <Route path="/acc/write" component={AccompanyWrite} />
       </StyledContainer>
       {!(location.pathname === '/' || location.pathname === '/signup') && (
         <CategoryNav />

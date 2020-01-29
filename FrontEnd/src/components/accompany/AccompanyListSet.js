@@ -13,11 +13,17 @@ const ListComponent = styled.div`
   margin-bottom: 7rem;
 `;
 
-const AccompanyListSet = () => {
+const AccompanyListSet = accDate => {
   const accBoardList = useSelector(state => state.accompanyBoard.boardList);
   const history = useHistory();
-  const handleBoardClick = id => {
-    history.push('/acc/accList/' + id);
+  const handleBoardClick = board => {
+    history.push({
+      pathname: '/acc/accList/' + board.acBoardId,
+      state: {
+        prevpath: history.location.pathname,
+        board: board,
+      },
+    });
   };
   return (
     <ListComponent>
@@ -25,7 +31,7 @@ const AccompanyListSet = () => {
         <AccompanyListPaper
           key={board.acBoardId}
           boardInfo={board}
-          onClick={() => handleBoardClick(board.acBoardId)}
+          onClick={() => handleBoardClick(board)}
         />
       ))}
     </ListComponent>

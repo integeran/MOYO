@@ -27,6 +27,7 @@ const AccompanyFilterDialog = ({
   open,
   handleClose,
 }) => {
+  const getAgeLabel = age => age + '대' + (age === '50' ? '+' : '');
   const handleSubmitFilter = () => {
     handleClose();
   };
@@ -35,7 +36,7 @@ const AccompanyFilterDialog = ({
     <Dialog open={open} maxWidth="md" fullWidth onClose={handleClose}>
       <DialogTitle>필터링</DialogTitle>
       <DialogContent>
-        <FormControl>
+        <FormControl fullWidth>
           <FormLabel>성별</FormLabel>
           <RadioGroup
             name="gender"
@@ -49,7 +50,7 @@ const AccompanyFilterDialog = ({
           </RadioGroup>
         </FormControl>
 
-        <FormControl>
+        <FormControl fullWidth>
           <FormLabel>나이</FormLabel>
           <FormGroup row>
             {Object.keys(filterAge).map(age => (
@@ -63,13 +64,13 @@ const AccompanyFilterDialog = ({
                     value={age}
                   />
                 }
-                label={`${age}` + '대' + (`${age}` === '50' ? '+' : '')}
+                label={getAgeLabel(`${age}`)}
               />
             ))}
           </FormGroup>
         </FormControl>
 
-        <FormControl>
+        <FormControl fullWidth>
           <FormLabel>여행타입</FormLabel>
           <FormGroup row>
             {Object.keys(filterType).map(type => (
