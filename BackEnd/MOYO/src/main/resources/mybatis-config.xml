@@ -12,11 +12,7 @@
 		<typeAlias type="com.moyo.MOYO.dto.CommunityComment" alias="communityComment"/>
 		<typeAlias type="com.moyo.MOYO.dto.User" alias="user"/>
 		<typeAlias type="com.moyo.MOYO.dto.AccompanyBoard" alias="accompanyBoard"/>
-		<typeAlias type="com.moyo.MOYO.dto.ScheduleList" alias="scheduleList"/>
-		<typeAlias type="com.moyo.MOYO.dto.DailyAccompany" alias="dailyAccompany"/>
-		<typeAlias type="com.moyo.MOYO.dto.DailyMemo" alias="dailyMemo"/>
-		<typeAlias type="com.moyo.MOYO.dto.Postmap" alias="postmap"/>
-		<typeAlias type="com.moyo.MOYO.dto.Postmaplike" alias="postmaplike"/>
+		<typeAlias type="com.moyo.MOYO.dto.Filter" alias="filter"/>
 	</typeAliases>
 	
 	<mappers>
