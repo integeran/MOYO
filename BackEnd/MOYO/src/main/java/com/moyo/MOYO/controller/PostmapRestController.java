@@ -41,7 +41,7 @@ public class PostmapRestController {
 			return response(pService.selectAll(map), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
 			log.error("PostmapRestController - selectAll : ", latitude,longitude);
-			return response(pService.selectAll(map), HttpStatus.CONFLICT, false);
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
 	
@@ -52,7 +52,7 @@ public class PostmapRestController {
 			return response(pService.selectOne(pmId), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
 			log.error("PostmapRestController - selectOne : ",pmId);
-			return response(pService.selectOne(pmId), HttpStatus.CONFLICT, false);
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
 	
@@ -63,7 +63,7 @@ public class PostmapRestController {
 			return response(pService.insertPostmap(postmap), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
 			log.error("PostmapRestController - insertPostmap : ",postmap);
-			return response(pService.insertPostmap(postmap), HttpStatus.CONFLICT, false);
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
 	
@@ -74,7 +74,7 @@ public class PostmapRestController {
 			return response(pService.updatePostmap(postmap), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
 			log.error("PostmapRestController - updatePostmap : ",postmap);
-			return response(pService.updatePostmap(postmap), HttpStatus.CONFLICT, false);
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
 	
@@ -85,7 +85,7 @@ public class PostmapRestController {
 			return response(pService.deletePostmap(pmId), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
 			log.error("PostmapRestController - deletePostmap : ",pmId);
-			return response(pService.deletePostmap(pmId), HttpStatus.CONFLICT, false);
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
 	
@@ -96,7 +96,7 @@ public class PostmapRestController {
 			return response(pService.checkDuration(today), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
 			log.error("PostmapRestController - checkDuration : ", today);
-			return response(pService.checkDuration(today), HttpStatus.CONFLICT, true);
+			return response(e.getMessage(), HttpStatus.CONFLICT, true);
 		}
 	}
 	
@@ -105,14 +105,14 @@ public class PostmapRestController {
 		try {
 			log.trace("PostmapRestController - likePostmap : ", postmaplike);
 			boolean isDuplicate = pService.checkLikeDuplicate(postmaplike.getUId());
-			if(isDuplicate) {	//유저가 이미 좋아요 눌렀는지 체크
-				return response(pService.likePostmap(postmaplike), HttpStatus.CONFLICT, false);
-			}else {
+			if(isDuplicate) {	//유저가 이미 좋아요 눌렀으면 delete
+				return response(pService.deletePostmapLike(postmaplike.getPmId()), HttpStatus.OK, true);
+			}else {	
 				return response(pService.likePostmap(postmaplike), HttpStatus.OK, true);
 			}
 		} catch (RuntimeException e) {
 			log.error("PostmapRestController - likePostmap : ",postmaplike);
-			return response(pService.likePostmap(postmaplike), HttpStatus.CONFLICT, false);
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
 	
@@ -123,7 +123,7 @@ public class PostmapRestController {
 			return response(pService.deletePostmapLike(pmLikeId), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
 			log.error("PostmapRestController - deletePostmapLike : ",pmLikeId);
-			return response(pService.deletePostmapLike(pmLikeId), HttpStatus.CONFLICT, false);
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
 	
