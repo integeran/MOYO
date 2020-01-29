@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.moyo.MOYO.dto.AccompanyBoard;
+import com.moyo.MOYO.dto.Filter;
 import com.moyo.MOYO.repository.AccompanyBoardRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +21,9 @@ public class AccompanyBoardServiceImpl implements AccompanyBoardService {
 	AccompanyBoardRepository acRepo;
 	
 	@Override
-	public List<AccompanyBoard> selectAll(Map<String, Object> map) {
-		log.trace("AccompanyBoardService - selectAll : ",map);
-		return acRepo.selectAll(map);
+	public List<AccompanyBoard> selectAll(Filter filter) {
+		log.trace("AccompanyBoardService - selectAll : ",filter);
+		return acRepo.selectAll(filter);
 	}
 	
 	@Override
