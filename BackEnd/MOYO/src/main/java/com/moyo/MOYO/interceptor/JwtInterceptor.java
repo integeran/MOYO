@@ -11,7 +11,7 @@ import com.moyo.MOYO.service.JwtService;
 
 @Component
 public class JwtInterceptor implements HandlerInterceptor {
-	private static final String HEADER_AUTH = "Authorization";
+	private static final String HEADER_AUTH = "userToken";
 	
 	@Autowired
 	private JwtService jwtService;
@@ -20,7 +20,6 @@ public class JwtInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		final String token = request.getHeader(HEADER_AUTH);
-		
 		if (token != null && jwtService.isValidToken(token)) {
 			return true;
 		} else {
