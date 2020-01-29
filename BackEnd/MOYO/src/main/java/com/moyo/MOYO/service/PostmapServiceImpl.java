@@ -74,9 +74,15 @@ public class PostmapServiceImpl implements PostmapService{
 	}
 
 	@Override
-	public boolean checkLikeDuplicate(int uId) {
-		log.trace("PostmapService - checkLikeDuplicate : ", uId);
-		return pRepo.checkLikeDuplicate(uId);
+	public int checkLikeDuplicate(Postmaplike postmaplike) {
+		log.trace("PostmapService - checkLikeDuplicate : ", postmaplike);
+		return pRepo.checkLikeDuplicate(postmaplike);
+	}
+
+	@Override
+	public Postmaplike selectLikeOne(Postmaplike postmaplike) {
+		log.trace("PostmapService - checkLikeDuplicate : ", postmaplike);
+		return pRepo.selectLikeOne(postmaplike);
 	}
 
 }
