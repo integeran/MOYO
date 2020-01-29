@@ -12,12 +12,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.moyo.MOYO.dto.AccompanyBoard;
 import com.moyo.MOYO.dto.Filter;
-import com.moyo.MOYO.dto.User;
 import com.moyo.MOYO.service.AccompanyBoardService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +28,6 @@ public class AccompanyBoardRestController {
 	AccompanyBoardService acService;
 	
 	@GetMapping("accompanyBoard/selectAll")
-	@ResponseBody
 	public ResponseEntity<Map<String, Object>> selectAll(@RequestBody Filter filter) {
 		try {
 			log.trace("AccompanyBoardRestController - selectAll : ",filter);
