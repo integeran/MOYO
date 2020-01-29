@@ -13,6 +13,13 @@
 		<typeAlias type="com.moyo.MOYO.dto.User" alias="user"/>
 		<typeAlias type="com.moyo.MOYO.dto.AccompanyBoard" alias="accompanyBoard"/>
 		<typeAlias type="com.moyo.MOYO.dto.Filter" alias="filter"/>
+		<typeAlias type="com.moyo.MOYO.dto.ScheduleList" alias="scheduleList"/>
+		<typeAlias type="com.moyo.MOYO.dto.DailyAccompany" alias="dailyAccompany"/>
+		<typeAlias type="com.moyo.MOYO.dto.DailyMemo" alias="dailyMemo"/>
+		<typeAlias type="com.moyo.MOYO.dto.Postmap" alias="postmap"/>
+		<typeAlias type="com.moyo.MOYO.dto.Postmaplike" alias="postmaplike"/>
+		<typeAlias type="com.moyo.MOYO.dto.Nation" alias="nation"/>
+		<typeAlias type="com.moyo.MOYO.dto.City" alias="city"/>
 	</typeAliases>
 	
 	<mappers>
