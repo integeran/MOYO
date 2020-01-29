@@ -16,6 +16,7 @@ export const initialState = {
   roomList: [],
   messageList: [],
   waitTest: true,
+  loadbar: 0,
 };
 
 export const DM_INIT = 'DM_INIT';
@@ -24,6 +25,7 @@ export const DM_ISOPENROOM = 'DM_ISOPENROOM';
 export const DM_ROOMLIST_UPDATE = 'DM_ROOMLIST_UPDATE';
 export const DM_MESSAGELIST_UPDATE = 'DM_MESSAGELIST_UPDATE';
 export const DM_CHANGE_RECEIVER = 'DM_CHANGE_RECEIVER';
+export const DM_CHANGE_LOADBAR = 'DM_CHANGE_LOADBAR';
 
 export const initAction = res => {
   return {
@@ -60,6 +62,13 @@ export const messageList_updateAction = res => {
 export const changeReceiverAction = res => {
   return {
     type: DM_CHANGE_RECEIVER,
+    payload: res,
+  };
+};
+
+export const changeLoadbarAction = res => {
+  return {
+    type: DM_CHANGE_LOADBAR,
     payload: res,
   };
 };
@@ -109,6 +118,13 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         receiver: action.payload,
+      };
+    }
+
+    case DM_CHANGE_LOADBAR: {
+      return {
+        ...state,
+        loadbar: action.payload,
       };
     }
 
