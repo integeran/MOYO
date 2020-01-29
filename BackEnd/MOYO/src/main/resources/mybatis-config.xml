@@ -11,6 +11,7 @@
 		<typeAlias type="com.moyo.MOYO.dto.Community" alias="community"/>
 		<typeAlias type="com.moyo.MOYO.dto.User" alias="user"/>
 		<typeAlias type="com.moyo.MOYO.dto.AccompanyBoard" alias="accompanyBoard"/>
+		<typeAlias type="com.moyo.MOYO.dto.Filter" alias="filter"/>
 	</typeAliases>
 	
 	<mappers>
