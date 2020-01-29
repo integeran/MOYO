@@ -20,6 +20,9 @@ const initialState = {
 
       uId: 1,
       nickname: '하지수',
+      age: 2,
+      image: '../../assets/img/iu.jpg',
+      gender: 'M',
 
       nId: 2,
       nation: '프랑스',
@@ -29,7 +32,7 @@ const initialState = {
 
       tTypeId: 1,
       type: '관광',
-      wantAge: 2,
+      wantAge: '1|2|3',
       wantGender: 'N',
     },
     {

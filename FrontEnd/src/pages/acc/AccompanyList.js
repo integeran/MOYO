@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
@@ -92,7 +92,7 @@ const AccompanyList = () => {
       </LocationDiv>
       <DateDiv onClick={handleDateSelect}>{accDate}</DateDiv>
       <AccompanySearchBar />
-      <AccompanyListSet />
+      <AccompanyListSet accDate={accDate} />
       <CenterFab
         variant="extended"
         aria-label="filter"

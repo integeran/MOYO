@@ -1,6 +1,5 @@
 import React from 'react';
 import { useHistory } from 'react-router';
-import { AppBar, Toolbar, IconButton } from '@material-ui/core';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ChatIcon from '@material-ui/icons/Chat';
 import Grid from '@material-ui/core/Grid';
@@ -11,13 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IU from '../../assets/img/iu.jpg';
 import styled from 'styled-components';
-
-const StyledAppBar = styled(({ ...other }) => <AppBar {...other} />)`
-  & .MuiTypography-h6 {
-    flex-grow: 1;
-    text-align: center;
-  }
-`;
+import BaseAppBar from '../../components/common/BaseAppBar';
 
 const CenterGrid = styled(Grid)`
   display: flex;
@@ -37,27 +30,42 @@ const StyledDivider = styled(Divider)`
 
 const AccompanyListDetail = () => {
   const history = useHistory();
+  const boardData = history.location.state.board;
+  console.log(boardData);
+
+  const convertAgeToStr = age => {
+    age = Number(age);
+    return age === 0 ? '무관' : Number(age) + '0대' + (age === '5' ? '+' : '');
+  };
+  const convertWantAge = ageArrStr =>
+    String(ageArrStr)
+      .split('|')
+      .map(age => convertAgeToStr(age))
+      .join(' / ');
+
+  const convertGenderToStr = gender => {
+    switch (String(gender)) {
+      case 'M':
+        return '남성';
+      case 'F':
+        return '여성';
+      default:
+        return '무관';
+    }
+  };
+
   const handleMoveBack = () => {
     history.goBack();
   };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <StyledAppBar color="inherit" elevation={0} position="sticky">
-        <Toolbar>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="back"
-            onClick={handleMoveBack}
-          >
-            <ArrowBackIosIcon />
-          </IconButton>
-          <Typography variant="h6">안녕?</Typography>
-          <IconButton edge="end" color="inherit" aria-label="message">
-            <ChatIcon />
-          </IconButton>
-        </Toolbar>
-      </StyledAppBar>
+      <BaseAppBar
+        title={boardData.title}
+        Icon1={<ArrowBackIosIcon />}
+        Icon2={<ChatIcon />}
+        handleClick1={handleMoveBack}
+      />
       <Grid
         container
         direction="column"
@@ -71,16 +79,17 @@ const AccompanyListDetail = () => {
           </CenterGrid>
           <Grid item container direction="column" xs>
             <Grid item>
-              <Typography variant="h6">란코루</Typography>
+              <Typography variant="h6">{boardData.nickname}</Typography>
             </Grid>
             <Grid item>
               <Typography variant="body1" color="textSecondary">
-                성별: 남자 /연령: 20대
+                성별: {convertGenderToStr(boardData.gender)} / 연령:{' '}
+                {convertAgeToStr(boardData.age)}
               </Typography>
             </Grid>
             <Grid item>
               <Typography variant="body1" color="textSecondary">
-                작성일자: 2020.01.12
+                여행일자: {boardData.startDate} ~ {boardData.endDate}
               </Typography>
             </Grid>
           </Grid>
@@ -96,18 +105,18 @@ const AccompanyListDetail = () => {
       >
         <Grid item container xs direction="column">
           <Grid item>
-            <Typography variant="h6" style={{ marginLeft: '2rem' }}>
-              이런 사람 찾아요!
+            <Typography variant="subtitle1" style={{ marginLeft: '2rem' }}>
+              이런 사람이면 더 좋겠어요!
             </Typography>
           </Grid>
           <Grid item>
             <Typography variant="body1" style={{ marginLeft: '3rem' }}>
-              - 연령대: 10대 / 20대
+              - 연령대: {convertWantAge(boardData.wantAge)}
             </Typography>
           </Grid>
           <Grid item>
             <Typography variant="body1" style={{ marginLeft: '3rem' }}>
-              - 성별 : 무관
+              - 성별 : {convertGenderToStr(boardData.wantGender)}
             </Typography>
           </Grid>
         </Grid>
@@ -120,7 +129,7 @@ const AccompanyListDetail = () => {
             align="center"
             style={{ borderRight: '1px solid #DDDDDD' }}
           >
-            영국/런던
+            {boardData.nation}/{boardData.city}
           </Typography>
         </Grid>
         <Grid item xs={4}>
@@ -129,12 +138,12 @@ const AccompanyListDetail = () => {
             align="center"
             style={{ borderRight: '1px solid #DDDDDD' }}
           >
-            1.28일(화)
+            {boardData.startDate}
           </Typography>
         </Grid>
         <Grid item xs={4}>
           <Typography variant="body2" align="center">
-            타입: 관광
+            타입: {boardData.type}
           </Typography>
         </Grid>
       </Grid>
@@ -142,33 +151,7 @@ const AccompanyListDetail = () => {
         <Container>
           <Paper variant="outlined">
             <Typography variant="body2" style={{ margin: '1rem' }}>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum.
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum.
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum.
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+              {boardData.contents}
             </Typography>
           </Paper>
         </Container>
