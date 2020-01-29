@@ -1,11 +1,13 @@
 import React from 'react';
 import Category from '../components/Category';
 import ContentsContainer from '../components/ContentsContainer';
+import Postmap from '../components/Postmap';
+import Test from '../components/Test';
 
 const Main = () => {
   return (
     <>
-      {/* <ContentsContainer categroy={category} /> */}
+      <Postmap />
       <Category />
     </>
   );
