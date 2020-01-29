@@ -24,6 +24,9 @@ public class AccompanyBoard {
 	private String updateDate;
 	
 	private String nickname;
+	private int age;
+	private String gender;
+	private String image;
 	private String nation;
 	private String city;
 	private String type;
