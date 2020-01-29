@@ -83,4 +83,12 @@
 	    where ac_board_id = #{acBoardId}
 	</update>
 	
+	<select id="selectNation" resultType="nation">
+		select * from nation;
+	</select>
+	
+	<select id="selectCity" resultType="city" parameterType="int">
+		select c.* from city c join nation n on c.n_id = n.n_id where n.n_id = #{nId};
+	</select>
+	
 </mapper>

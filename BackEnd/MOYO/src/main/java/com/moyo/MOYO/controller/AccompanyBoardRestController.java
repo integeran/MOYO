@@ -30,7 +30,6 @@ public class AccompanyBoardRestController {
 	AccompanyBoardService acService;
 	
 	@GetMapping("accompanyBoard/selectAll")
-	@ResponseBody
 	public ResponseEntity<Map<String, Object>> selectAll(@RequestBody Filter filter) {
 		try {
 			log.trace("AccompanyBoardRestController - selectAll : ",filter);
@@ -84,6 +83,29 @@ public class AccompanyBoardRestController {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
+	
+	@GetMapping("accompanyBoard/selectNation")
+	public ResponseEntity<Map<String, Object>> selectNation() {
+		try {
+			log.trace("AccompanyBoardRestController - selectNation ");
+			return response(acService.selectNation(), HttpStatus.OK, true);
+		} catch (RuntimeException e) {
+			log.error("AccompanyBoardRestController - selectNation ");
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
+	@GetMapping("accompanyBoard/selectCity/{nId}")
+	public ResponseEntity<Map<String, Object>> selectCity(@RequestParam int nId) {
+		try {
+			log.trace("AccompanyBoardRestController - selectCity : ",nId);
+			return response(acService.selectCity(nId), HttpStatus.OK, true);
+		} catch (RuntimeException e) {
+			log.error("AccompanyBoardRestController - selectCity : ",nId);
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
 	public ResponseEntity<Map<String, Object>> response(Object data, HttpStatus httpstatus, boolean status) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("data", data);

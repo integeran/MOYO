@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.moyo.MOYO.dto.AccompanyBoard;
+import com.moyo.MOYO.dto.City;
 import com.moyo.MOYO.dto.Filter;
+import com.moyo.MOYO.dto.Nation;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -60,5 +62,17 @@ public class AccompanyBoardRepositoryImpl implements AccompanyBoardRepository {
 	public List<AccompanyBoard> search(HashMap<String, Object> filter) {
 		log.trace("AccompanyBoardRepository - search : ", filter);
 		return session.selectList(ns + "search", filter);
+	}
+
+	@Override
+	public List<Nation> selectNation() {
+		log.trace("AccompanyBoardRepository - selectNation ");
+		return session.selectList(ns+"selectNation");
+	}
+
+	@Override
+	public List<City> selectCity(int nId) {
+		log.trace("AccompanyBoardRepository - selectCity : ",nId);
+		return session.selectList(ns+"selectCity",nId);
 	}
 }
