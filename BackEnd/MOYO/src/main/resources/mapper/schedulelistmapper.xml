@@ -1,19 +1,31 @@
-  <?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="moyo.schedulelistmapper">
 	<select id="selectAll" resultType="scheduleList">
-		select * from schedule_list
+		select u.nickname nickname, c.name city, na.name nation, sl.* 
+		from schedule_list sl
+		left outer join user u on sl.u_id = u.u_id
+		left outer join nation na on sl.n_id = na.n_id
+		left outer join city c on sl.c_id = c.c_id
 	</select>
 	<select id="selectAllByUser" parameterType="int" resultType="scheduleList">
-		select * from schedule_list
-		where u_id = #{uId}
-		order by start_date
+		select u.nickname nickname, c.name city, na.name nation, sl.* 
+		from schedule_list sl
+		left outer join user u on sl.u_id = u.u_id
+		left outer join nation na on sl.n_id = na.n_id
+		left outer join city c on sl.c_id = c.c_id
+		where sl.u_id = #{uId}
+		order by sl.start_date
 	</select>
 	<select id="selectOne" parameterType="int" resultType="scheduleList">
-		select * from schedule_list
-		where s_list_id = #{sListId}
+		select u.nickname nickname, c.name city, na.name nation, sl.*
+		from schedule_list sl
+		left outer join user u on sl.u_id = u.u_id
+		left outer join nation na on sl.n_id = na.n_id
+		left outer join city c on sl.c_id = c.c_id
+		where sl.s_list_id = #{sListId}
 	</select>
 	<insert id="createScheduleList" parameterType="scheduleList">
 		insert into 
