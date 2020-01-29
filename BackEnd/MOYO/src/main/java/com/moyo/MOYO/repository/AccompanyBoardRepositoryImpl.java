@@ -50,7 +50,6 @@ public class AccompanyBoardRepositoryImpl implements AccompanyBoardRepository {
 		log.trace("AccompanyBoardRepository - update");
 		return session.update(ns + "updateAccompanyBoard", accompanyBoard);
 	}
-
 	@Override
 	public List<AccompanyBoard> selectFilter(HashMap<String, Object> filter) {
 		log.trace("AccompanyBoardRepository - selectFilter : ", filter);
@@ -62,6 +61,4 @@ public class AccompanyBoardRepositoryImpl implements AccompanyBoardRepository {
 		log.trace("AccompanyBoardRepository - search : ", filter);
 		return session.selectList(ns + "search", filter);
 	}
-	
-
 }

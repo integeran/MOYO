@@ -30,6 +30,18 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
+	public User selectOneBySocialId(String socialId, int provider) {
+		log.trace("UserService - selectOneBySocialId");
+		return uRepo.selectOneBySocialId(socialId, provider);
+	}
+	
+	@Override
+	public User selectOneByNickname(String nickname) {
+		log.trace("UserService - selectOneByNickname");
+		return uRepo.selectOneByNickname(nickname);
+	}
+	
+	@Override
 	public int register(User user) {
 		log.trace("UserService - register");
 		return uRepo.register(user);
@@ -46,17 +58,4 @@ public class UserServiceImpl implements UserService {
 		log.trace("UserService - update");
 		return uRepo.update(user);
 	}
-
-	@Override
-	public User checkDuplicate(String word) {
-		log.trace("UserService - checkDuplicate");
-		return uRepo.checkDuplicate(word);
-	}
-
-	@Override
-	public List<User> searchByNickname(String word) {
-		log.trace("UserService - searchByNickname");
-		return uRepo.searchByNickname(word);
-	}
-
 }
