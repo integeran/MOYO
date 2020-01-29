@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.moyo.MOYO.dto.AccompanyBoard;
+import com.moyo.MOYO.dto.Filter;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,9 +22,9 @@ public class AccompanyBoardRepositoryImpl implements AccompanyBoardRepository {
 	SqlSession session;
 	
 	@Override
-	public List<AccompanyBoard> selectAll(Map<String, Object> map) {
-		log.trace("AccompanyBoardRepository - selectAll : ",map);
-		return session.selectList(ns + "selectAll", map);
+	public List<AccompanyBoard> selectAll(Filter filter) {
+		log.trace("AccompanyBoardRepository - selectAll : ",filter);
+		return session.selectList(ns + "selectAll", filter);
 	}
 	
 	@Override
