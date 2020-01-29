@@ -8,7 +8,7 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import styled from 'styled-components';
 
 const BottomNavigationStyled = styled(BottomNavigation)`
-  border-top: 2px solid gray;
+  border-top: 1px solid gray;
 `;
 
 const BottomNavigationActionStyled = styled(BottomNavigationAction)`
@@ -17,11 +17,12 @@ const BottomNavigationActionStyled = styled(BottomNavigationAction)`
   }
 `;
 
-const Category = () => {
-  const [value, setValue] = useState('recents');
+const CategoryNav = () => {
+  const [value, setValue] = useState('accompany');
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
   return (
     <BottomNavigationStyled value={value} onChange={handleChange}>
       <BottomNavigationActionStyled
@@ -36,7 +37,7 @@ const Category = () => {
       />
       <BottomNavigationActionStyled
         label="채팅"
-        value="chat"
+        value="dm"
         icon={<ChatIcon />}
       />
       <BottomNavigationActionStyled
@@ -46,11 +47,11 @@ const Category = () => {
       />
       <BottomNavigationActionStyled
         label="더보기"
-        value="moer"
+        value="more"
         icon={<MoreHorizIcon />}
       />
     </BottomNavigationStyled>
   );
 };
 
-export default Category;
+export default CategoryNav;

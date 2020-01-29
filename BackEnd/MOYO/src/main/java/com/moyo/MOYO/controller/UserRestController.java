@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.moyo.MOYO.dto.User;
+import com.moyo.MOYO.service.JwtService;
 import com.moyo.MOYO.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -27,13 +28,16 @@ public class UserRestController {
 	@Autowired
 	UserService uService;
 	
+	@Autowired
+	JwtService jwtService;
+	
 	@GetMapping("user/selectAll")
 	public ResponseEntity<Map<String, Object>> selectAll() {
 		try {
 			log.trace("UserRestController - selectAll");
 			return response(uService.selectAll(), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			return response(uService.selectAll(), HttpStatus.CONFLICT, false);
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
 	
@@ -43,27 +47,62 @@ public class UserRestController {
 			log.trace("UserRestController - selectOne");
 			return response(uService.selectOne(uId), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			return response(uService.selectOne(uId), HttpStatus.CONFLICT, false);
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
+	@GetMapping("user/selectOneBySocialId")
+	public ResponseEntity<Map<String, Object>> selectOneBySocialId(@RequestParam("socialId") String socialId, @RequestParam("provider") int provider) {
+		try {
+			log.trace("UserRestController - selectOneBySocialId");
+			return response(uService.selectOneBySocialId(socialId, provider), HttpStatus.OK, true);
+		} catch (RuntimeException e) {
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
+	@GetMapping("user/selectOneByNickname/{nickname}")
+	public ResponseEntity<Map<String, Object>> selectOneByNickname(@PathVariable String nickname) {
+		try {
+			log.trace("UserRestController - selectOneByNickname");
+			return response(uService.selectOneByNickname(nickname), HttpStatus.OK, true);
+		} catch (RuntimeException e) {
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
 	
 	@PostMapping("user/register")
 	public ResponseEntity<Map<String, Object>> register(@RequestBody User user) {
+		String token = null;
 		try {
 			log.trace("UserRestController - register");
-			return response(uService.register(user), HttpStatus.OK, true);
+			User registeredUser = uService.selectOneBySocialId(user.getSocialId(), user.getProvider());
+			User nicknameUser = uService.selectOneByNickname(user.getNickname());
+			if (registeredUser != null) {
+				return response("이미 존재하는 회원입니다.", HttpStatus.OK, false);
+			}
+			if (nicknameUser != null) {
+				return response("이미 존재하는 닉네임입니다.", HttpStatus.OK, false);
+			}
+			uService.register(user);
+			User loginUser = uService.selectOneBySocialId(user.getSocialId(), user.getProvider());
+			if (loginUser != null) {
+				token = jwtService.createLoginToken(loginUser);
+			}
+			return response(token, HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			return response(uService.register(user), HttpStatus.CONFLICT, false);
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
 	
-	@DeleteMapping("user/delete/?uId={}")
-	public ResponseEntity<Map<String, Object>> delete(@RequestParam int uId) {
+	@DeleteMapping("user/delete")
+	public ResponseEntity<Map<String, Object>> delete(@RequestParam("uId") int uId) {
+		System.out.println(uId);
 		try {
 			log.trace("UserRestController - delete");
 			return response(uService.delete(uId), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			return response(uService.delete(uId), HttpStatus.CONFLICT, false);
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
 	
@@ -73,8 +112,26 @@ public class UserRestController {
 			log.trace("UserRestController - update");
 			return response(uService.update(user), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			return response(uService.update(user), HttpStatus.CONFLICT, false);
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
+	}
+	
+	@PostMapping("user/issueToken")
+	public ResponseEntity<Map<String, Object>> issueToken(@RequestBody User user) {
+		try {
+			String token = null;
+			User loginUser = uService.selectOneBySocialId(user.getSocialId(), user.getProvider());
+			if (loginUser != null) {
+				token = jwtService.createLoginToken(loginUser);
+				return response(token, HttpStatus.OK, true);
+			} else {
+				token = jwtService.createLoginToken(loginUser);
+				return response(token, HttpStatus.CONFLICT, false);
+			}
+		} catch (RuntimeException e) {
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+		
 	}
 	
 	public ResponseEntity<Map<String, Object>> response(Object data, HttpStatus httpstatus, boolean status) {

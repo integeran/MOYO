@@ -1,8 +1,6 @@
 package com.moyo.MOYO.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +13,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.moyo.MOYO.dto.AccompanyBoard;
 import com.moyo.MOYO.dto.Filter;
 import com.moyo.MOYO.dto.User;
 import com.moyo.MOYO.service.AccompanyBoardService;
-import com.moyo.MOYO.service.UserService;
-import com.moyo.MOYO.service.UserServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.build.HashCodeAndEqualsPlugin.Sorted;
 
 @RestController
 @Slf4j
@@ -90,7 +84,6 @@ public class AccompanyBoardRestController {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
-
 	public ResponseEntity<Map<String, Object>> response(Object data, HttpStatus httpstatus, boolean status) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("data", data);

@@ -8,14 +8,14 @@ public interface UserRepository {
 	public List<User> selectAll();
 	
 	public User selectOne(int uId);
+
+	public User selectOneBySocialId(String socialId, int provider);
+	
+	public User selectOneByNickname(String nickname);
 	
 	public int register(User user);
 
 	public int delete(int uId);
 	
 	public int update(User user);
-	
-	public User checkDuplicate(String word);
-	
-	public List<User> searchByNickname(String word);
 }

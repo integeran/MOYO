@@ -61,7 +61,4 @@ public class AccompanyBoardServiceImpl implements AccompanyBoardService {
 		log.trace("AccompanyBoardService - search : ",filter);
 		return acRepo.search(filter);
 	}
-
-
-
 }
