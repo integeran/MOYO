@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
+@CrossOrigin("*")
 public class PostmapRestController {
 	
 	@Autowired
@@ -104,9 +106,8 @@ public class PostmapRestController {
 	private ResponseEntity<Map<String, Object>> likePostmap(@RequestBody Postmaplike postmaplike) {
 		try {
 			log.trace("PostmapRestController - likePostmap : ", postmaplike);
-			boolean isDuplicate = pService.checkLikeDuplicate(postmaplike.getUId());
-			if(isDuplicate) {	//유저가 이미 좋아요 눌렀으면 delete
-				return response(pService.deletePostmapLike(postmaplike.getPmId()), HttpStatus.OK, true);
+			if(pService.checkLikeDuplicate(postmaplike)==1) {	//유저가 이미 좋아요 눌렀으면 delete
+				return response(0, HttpStatus.OK, true);
 			}else {	
 				return response(pService.likePostmap(postmaplike), HttpStatus.OK, true);
 			}
