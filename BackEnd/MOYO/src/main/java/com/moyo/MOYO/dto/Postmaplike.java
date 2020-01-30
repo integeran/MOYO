@@ -7,13 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DailyMemo {
-	private int dMemoId;
+public class Postmaplike {
+	private int pmLikeId;
 	private int uId;
-	private String contents;
-	private String day;
-	private String registerDate;
-	private String updateDate;
-	private String nickname;
-	
+	private int pmId;
 }

@@ -11,9 +11,9 @@ public class DailyAccompany {
 	private int dAcId;
 	private int uId;
 	private int accompanyId;
-	private String accompanyNickname;
 	private String day;
 	private String registerDate;
 	private String updateDate;
-
+	private String nickname;
+	private String accompanyNickname;
 }

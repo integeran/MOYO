@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 public class ScheduleList {
 	private int sListId;
 	private int uId;
-	private String nickname;
 	private int nId;
-	private String nation;
 	private int cId;
-	private String city;
 	private String startDate;
 	private String endDate;
 	private String registerDate;
 	private String updateDate;
+	private String nickname;
+	private String nation;
+	private String city;
 }
