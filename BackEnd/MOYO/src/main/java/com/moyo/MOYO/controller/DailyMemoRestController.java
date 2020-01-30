@@ -44,7 +44,7 @@ public class DailyMemoRestController {
 	}
 	
 	@GetMapping("dailyMemo/selectAllByUser/{uId}")
-	public ResponseEntity<Map<String, Object>> selectAllByUser(int uId) {
+	public ResponseEntity<Map<String, Object>> selectAllByUser(@PathVariable int uId) {
 		try {
 			log.trace("DailyMemoRestController - selectAllByUser");
 			return response(dMemoService.selectAllByUser(uId), HttpStatus.OK, true);
@@ -58,6 +58,20 @@ public class DailyMemoRestController {
 		try {
 			log.trace("DailyMemoRestController - selectOne");
 			return response(dMemoService.selectOne(dMemoId), HttpStatus.OK, true);
+		} catch (RuntimeException e) {
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
+	@PostMapping("dailyMemo/post")
+	public ResponseEntity<Map<String, Object>> post(@RequestBody DailyMemo dailyMemo) {
+		try {
+			log.trace("DailyMemoRestController - post");
+			if (dMemoService.update(dailyMemo) == 1) {
+				return response(-1, HttpStatus.OK, true);
+			} else {
+				return response(dMemoService.create(dailyMemo), HttpStatus.OK, true);
+			}
 		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
