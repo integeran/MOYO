@@ -101,6 +101,7 @@ const Signup = props => {
       pushUserData('age', jwtData.user.age);
       pushUserData('gender', jwtData.user.gender);
       pushUserData('image', jwtData.user.image);
+      localStorage.setItem('token', resData.data.data);
       history.push({
         pathname: '/main',
       });
