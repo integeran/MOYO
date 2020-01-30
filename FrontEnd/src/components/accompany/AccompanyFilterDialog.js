@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import {
   Dialog,
@@ -26,12 +26,10 @@ const AccompanyFilterDialog = ({
   onTypeChange,
   open,
   handleClose,
+  handleSubmit,
 }) => {
   const getAgeLabel = age => age + '대' + (age === '50' ? '+' : '');
-  const handleSubmitFilter = () => {
-    handleClose();
-  };
-
+  useEffect(() => {}, []);
   return (
     <Dialog open={open} maxWidth="md" fullWidth onClose={handleClose}>
       <DialogTitle>필터링</DialogTitle>
@@ -94,7 +92,7 @@ const AccompanyFilterDialog = ({
         <Button onClick={handleClose} color="primary">
           취소
         </Button>
-        <Button onClick={handleSubmitFilter} color="primary">
+        <Button onClick={handleSubmit} color="primary">
           적용
         </Button>
       </DialogActions>

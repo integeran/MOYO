@@ -36,6 +36,7 @@ const CenterFab = styled(Fab)`
 const AccompanyList = () => {
   let history = useHistory();
   const dispatch = useDispatch();
+  const [dialogOpen, setDialogOpen] = useState(false);
   const { accNation, accCity, accDate } = useSelector(
     state => ({
       accNation: state.accompanyCondition.nation,
@@ -44,14 +45,14 @@ const AccompanyList = () => {
     }),
     [],
   );
-  const [open, setOpen] = useState(false);
-
   const { filterGender, filterAge, filterType } = useSelector(state => ({
     filterGender: state.accompanyFilter.gender,
     filterAge: state.accompanyFilter.age,
     filterType: state.accompanyFilter.type,
   }));
-
+  const handleSearchClick = () => {
+    console.log('search Result');
+  };
   const handleFilterGenderChange = e =>
     dispatch(accompanyFilterGender(e.target.value));
   const handleFilterAgeChange = name => e =>
@@ -62,13 +63,11 @@ const AccompanyList = () => {
     dispatch(
       accompanyFilterType({ ...filterType, [name.type]: e.target.checked }),
     );
-
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleFilteringClick = () => {
+    setDialogOpen(true);
   };
-
-  const handleClose = () => {
-    setOpen(false);
+  const handleSubmit = () => {
+    setDialogOpen(false);
   };
 
   const handleLocationSelect = () => {
@@ -77,7 +76,6 @@ const AccompanyList = () => {
       state: { prevpath: history.location.pathnmae },
     });
   };
-
   const handleDateSelect = () => {
     history.push({
       pathname: '/acc/accSetDate',
@@ -91,12 +89,12 @@ const AccompanyList = () => {
         {accNation.name}/{accCity.name}
       </LocationDiv>
       <DateDiv onClick={handleDateSelect}>{accDate}</DateDiv>
-      <AccompanySearchBar />
+      <AccompanySearchBar handleSearch={handleSearchClick} />
       <AccompanyListSet accDate={accDate} />
       <CenterFab
         variant="extended"
         aria-label="filter"
-        onClick={handleClickOpen}
+        onClick={handleFilteringClick}
       >
         <FilterListIcon />
         필터
@@ -108,8 +106,11 @@ const AccompanyList = () => {
         onGenderChange={handleFilterGenderChange}
         onAgeChange={handleFilterAgeChange}
         onTypeChange={handleFilterTypeChange}
-        open={open}
-        handleClose={() => handleClose()}
+        open={dialogOpen}
+        handleClose={() => {
+          setDialogOpen(false);
+        }}
+        handleSubmit={() => handleSubmit()}
       />
     </div>
   );
