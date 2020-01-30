@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.moyo.MOYO.dto.AccompanyBoard;
+import com.moyo.MOYO.dto.Filter;
 import com.moyo.MOYO.service.AccompanyBoardService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -28,25 +28,12 @@ public class AccompanyBoardRestController {
 	AccompanyBoardService acService;
 	
 	@GetMapping("accompanyBoard/selectAll")
-	public ResponseEntity<Map<String, Object>> selectAll(@RequestParam String searchDate, @RequestParam int nId, @RequestParam int cId,
-														@RequestParam(required=false) int[] wantAge, @RequestParam(required=false) String wantGender,
-														@RequestParam(required=false) int[] tType, @RequestParam(required=false) String searchCondition,
-														@RequestParam(required=false)  String searchWord, @RequestParam(required=false) String sortingCondition) {
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("searchDate", searchDate);
-		map.put("nId", nId);
-		map.put("cId", cId);
-		map.put("wantAge", wantAge);
-		map.put("wantGender", wantGender);
-		map.put("tType", tType);
-		map.put("searchCondition", searchCondition);
-		map.put("searchWord", searchWord);
-		map.put("sortingCondition", sortingCondition);
+	public ResponseEntity<Map<String, Object>> selectAll(@RequestBody Filter filter) {
 		try {
-			log.trace("AccompanyBoardRestController - selectAll : ",map);
-			return response(acService.selectAll(map), HttpStatus.OK, true);
+			log.trace("AccompanyBoardRestController - selectAll : ",filter);
+			return response(acService.selectAll(filter), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			log.error("AccompanyBoardRestController - selectAll : ",map);
+			log.error("AccompanyBoardRestController - selectAll : ",filter);
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}

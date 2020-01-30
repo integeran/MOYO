@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import { useDispatch } from 'react-redux';
 import { accompanyDate } from '../../modules/accompanyCondition';
+import { useHistory } from 'react-router';
 
 const CalendarStyled = styled(Calendar)`
   border: 0;
@@ -17,13 +18,17 @@ const ButtonContainer = styled.div`
   width: 90%;
 `;
 
-const AccompanyDateSelect = ({ history }) => {
+const AccompanyDateSelect = () => {
+  const history = useHistory();
   const diaspatch = useDispatch();
   const [date, setDate] = useState(null);
   const onChange = date => setDate(date);
   const HandleClick = () => {
     diaspatch(accompanyDate(date));
-    history.push('/acc/accList');
+    history.push({
+      pathname: '/acc/accList',
+      state: { prevpath: history.location.pathname },
+    });
   };
   return (
     <div>

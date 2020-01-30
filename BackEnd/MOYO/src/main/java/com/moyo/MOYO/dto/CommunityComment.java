@@ -14,5 +14,6 @@ public class CommunityComment {
 	private String contents;
 	private String registerDate;
 	private String updateDate;
+	private String nickname;
 
 }

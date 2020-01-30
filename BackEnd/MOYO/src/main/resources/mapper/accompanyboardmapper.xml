@@ -1,24 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="moyo.accompanyboardmapper">
-	<sql id="sortingCondition">
+
+	<sql id="searchSort">
 		<choose>
-			<when test="sortingCondition=='startDate'">
+			<when test="searchSort=='startDate'">
 				order by start_date
 			</when>
-			<when test="sortingCondition=='endDate'">
+			<when test="searchSort=='endDate'">
 				order by end_date
 			</when>
 			<otherwise>
-				order by register_date
+				order by update_date
 			</otherwise>
 		</choose>
 	</sql>
 
 	<select id="selectOne" parameterType="int" resultType="accompanyBoard">
-		select u.nickname nickname, ab.*, c.name city, na.name nation, tt.name type
+		select u.nickname, u.image, u.age, u.gender, ab.*, c.name city, na.name nation, tt.name type
 		  FROM accompany_board ab
 		  left outer join user u on ab.u_id = u.u_id
 		  left outer join city c on ab.c_id = c.c_id
@@ -27,8 +28,8 @@
 		 where ac_board_id = #{acBoardId}
 	</select>
 	
-	<select id="selectAll" parameterType="map" resultType="accompanyBoard">
-		SELECT u.nickname nickname, ab.*, c.name city, na.name nation, tt.name type
+	<select id="selectAll" parameterType="filter" resultType="accompanyBoard">
+		SELECT u.nickname, u.image, u.age, u.gender, ab.*, c.name city, na.name nation, tt.name type
 		  FROM accompany_board ab
 		  left outer join user u on ab.u_id = u.u_id
 		  left outer join city c on ab.c_id = c.c_id
@@ -38,14 +39,15 @@
 		   and #{nId} = ab.n_id
 		   and (case when #{cId}=0 then 1=1
 		             else #{cId}=ab.c_id end)
- 		   and (case when ifNull(#{wantAge},0)=0 then 1=1
-		             else ab.want_age in <foreach collection="#{wantAge}" item="value" open="(" close=")" separator=",">
+		             
+ 		   and (case when ifNull(#{searchAge},0)=0 then 1=1
+		             else u.age in <foreach collection="#{searchAge}" item="value" open="(" close=")" separator=",">
 					               					#{value}
 				          				 </foreach> end)
-		    and (case when ifNull(#{wantGender},"N")="N" then 1=1
-		             else #{wantGender}=ab.want_gender end)
+		    and (case when ifNull(#{searchGender},"N")="N" then 1=1
+		             else #{searchGender}=u.gender end)
 		   and (case when ifNull(#{tType},0)=0 then 1=1
-		             else ab.t_type_id in <foreach collection="#{tType}" item="value" open="(" close=")" separator=",">
+		             else ab.t_type_id in <foreach collection="#{searchType}" item="value" open="(" close=")" separator=",">
 					               					#{value}
 				          				 </foreach> end)
 		   <if test="searchCondition!=null">
@@ -61,7 +63,7 @@
 				</if>
 		  </if>
 		  and deadline_toggle = 'n'
-		   <include refid="sortingCondition"></include>		             
+		   <include refid="searchSort"></include>		             
 	</select>
 	
 	<insert id="createAccompanyBoard" parameterType="accompanyBoard" >
