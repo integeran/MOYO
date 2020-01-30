@@ -6,6 +6,8 @@ import auth from './auth';
 import loading from './loading';
 import planDate from './planDate';
 import morePlanTravel from './morePlanTravel';
+import morePlanCompanion from './morePlanCompanion';
+import morePlanMemo from './morePlanMemo';
 
 const rootReducer = combineReducers({
   auth,
@@ -15,6 +17,8 @@ const rootReducer = combineReducers({
   accompanyFilter,
   planDate,
   morePlanTravel,
+  morePlanCompanion,
+  morePlanMemo,
 });
 
 export default rootReducer;

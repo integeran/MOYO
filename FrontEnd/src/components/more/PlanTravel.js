@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import DateFnsUtils from '@date-io/date-fns';
-import moment from 'moment';
-import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import { useSelector, useDispatch } from 'react-redux';
+import moment from 'moment';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Divider from '@material-ui/core/Divider';
 import MenuItem from '@material-ui/core/MenuItem';
 import { storeSchedule } from '../../modules/morePlanTravel';
 
@@ -62,14 +60,30 @@ const PlanTravel = () => {
     setSelectedEndDate(selectedStartDate);
   }, [selectedStartDate]);
 
-  const [open, setOpen] = React.useState(false);
+  const [openCreate, setOpenCreate] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleClickOpenCreate = () => {
+    setOpenCreate(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleCloseCreate = () => {
+    setOpenCreate(false);
+  };
+
+  const [openUpdate, setOpenUpdate] = React.useState(false);
+
+  const handleClickOpenUpdate = item => {
+    setNationUpdate(item.nid);
+    setCityUpdate(item.cid);
+    setCityListUpdate(cityData.filter(i => i.nid === item.nid));
+    setSelectedStartDateUpdate(item.startDate);
+    setSelectedEndDateUpdate(item.endDate);
+    setSelectedListId(item.slistId);
+    setOpenUpdate(true);
+  };
+
+  const handleCloseUpdate = () => {
+    setOpenUpdate(false);
   };
 
   const axios = require('axios');
@@ -107,29 +121,107 @@ const PlanTravel = () => {
     const resData = await postPlanTravelServer();
     const schData = await getSchedule();
     dispatch(storeSchedule(schData.data.data));
-    setOpen(false);
-    // console.log(selectedStartDate);
-    // console.log(selectedEndDate);
+    setOpenCreate(false);
   };
 
-  // useEffect(() => {
-  //   async function getData() {
-  //     const resData = await getSchedule();
-  //     dispatch(storeSchedule(resData.data.data));
-  //   }
-  //   getData();
-  // }, []);
+  const planTravelList = useSelector(
+    state => state.morePlanTravel.planTravelList,
+  );
+
+  const deleteSchedule = async sId => {
+    try {
+      return await axios.delete(
+        `http://70.12.246.66:8080/scheduleList/delete/${sId}`,
+        { headers: { userToken: userData.userToken } },
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDeleteSchedule = async sId => {
+    const resData = await deleteSchedule(sId);
+    const schData = await getSchedule();
+    dispatch(storeSchedule(schData.data.data));
+  };
+
+  const travelList = planTravelList.map(item => (
+    <li key={item.slistId}>
+      {item.city} / {item.startDate.split(' ')[0]} /{' '}
+      {item.endDate.split(' ')[0]}{' '}
+      <a onClick={() => handleClickOpenUpdate(item)}>수정</a>{' '}
+      <a
+        onClick={() => {
+          handleDeleteSchedule(item.slistId);
+        }}
+      >
+        삭제
+      </a>
+    </li>
+  ));
+
+  const [nationUpdate, setNationUpdate] = useState('');
+
+  const handleChangeNationUpdate = event => {
+    setNationUpdate(event.target.value);
+    setCityListUpdate(cityData.filter(item => item.nid === event.target.value));
+  };
+
+  const [cityListUpdate, setCityListUpdate] = useState([]);
+  const [cityUpdate, setCityUpdate] = useState('');
+
+  const handleChangeCityUpdate = event => {
+    setCityUpdate(event.target.value);
+  };
+
+  const [selectedStartDateUpdate, setSelectedStartDateUpdate] = useState('');
+
+  const [selectedEndDateUpdate, setSelectedEndDateUpdate] = useState('');
+  const [selectedListId, setSelectedListId] = useState('');
+
+  const putPlanTravelServer = async () => {
+    try {
+      return await axios.put(
+        'http://70.12.246.66:8080/scheduleList/update',
+        {
+          uid: userData.uid,
+          cid: cityUpdate,
+          nid: nationUpdate,
+          slistId: selectedListId,
+          startDate: moment(selectedStartDateUpdate).format('YYYY-MM-DD'),
+          endDate: moment(selectedEndDateUpdate).format('YYYY-MM-DD 12:00:00'),
+        },
+        { headers: { userToken: userData.userToken } },
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const putPlanTravel = async () => {
+    const resData = await putPlanTravelServer();
+    const schData = await getSchedule();
+    dispatch(storeSchedule(schData.data.data));
+    setOpenUpdate(false);
+  };
 
   return (
     <div>
       <h2>여행일정</h2>
 
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+      <Button
+        variant="outlined"
+        color="primary"
+        onClick={handleClickOpenCreate}
+      >
         여행 계획 추가
       </Button>
+
+      <ul>{travelList}</ul>
+
       <Dialog
-        open={open}
-        onClose={handleClose}
+        open={openCreate}
+        onClose={handleCloseCreate}
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">여행 일정 추가</DialogTitle>
@@ -181,11 +273,74 @@ const PlanTravel = () => {
           </TextField>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleCloseCreate} color="primary">
             취소
           </Button>
           <Button onClick={postPlanTravel} color="primary">
             추가
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openUpdate}
+        onClose={handleCloseUpdate}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">여행 일정 수정</DialogTitle>
+        <DialogContent>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <DatePicker
+              disableToolbar
+              variant="dialog"
+              label="시작"
+              value={selectedStartDateUpdate}
+              onChange={setSelectedStartDateUpdate}
+            />
+            <DatePicker
+              disableToolbar
+              variant="dialog"
+              label="끝"
+              value={selectedEndDateUpdate}
+              onChange={setSelectedEndDateUpdate}
+              minDate={selectedStartDateUpdate}
+            />
+          </MuiPickersUtilsProvider>
+          <TextField
+            id="standard-select-currency"
+            select
+            fullWidth
+            label="나라"
+            value={nationUpdate}
+            onChange={handleChangeNationUpdate}
+          >
+            {nationData.map(option => (
+              <MenuItem key={option.nid} value={option.nid}>
+                {option.name}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            id="standard-select-currency"
+            select
+            fullWidth
+            label="도시"
+            value={cityUpdate}
+            onChange={handleChangeCityUpdate}
+          >
+            {cityListUpdate.map(option => (
+              <MenuItem key={option.cid} value={option.cid}>
+                {option.name}
+              </MenuItem>
+            ))}
+          </TextField>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseUpdate} color="primary">
+            취소
+          </Button>
+          <Button onClick={putPlanTravel} color="primary">
+            수정
           </Button>
         </DialogActions>
       </Dialog>
