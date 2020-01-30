@@ -6,6 +6,7 @@ import RoomIcon from '@material-ui/icons/Room';
 import ForumIcon from '@material-ui/icons/Forum';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
 
 const BottomNavigationStyled = styled(BottomNavigation)`
   border-top: 1px solid gray;
@@ -21,6 +22,10 @@ const CategoryNav = () => {
   const [value, setValue] = useState('accompany');
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+  const history = useHistory();
+  const handleMoreClick = () => {
+    history.push('/more');
   };
 
   return (
@@ -49,6 +54,7 @@ const CategoryNav = () => {
         label="더보기"
         value="more"
         icon={<MoreHorizIcon />}
+        onClick={handleMoreClick}
       />
     </BottomNavigationStyled>
   );
