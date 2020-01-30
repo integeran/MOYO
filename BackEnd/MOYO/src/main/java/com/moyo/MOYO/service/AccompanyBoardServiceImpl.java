@@ -11,6 +11,7 @@ import com.moyo.MOYO.dto.AccompanyBoard;
 import com.moyo.MOYO.dto.City;
 import com.moyo.MOYO.dto.Filter;
 import com.moyo.MOYO.dto.Nation;
+import com.moyo.MOYO.dto.TravelType;
 import com.moyo.MOYO.repository.AccompanyBoardRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -74,5 +75,11 @@ public class AccompanyBoardServiceImpl implements AccompanyBoardService {
 	public List<City> selectCity(int nId) {
 		log.trace("AccompanyBoardService - selectCity : ",nId);
 		return acRepo.selectCity(nId);
+	}
+
+	@Override
+	public List<TravelType> selectTravelType() {
+		log.trace("AccompanyBoardService - selectTravelType ");
+		return acRepo.selectTravelType();
 	}
 }

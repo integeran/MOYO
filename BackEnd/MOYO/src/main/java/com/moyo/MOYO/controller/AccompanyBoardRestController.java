@@ -106,6 +106,17 @@ public class AccompanyBoardRestController {
 		}
 	}
 	
+	@GetMapping("accompanyBoard/selectTravelType")
+	public ResponseEntity<Map<String, Object>> selectTravelType() {
+		try {
+			log.trace("AccompanyBoardRestController - selectTravelType ");
+			return response(acService.selectTravelType(), HttpStatus.OK, true);
+		} catch (RuntimeException e) {
+			log.error("AccompanyBoardRestController - selectTravelType ");
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
 	public ResponseEntity<Map<String, Object>> response(Object data, HttpStatus httpstatus, boolean status) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("data", data);

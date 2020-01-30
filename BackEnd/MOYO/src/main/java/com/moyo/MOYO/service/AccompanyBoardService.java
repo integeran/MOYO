@@ -8,6 +8,7 @@ import com.moyo.MOYO.dto.AccompanyBoard;
 import com.moyo.MOYO.dto.City;
 import com.moyo.MOYO.dto.Filter;
 import com.moyo.MOYO.dto.Nation;
+import com.moyo.MOYO.dto.TravelType;
 
 public interface AccompanyBoardService {
 	public List<AccompanyBoard> selectAll(Filter filter);
@@ -27,4 +28,6 @@ public interface AccompanyBoardService {
 	public List<Nation> selectNation();
 
 	public List<City> selectCity(int nId);
+
+	public List<TravelType> selectTravelType();
 }
