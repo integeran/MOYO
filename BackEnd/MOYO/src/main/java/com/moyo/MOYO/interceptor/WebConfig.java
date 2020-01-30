@@ -21,13 +21,6 @@ public class WebConfig implements WebMvcConfigurer {
 	private JwtInterceptor jwtInterceptor;
 	
 	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(jwtInterceptor)
-										.addPathPatterns("/**")
-										.excludePathPatterns(EXCLUDE_PATHS);
-	}
-	
-	@Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
         		.allowedOrigins("*")
@@ -35,5 +28,12 @@ public class WebConfig implements WebMvcConfigurer {
         		.allowedHeaders("*")
         		.maxAge(3600);
     }
+	
+//	@Override
+//	public void addInterceptors(InterceptorRegistry registry) {
+//		registry.addInterceptor(jwtInterceptor)
+//		.addPathPatterns("/**")
+//		.excludePathPatterns(EXCLUDE_PATHS);
+//	}
 	
 }

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,12 +30,13 @@ public class AccompanyBoardRestController {
 	AccompanyBoardService acService;
 	
 	@GetMapping("accompanyBoard/selectAll")
-	public ResponseEntity<Map<String, Object>> selectAll(@RequestBody Filter filter) {
+	public ResponseEntity<Map<String, Object>> selectAll(@ModelAttribute Filter filter) {
+		System.out.println(filter);
 		try {
 			log.trace("AccompanyBoardRestController - selectAll : ",filter);
 			return response(acService.selectAll(filter), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			log.error("AccompanyBoardRestController - selectAll : ",filter);
+			log.trace("AccompanyBoardRestController - selectAll : ",filter);
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
@@ -52,6 +54,7 @@ public class AccompanyBoardRestController {
 	
 	@PostMapping("accompanyBoard/create")
 	public ResponseEntity<Map<String, Object>> create(@RequestBody AccompanyBoard accompanyBoard) {
+		System.out.println(accompanyBoard);
 		try {
 			log.trace("AccompanyBoardRestController - create : ",accompanyBoard);
 			return response(acService.create(accompanyBoard), HttpStatus.OK, true);
@@ -95,7 +98,7 @@ public class AccompanyBoardRestController {
 	}
 	
 	@GetMapping("accompanyBoard/selectCity/{nId}")
-	public ResponseEntity<Map<String, Object>> selectCity(@RequestParam int nId) {
+	public ResponseEntity<Map<String, Object>> selectCity(@PathVariable int nId) {
 		try {
 			log.trace("AccompanyBoardRestController - selectCity : ",nId);
 			return response(acService.selectCity(nId), HttpStatus.OK, true);
