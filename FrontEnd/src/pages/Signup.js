@@ -32,7 +32,7 @@ const genders = [
     label: '남자',
   },
   {
-    value: 'w',
+    value: 'f',
     label: '여자',
   },
 ];

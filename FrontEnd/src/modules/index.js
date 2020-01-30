@@ -4,6 +4,7 @@ import accompanyBoard from './accompanyBoard';
 import accompanyFilter from './accompanyFilter';
 import auth from './auth';
 import loading from './loading';
+import planDate from './planDate';
 
 const rootReducer = combineReducers({
   auth,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   accompanyCondition,
   accompanyBoard,
   accompanyFilter,
+  planDate,
 });
 
 export default rootReducer;
