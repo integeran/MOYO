@@ -44,7 +44,7 @@ const AccompanyListDetail = () => {
       .join(' / ');
 
   const convertGenderToStr = gender => {
-    switch (String(gender)) {
+    switch (String(gender).toUpperCase()) {
       case 'M':
         return '남성';
       case 'F':
@@ -150,7 +150,10 @@ const AccompanyListDetail = () => {
       <Grid item xs style={{ marginTop: '1rem', marginBottom: '1rem' }}>
         <Container>
           <Paper variant="outlined">
-            <Typography variant="body2" style={{ margin: '1rem' }}>
+            <Typography
+              variant="body2"
+              style={{ margin: '1rem', whiteSpace: 'pre-line' }}
+            >
               {boardData.contents}
             </Typography>
           </Paper>
