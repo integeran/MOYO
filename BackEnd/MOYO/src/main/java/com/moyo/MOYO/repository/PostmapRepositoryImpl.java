@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.moyo.MOYO.dto.Postmap;
 import com.moyo.MOYO.dto.Postmaplike;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Repository
 @Slf4j
+@Transactional
 public class PostmapRepositoryImpl implements PostmapRepository{
 	private String ns = "moyo.postmapmapper.";
 	
@@ -39,18 +41,21 @@ public class PostmapRepositoryImpl implements PostmapRepository{
 	}
 
 	@Override
+	@Transactional
 	public int updatePostmap(Postmap postmap) {
 		log.trace("PostmapRepository - updatePostmap : ",postmap);
 		return session.update(ns+ "updatePostmap",postmap);
 	}
 
 	@Override
+	@Transactional
 	public int deletePostmap(int pmId) {
 		log.trace("PostmapRepository - deletePostmap : ",pmId);
 		return session.delete(ns+ "deletePostmap",pmId);
 	}
 
 	@Override
+	@Transactional
 	public int checkDuration(String today) {
 		log.trace("PostmapRepository - checkDuration : ",today);
 		return session.delete(ns+ "checkDuration", today);
@@ -75,8 +80,13 @@ public class PostmapRepositoryImpl implements PostmapRepository{
 	}
 
 	@Override
-	public boolean checkLikeDuplicate(int uId) {
-		return session.selectOne(ns+"checkLikeDuplicate",uId);
+	public int checkLikeDuplicate(Postmaplike postmaplike) {
+		return session.delete(ns+"checkLikeDuplicate",postmaplike);
+	}
+
+	@Override
+	public Postmaplike selectLikeOne(Postmaplike postmaplike) {
+		return session.selectOne(ns + "selectLikeOne",postmaplike);
 	}
 	
 	
