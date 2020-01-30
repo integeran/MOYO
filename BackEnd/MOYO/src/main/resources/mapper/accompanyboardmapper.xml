@@ -91,4 +91,7 @@
 		select c.* from city c join nation n on c.n_id = n.n_id where n.n_id = #{nId};
 	</select>
 	
+	<select id="selectTravelType" resultType="travelType">
+		select * from travel_type;
+	</select>
 </mapper>

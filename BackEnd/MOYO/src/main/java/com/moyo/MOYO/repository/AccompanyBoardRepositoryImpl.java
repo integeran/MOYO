@@ -12,6 +12,7 @@ import com.moyo.MOYO.dto.AccompanyBoard;
 import com.moyo.MOYO.dto.City;
 import com.moyo.MOYO.dto.Filter;
 import com.moyo.MOYO.dto.Nation;
+import com.moyo.MOYO.dto.TravelType;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -74,5 +75,11 @@ public class AccompanyBoardRepositoryImpl implements AccompanyBoardRepository {
 	public List<City> selectCity(int nId) {
 		log.trace("AccompanyBoardRepository - selectCity : ",nId);
 		return session.selectList(ns+"selectCity",nId);
+	}
+
+	@Override
+	public List<TravelType> selectTravelType() {
+		log.trace("AccompanyBoardRepository - selectTravelType ");
+		return session.selectList(ns+"selectTravelType");
 	}
 }
