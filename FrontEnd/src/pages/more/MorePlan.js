@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import Divider from '@material-ui/core/Divider';
 import Planner from '../../components/more/Planner';
@@ -8,9 +9,10 @@ import interactionPlugin from '@fullcalendar/interaction';
 import './styles.css';
 import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
-import { useSelector, useDispatch } from 'react-redux';
 import { changeField } from '../../modules/planDate';
 import { storeSchedule } from '../../modules/morePlanTravel';
+import { storeCompanion } from '../../modules/morePlanCompanion';
+import { storeMemo } from '../../modules/morePlanMemo';
 
 const MorePlan = () => {
   const dispatch = useDispatch();
@@ -44,24 +46,46 @@ const MorePlan = () => {
     }
   };
 
+  const getCompanion = async () => {
+    try {
+      return await axios.get(
+        `http://70.12.246.66:8080/dailyAccompany/selectAllByUser/${userData.uid}`,
+        { headers: { userToken: userData.userToken } },
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getMemo = async () => {
+    try {
+      return await axios.get(
+        `http://70.12.246.66:8080/dailyMemo/selectAllByUser/${userData.uid}`,
+        { headers: { userToken: userData.userToken } },
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const onEventClick = props => {
+    console.log(props);
+  };
+
   useEffect(() => {
     async function getData() {
-      const resData = await getSchedule();
-      console.log(resData.data.data);
-      dispatch(storeSchedule(resData.data.data));
-      stateEvents(resData.data.data);
+      const schData = await getSchedule();
+      dispatch(storeSchedule(schData.data.data));
+      stateEvents(schData.data.data);
+      const comData = await getCompanion();
+      dispatch(storeCompanion(comData.data.data));
+      const memData = await getMemo();
+      dispatch(storeMemo(memData.data.data));
     }
     getData();
   }, []);
 
-  const [events, setEvents] = useState([
-    {
-      // title: 'The Title',
-      // start: '2020-01-01',
-      // end: '2020-01-03',
-      // allDay: 'false',
-    },
-  ]);
+  const [events, setEvents] = useState([{}]);
 
   const stateEvents = p => {
     setEvents(
@@ -91,6 +115,7 @@ const MorePlan = () => {
         dateClick={date => handleChangeSelectedDate(date)}
         events={events}
         displayEventTime={false}
+        eventClick={onEventClick}
       />
       {selectedDate && <Planner />}
     </div>
