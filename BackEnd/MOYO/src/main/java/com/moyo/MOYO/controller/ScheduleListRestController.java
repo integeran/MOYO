@@ -37,7 +37,7 @@ public class ScheduleListRestController {
 	}
 	
 	@GetMapping("scheduleList/selectAllByUser/{uId}")
-	public ResponseEntity<Map<String, Object>> selectAllByUser(int uId) {
+	public ResponseEntity<Map<String, Object>> selectAllByUser(@PathVariable int uId) {
 		try {
 			log.trace("ScheduleListRestController - selectAllByUser");
 			return response(sListService.selectAllByUser(uId), HttpStatus.OK, true);

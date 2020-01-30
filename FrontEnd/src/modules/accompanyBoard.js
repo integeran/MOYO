@@ -20,6 +20,9 @@ const initialState = {
 
       uId: 1,
       nickname: '하지수',
+      age: 2,
+      image: '../../assets/img/iu.jpg',
+      gender: 'M',
 
       nId: 2,
       nation: '프랑스',
@@ -29,7 +32,7 @@ const initialState = {
 
       tTypeId: 1,
       type: '관광',
-      wantAge: 2,
+      wantAge: '1|2|3',
       wantGender: 'N',
     },
     {
@@ -76,10 +79,54 @@ const initialState = {
       wantAge: 3,
       wantGender: 'W',
     },
+    {
+      acBoardId: 4,
+      title: '27-30일 프랑스 니스에서 같이 관광하실분!',
+      contents:
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      startDate: '2020-01-27',
+      endDate: '2020-01-30',
+
+      uId: 3,
+      nickname: '이인동',
+
+      nId: 2,
+      nation: '프랑스',
+
+      cId: 2,
+      city: '니스',
+
+      tTypeId: 1,
+      type: '관광',
+      wantAge: 3,
+      wantGender: 'W',
+    },
+    {
+      acBoardId: 5,
+      title: '27-30일 프랑스 니스에서 같이 관광하실분!',
+      contents:
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      startDate: '2020-01-27',
+      endDate: '2020-01-30',
+
+      uId: 3,
+      nickname: '이인동',
+
+      nId: 2,
+      nation: '프랑스',
+
+      cId: 2,
+      city: '니스',
+
+      tTypeId: 1,
+      type: '관광',
+      wantAge: 3,
+      wantGender: 'W',
+    },
   ],
 };
 
-const location = handleActions(
+const board = handleActions(
   {
     [ACC_SEARCH_BOARD]: (state, { payload: boardList }) =>
       produce(state, draft => {
@@ -89,4 +136,4 @@ const location = handleActions(
   initialState,
 );
 
-export default location;
+export default board;

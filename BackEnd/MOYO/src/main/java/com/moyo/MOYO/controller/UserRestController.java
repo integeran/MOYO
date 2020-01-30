@@ -125,8 +125,7 @@ public class UserRestController {
 				token = jwtService.createLoginToken(loginUser);
 				return response(token, HttpStatus.OK, true);
 			} else {
-				token = jwtService.createLoginToken(loginUser);
-				return response(token, HttpStatus.CONFLICT, false);
+				return response(token, HttpStatus.OK, false);
 			}
 		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
