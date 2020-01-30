@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
-import Header from '../../components/common/Header';
 import { useHistory } from 'react-router';
 
 const MainButtonDiv = styled.div`
@@ -31,7 +30,6 @@ const AccompanyMain = () => {
   };
   return (
     <div>
-      <Header leftSet="뒤로" midTitle="메인" rightSet="채팅" />
       <p>오늘은 여행이 어때요?</p>
       <MainButtonDiv>
         <MainButton variant="outlined" onClick={handleAccompanyFindClick}>
