@@ -17,7 +17,7 @@ const Login = () => {
 
   const getResponse = async res => {
     try {
-      return await axios.post('http://70.12.246.66:8080/user/issueToken', {
+      return await axios.post('http://70.12.247.75:8080/user/issueToken', {
         provider: 0,
         socialId: res.profile.id,
       });

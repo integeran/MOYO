@@ -20,12 +20,18 @@ const BottomNavigationActionStyled = styled(BottomNavigationAction)`
 
 const CategoryNav = () => {
   const [value, setValue] = useState('accompany');
+  const history = useHistory();
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  const history = useHistory();
+
   const handleMoreClick = () => {
     history.push('/more');
+  };
+
+  const handleAccompanyClick = () => {
+    history.push('/acc');
   };
 
   return (
@@ -34,6 +40,7 @@ const CategoryNav = () => {
         label="동행"
         value="accompany"
         icon={<CardTravelIcon />}
+        onClick={handleAccompanyClick}
       />
       <BottomNavigationActionStyled
         label="포스트맵"
