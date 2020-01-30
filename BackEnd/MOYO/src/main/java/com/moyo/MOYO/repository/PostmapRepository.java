@@ -25,5 +25,7 @@ public interface PostmapRepository {
 	
 	public int selectPostmapLike(int pmId);
 
-	public boolean checkLikeDuplicate(int uId);
+	public int checkLikeDuplicate(Postmaplike postmaplike);
+
+	public Postmaplike selectLikeOne(Postmaplike postmaplike);
 }
