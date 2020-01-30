@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
+@CrossOrigin("*")
 public class CommunityCommentRestController {
 	
 	@Autowired
@@ -31,7 +33,7 @@ public class CommunityCommentRestController {
 		try {
 			log.trace("CommunityCommentRestController - selectAll");
 			return response(cCommentService.selectAll(), HttpStatus.OK, true);
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
@@ -41,7 +43,7 @@ public class CommunityCommentRestController {
 		try {
 			log.trace("CommunityCommentRestController - selectAllByCommunity");
 			return response(cCommentService.selectAllByCommunity(cmId), HttpStatus.OK, true);
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
@@ -51,7 +53,7 @@ public class CommunityCommentRestController {
 		try {
 			log.trace("CommunityCommentRestController - create");
 			return response(cCommentService.create(communityComment), HttpStatus.OK, true);
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
@@ -61,7 +63,7 @@ public class CommunityCommentRestController {
 		try {
 			log.trace("CommunityCommentRestController - delete");
 			return response(cCommentService.delete(cmCommentId), HttpStatus.OK, true);
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
@@ -71,7 +73,7 @@ public class CommunityCommentRestController {
 		try {
 			log.trace("CommunityCommentRestController - update");
 			return response(cCommentService.update(communityComment), HttpStatus.OK, true);
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}

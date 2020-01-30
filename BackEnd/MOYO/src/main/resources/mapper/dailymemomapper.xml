@@ -24,15 +24,16 @@
 	<insert id="createDailyMemo" parameterType="dailyMemo">
 		insert into
 		daily_memo (u_id, contents, day, register_date, update_date)
-		values (#{uId}, #{contents}, #{day}, current_timestamp(), current_timestamp())
+		select #{uId}, #{contents}, #{day}, current_timestamp(), current_timestamp() from dual
+		where not exists (select * from daily_memo where u_id = #{uId} and day = #{day})
 	</insert>
-	<delete id="deleteDailyMemo">
+	<delete id="deleteDailyMemo" parameterType="map">
 		delete from daily_memo
-		where d_memo_id = #{dMemoId}
+		where d_memo_id = #{dMemoId} and u_id = #{uId}
 	</delete>
-	<update id="updateDailyMemo">
+	<update id="updateDailyMemo" parameterType="dailyMemo">
 		update daily_memo
 		set contents = #{contents}, day = #{day}, update_date = current_timestamp()
-		where d_memo_id = #{dMemoId}
+		where d_memo_id = #{dMemoId} and u_id = #{uId}
 	</update>
 </mapper>

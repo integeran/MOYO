@@ -6,32 +6,39 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.moyo.MOYO.dto.ScheduleList;
+import com.moyo.MOYO.service.JwtService;
 import com.moyo.MOYO.service.ScheduleListService;
 
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
+@CrossOrigin("*")
 public class ScheduleListRestController {
 	
 	@Autowired
 	ScheduleListService sListService;
+	
+	@Autowired
+	JwtService jwtService;
 	
 	@GetMapping("scheduleList/selectAll")
 	public ResponseEntity<Map<String, Object>> selectAll() {
 		try {
 			log.trace("ScheduleListRestController - selectAll");
 			return response(sListService.selectAll(), HttpStatus.OK, true);
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
@@ -41,7 +48,7 @@ public class ScheduleListRestController {
 		try {
 			log.trace("ScheduleListRestController - selectAllByUser");
 			return response(sListService.selectAllByUser(uId), HttpStatus.OK, true);
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
@@ -51,7 +58,7 @@ public class ScheduleListRestController {
 		try {
 			log.trace("ScheduleListRestController - selectOne");
 			return response(sListService.selectOne(sListId), HttpStatus.OK, true);
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
@@ -61,17 +68,20 @@ public class ScheduleListRestController {
 		try {
 			log.trace("ScheduleListRestController - create");
 			return response(sListService.create(scheduleList), HttpStatus.OK, true);
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
 	
 	@DeleteMapping("scheduleList/delete/{sListId}")
-	public ResponseEntity<Map<String, Object>> delete(@PathVariable int sListId) {
+	public ResponseEntity<Map<String, Object>> delete(@PathVariable int sListId, @RequestHeader(value="userToken") String userToken) {
 		try {
+			System.out.println(userToken);
+			int uId = jwtService.getUser(userToken).getUId();
+			System.out.println(uId);
 			log.trace("ScheduleListRestController - delete");
-			return response(sListService.delete(sListId), HttpStatus.OK, true);
-		} catch (Exception e) {
+			return response(sListService.delete(sListId, uId), HttpStatus.OK, true);
+		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
@@ -81,7 +91,7 @@ public class ScheduleListRestController {
 		try {
 			log.trace("ScheduleListRestController - update");
 			return response(sListService.update(scheduleList), HttpStatus.OK, true);
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
