@@ -42,9 +42,9 @@ public class DailyAccompanyServiceImpl implements DailyAccompanyService {
 	}
 	
 	@Override
-	public int delete(int dAcId) {
+	public int delete(int dAcId, int uId) {
 		log.trace("DailyAccompanyService - delete");
-		return dAccompanyRepo.delete(dAcId);
+		return dAccompanyRepo.delete(dAcId, uId);
 	}
 	
 	@Override

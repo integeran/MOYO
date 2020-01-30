@@ -13,7 +13,7 @@ public interface DailyMemoRepository {
 	
 	public int create(DailyMemo dailyMemo);
 	
-	public int delete(int dMemoId);
+	public int delete(int dMemoId, int uId);
 	
 	public int update(DailyMemo dailyMemo);
 
