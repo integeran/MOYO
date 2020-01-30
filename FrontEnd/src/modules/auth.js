@@ -16,6 +16,7 @@ const initialState = {
   },
   userData: {
     userToken: '',
+    uid: '',
     nickname: '',
     age: '',
     gender: '',

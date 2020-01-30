@@ -21,6 +21,7 @@ function loadUser() {
   if (localStorage.token) {
     const jwtToken = jwtDecode(localStorage.token);
     pushUserData('userToken', localStorage.token);
+    pushUserData('uid', jwtToken.user.uid);
     pushUserData('nickname', jwtToken.user.nickname);
     pushUserData('age', jwtToken.user.age);
     pushUserData('gender', jwtToken.user.gender);
