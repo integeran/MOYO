@@ -10,9 +10,9 @@ import {
   roomList_updateAction,
   messageList_updateAction,
   changeReceiverAction,
-} from '../modules/Dm';
-import Message from '../components/dm/Message';
-import UploadModal from '../components/dm/UploadModal';
+} from '../../modules/Dm';
+import Message from '../../components/dm/Message';
+import UploadModal from '../../components/dm/UploadModal';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -53,6 +53,7 @@ const DmRoom = ({ match }) => {
   const receiver = useSelector(state => state.Dm.receiver);
   const initUpload = useSelector(state => state.Dm.initUpload);
   const messageList = useSelector(state => state.Dm.messageList);
+  const userData = useSelector(state => state.auth.userData);
 
   const [title, setTitle] = useState('Hong Gildong');
   const [curRoomId, setCurRoomId] = useState('');
@@ -116,7 +117,9 @@ const DmRoom = ({ match }) => {
    */
   const onInit = useCallback(() => {
     axios
-      .get('http://localhost:8080/DM/testID')
+      .get('http://localhost:8080/DM/testID', {
+        headers: { userToken: userData.userToken },
+      })
       .then(res => {
         console.log('sender object: ', JSON.stringify(res.data.data.sender));
         console.log(
@@ -701,7 +704,7 @@ const DmRoom = ({ match }) => {
         style={{
           border: '1px solid',
           width: '100%',
-          height: '600px',
+          height: '400px',
           overflow: 'auto',
         }}
       >

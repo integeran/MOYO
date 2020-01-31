@@ -6,10 +6,10 @@ import {
   isOpenRoomAction,
   roomList_updateAction,
   messageList_updateAction,
-} from '../modules/Dm';
+} from '../../modules/Dm';
 import axios from 'axios';
 import * as firebase from 'firebase';
-import Room from '../components/dm/Room';
+import Room from '../../components/dm/Room';
 
 const DmRoomList = () => {
   const dispatch = useDispatch();

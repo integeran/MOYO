@@ -6,13 +6,11 @@ import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    height: 300,
+    height: '100%',
     flexGrow: 1,
-    minWidth: 300,
-    width: 500,
+    width: '100%',
     transform: 'translateZ(0)',
     position: 'absolute',
-    marginLeft: '22%',
     // The position fixed scoping doesn't work in IE 11.
     // Disable this demo to preserve the others.
     '@media all and (-ms-high-contrast: none)': {
