@@ -42,9 +42,9 @@ public class ScheduleListServiceImpl implements ScheduleListService {
 	}
 	
 	@Override
-	public int delete(int sListId) {
+	public int delete(int sListId, int uId) {
 		log.trace("ScheduleListService - delete");
-		return sListRepo.delete(sListId);
+		return sListRepo.delete(sListId, uId);
 	}
 	
 	@Override

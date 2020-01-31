@@ -13,7 +13,7 @@ public interface DailyAccompanyService {
 	
 	public int create(DailyAccompany dailyAccompany);
 	
-	public int delete(int dAcId);
+	public int delete(int dAcId, int uId);
 	
 	public int update(DailyAccompany dailyAccompany);
 

@@ -1,6 +1,8 @@
 package com.moyo.MOYO.repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +46,12 @@ public class DailyMemoRepositoryImpl implements DailyMemoRepository {
 	}
 	
 	@Override
-	public int delete(int dMemoId) {
+	public int delete(int dMemoId, int uId) {
 		log.trace("DailyMemoRepository - delete");
-		return session.delete(ns + "deleteDailyMemo", dMemoId);
+		Map<String, Object> param = new HashMap<String, Object>();
+    	param.put("dMemoId", dMemoId);
+    	param.put("uId", uId);
+		return session.delete(ns + "deleteDailyMemo", param);
 	}
 	
 	@Override
