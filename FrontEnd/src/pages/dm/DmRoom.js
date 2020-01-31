@@ -26,6 +26,8 @@ import AttachFileIcon from '@material-ui/icons/AttachFile';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -726,23 +728,43 @@ const DmRoom = ({ match }) => {
       </div>
 
       <div id="chatdiv" style={{ marginBottom: '40px' }}>
-        <input
-          type="text"
-          placeholder="텍스트를 입력하세요"
-          value={ivalue}
-          onChange={onChangeIvalue}
-          onKeyPress={onEnterKey}
-        ></input>
-        <TelegramIcon
-          color="primary"
-          style={{ cursor: 'pointer' }}
-          onClick={loadMessage}
-        />
-        <AttachFileIcon
-          color="primary"
-          style={{ cursor: 'pointer' }}
-          onClick={onAttachButton}
-        />
+        <Grid
+          container
+          style={{ width: '400px' }}
+          justify="center"
+          alignItems="center"
+        >
+          <Grid item xs={1} />
+          <Grid item xs={9}>
+            <TextField
+              placeholder="텍스트를 입력하세요"
+              onChange={onChangeIvalue}
+              value={ivalue}
+              onKeyPress={onEnterKey}
+              fullWidth
+              style={{ marginTop: '5px' }}
+            />
+          </Grid>
+          <Grid item xs={1}>
+            <IconButton aria-label="delete" className={classes.margin}>
+              <TelegramIcon
+                color="primary"
+                style={{ cursor: 'pointer' }}
+                onClick={loadMessage}
+              />
+            </IconButton>
+          </Grid>
+          <Grid item xs={1}>
+            <IconButton aria-label="delete" className={classes.margin}>
+              <AttachFileIcon
+                color="primary"
+                style={{ cursor: 'pointer' }}
+                onClick={onAttachButton}
+              />
+            </IconButton>
+          </Grid>
+        </Grid>
+
         <input
           type="file"
           id="attachfile"
