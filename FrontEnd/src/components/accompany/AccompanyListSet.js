@@ -1,20 +1,17 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import AccompanyListPaper from './AccompanyListPaper';
 import styled from 'styled-components';
 
 const ListComponent = styled.div`
   width: 90%;
-  margin: 0 auto;
+  min-height: 0;
+  margin: auto;
   margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 7rem;
+  margin-bottom: 6rem;
 `;
 
-const AccompanyListSet = accDate => {
-  const accBoardList = useSelector(state => state.accompanyBoard.boardList);
+const AccompanyListSet = ({ boardData }) => {
   const history = useHistory();
   const handleBoardClick = board => {
     history.push({
@@ -27,7 +24,7 @@ const AccompanyListSet = accDate => {
   };
   return (
     <ListComponent>
-      {accBoardList.map(board => (
+      {boardData.map(board => (
         <AccompanyListPaper
           key={board.acBoardId}
           boardInfo={board}

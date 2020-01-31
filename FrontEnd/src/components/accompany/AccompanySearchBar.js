@@ -5,6 +5,7 @@ import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
+import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -28,19 +29,23 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const AccompanySearchBar = handleSearch => {
+const AccompanySearchBar = ({ onClick }) => {
   const classes = useStyles();
-  const [text, setText] = useState();
-  const handleSearchClick = e => {
-    console.log(text);
-    handleSearch.handleSearch();
+  const [text, setText] = useState('');
+  const onChange = e => {
+    setText(e.target.value);
   };
+  const handleSearchClick = e => {
+    onClick(text);
+  };
+
   return (
     <>
       <Paper elevation={0} className={classes.root}>
         <InputBase
           className={classes.input}
-          onChange={e => setText(e.target.value)}
+          value={text}
+          onChange={onChange}
           placeholder="검색어를 입력해주세요!"
         />
         <Divider className={classes.divider} orientation="vertical" />

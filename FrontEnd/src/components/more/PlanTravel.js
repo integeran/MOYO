@@ -91,7 +91,7 @@ const PlanTravel = () => {
   const postPlanTravelServer = async () => {
     try {
       return await axios.post(
-        'http://70.12.246.66:8080/scheduleList/create',
+        'http://70.12.247.75:8080/scheduleList/create',
         {
           uid: userData.uid,
           cid: city,
@@ -109,7 +109,7 @@ const PlanTravel = () => {
   const getSchedule = async () => {
     try {
       return await axios.get(
-        `http://70.12.246.66:8080/scheduleList/selectAllByUser/${userData.uid}`,
+        `http://70.12.247.75:8080/scheduleList/selectAllByUser/${userData.uid}`,
         { headers: { userToken: userData.userToken } },
       );
     } catch (error) {
