@@ -46,7 +46,7 @@ const Companion = () => {
   };
 
   const handleDeleteCompanion = async dId => {
-    const resData = await deleteCompanion(dId);
+    await deleteCompanion(dId);
     const comData = await getCompanion();
     dispatch(storeCompanion(comData.data.data));
   };
@@ -96,7 +96,7 @@ const Companion = () => {
   };
 
   const putCompanionRequest = async () => {
-    const resData = await putCompanion();
+    await putCompanion();
     const comData = await getCompanion();
     dispatch(storeCompanion(comData.data.data));
     setOpenUpdate(false);
