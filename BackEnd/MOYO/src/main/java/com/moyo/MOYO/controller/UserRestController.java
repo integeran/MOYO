@@ -75,9 +75,9 @@ public class UserRestController {
 	
 	@PostMapping("user/register")
 	public ResponseEntity<Map<String, Object>> register(@RequestBody User user) {
-		String token = null;
 		try {
 			log.trace("UserRestController - register");
+			String token = null;
 			User registeredUser = uService.selectOneBySocialId(user.getSocialId(), user.getProvider());
 			User nicknameUser = uService.selectOneByNickname(user.getNickname());
 			if (registeredUser != null) {
@@ -112,7 +112,17 @@ public class UserRestController {
 	public ResponseEntity<Map<String, Object>> update(@RequestBody User user) {
 		try {
 			log.trace("UserRestController - update");
-			return response(uService.update(user), HttpStatus.OK, true);
+			String token = null;
+			User nicknameUser = uService.selectOneByNickname(user.getNickname());
+			if (nicknameUser != null) {
+				return response("이미 존재하는 닉네임입니다.", HttpStatus.OK, false);
+			}
+			uService.update(user);
+			User loginUser = uService.selectOneBySocialId(user.getSocialId(), user.getProvider());
+			if (loginUser != null) {
+				token = jwtService.createLoginToken(loginUser);
+			}
+			return response(token, HttpStatus.OK, true);
 		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
