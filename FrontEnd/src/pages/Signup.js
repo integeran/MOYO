@@ -6,6 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { changeField } from '../modules/auth';
+import axios from '../api/axios';
 
 const ageRange = [
   {
@@ -67,8 +68,6 @@ const Signup = props => {
   const handleChangeGender = event => {
     setGender(event.target.value);
   };
-
-  const axios = require('axios');
   const jwtDecode = require('jwt-decode');
   const dispatch = useDispatch();
   const history = useHistory();
@@ -79,7 +78,7 @@ const Signup = props => {
 
   const getResponse = async () => {
     try {
-      return await axios.post('http://localhost:8080/user/register', {
+      return await axios.post('user/register', {
         provider: 0,
         socialId: userSocialId,
         nickname: userNickname,

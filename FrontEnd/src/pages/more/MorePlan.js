@@ -14,6 +14,7 @@ import { storeSchedule } from '../../modules/morePlanTravel';
 import { storeCompanion } from '../../modules/morePlanCompanion';
 import { storeMemo } from '../../modules/morePlanMemo';
 import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
+import axios from '../../api/axios';
 
 const MorePlan = () => {
   const dispatch = useDispatch();
@@ -28,8 +29,6 @@ const MorePlan = () => {
     pushSelectedDate(moment(value.date).format());
   };
 
-  const axios = require('axios');
-
   const userData = useSelector(state => state.auth.userData);
 
   const planTravelList = useSelector(
@@ -42,10 +41,9 @@ const MorePlan = () => {
 
   const getSchedule = async () => {
     try {
-      return await axios.get(
-        `http://70.12.247.75:8080/scheduleList/selectAllByUser/${userData.uid}`,
-        { headers: { userToken: userData.userToken } },
-      );
+      return await axios.get(`scheduleList/selectAllByUser/${userData.uid}`, {
+        headers: { userToken: userData.userToken },
+      });
     } catch (error) {
       console.error(error);
     }
@@ -53,10 +51,9 @@ const MorePlan = () => {
 
   const getCompanion = async () => {
     try {
-      return await axios.get(
-        `http://70.12.246.66:8080/dailyAccompany/selectAllByUser/${userData.uid}`,
-        { headers: { userToken: userData.userToken } },
-      );
+      return await axios.get(`dailyAccompany/selectAllByUser/${userData.uid}`, {
+        headers: { userToken: userData.userToken },
+      });
     } catch (error) {
       console.error(error);
     }
@@ -64,10 +61,9 @@ const MorePlan = () => {
 
   const getMemo = async () => {
     try {
-      return await axios.get(
-        `http://70.12.246.66:8080/dailyMemo/selectAllByUser/${userData.uid}`,
-        { headers: { userToken: userData.userToken } },
-      );
+      return await axios.get(`dailyMemo/selectAllByUser/${userData.uid}`, {
+        headers: { userToken: userData.userToken },
+      });
     } catch (error) {
       console.error(error);
     }

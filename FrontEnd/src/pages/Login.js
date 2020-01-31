@@ -3,12 +3,11 @@ import KakaoLogin from 'react-kakao-login';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { changeField } from '../modules/auth';
+import axios from '../api/axios';
 
 const Login = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-
-  const axios = require('axios');
   const jwtDecode = require('jwt-decode');
 
   const pushUserData = (k, v) => {
@@ -17,7 +16,7 @@ const Login = () => {
 
   const getResponse = async res => {
     try {
-      return await axios.post('http://localhost:8080/user/issueToken', {
+      return await axios.post('user/issueToken', {
         provider: 0,
         socialId: res.profile.id,
       });

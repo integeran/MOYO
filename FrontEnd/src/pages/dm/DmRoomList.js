@@ -7,7 +7,7 @@ import {
   roomList_updateAction,
   messageList_updateAction,
 } from '../../modules/Dm';
-import axios from 'axios';
+import axios from '../../api/axios';
 import * as firebase from 'firebase';
 import Room from '../../components/dm/Room';
 
@@ -35,7 +35,7 @@ const DmRoomList = () => {
    */
   const onInit = useCallback(() => {
     axios
-      .get('http://localhost:8080/DM/testID', {
+      .get('DM/testID', {
         headers: { userToken: userData.userToken },
       })
       .then(res => {

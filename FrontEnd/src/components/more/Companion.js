@@ -9,9 +9,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import moment from 'moment';
+import axios from '../../api/axios';
 
 const Companion = () => {
-  const axios = require('axios');
   const dispatch = useDispatch();
 
   const userData = useSelector(state => state.auth.userData);
@@ -25,10 +25,9 @@ const Companion = () => {
 
   const getCompanion = async () => {
     try {
-      return await axios.get(
-        `http://70.12.246.66:8080/dailyAccompany/selectAllByUser/${userData.uid}`,
-        { headers: { userToken: userData.userToken } },
-      );
+      return await axios.get(`dailyAccompany/selectAllByUser/${userData.uid}`, {
+        headers: { userToken: userData.userToken },
+      });
     } catch (error) {
       console.error(error);
     }
@@ -36,10 +35,9 @@ const Companion = () => {
 
   const deleteCompanion = async dId => {
     try {
-      return await axios.delete(
-        `http://70.12.246.66:8080/dailyAccompany/delete/${dId}`,
-        { headers: { userToken: userData.userToken } },
-      );
+      return await axios.delete(`dailyAccompany/delete/${dId}`, {
+        headers: { userToken: userData.userToken },
+      });
     } catch (error) {
       console.error(error);
     }
@@ -82,7 +80,7 @@ const Companion = () => {
   const putCompanion = async () => {
     try {
       return await axios.put(
-        'http://70.12.246.66:8080/dailyAccompany/update',
+        'dailyAccompany/update',
         {
           uid: userData.uid,
           dacId: selectedId,

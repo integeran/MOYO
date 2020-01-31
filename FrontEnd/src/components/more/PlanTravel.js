@@ -11,6 +11,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import MenuItem from '@material-ui/core/MenuItem';
 import { storeSchedule } from '../../modules/morePlanTravel';
+import axios from '../../api/axios';
 
 const nationData = [
   { nid: 2, name: '프랑스' },
@@ -86,12 +87,10 @@ const PlanTravel = () => {
     setOpenUpdate(false);
   };
 
-  const axios = require('axios');
-
   const postPlanTravelServer = async () => {
     try {
       return await axios.post(
-        'http://70.12.247.75:8080/scheduleList/create',
+        'scheduleList/create',
         {
           uid: userData.uid,
           cid: city,
@@ -108,10 +107,9 @@ const PlanTravel = () => {
 
   const getSchedule = async () => {
     try {
-      return await axios.get(
-        `http://70.12.247.75:8080/scheduleList/selectAllByUser/${userData.uid}`,
-        { headers: { userToken: userData.userToken } },
-      );
+      return await axios.get(`scheduleList/selectAllByUser/${userData.uid}`, {
+        headers: { userToken: userData.userToken },
+      });
     } catch (error) {
       console.error(error);
     }
@@ -130,10 +128,9 @@ const PlanTravel = () => {
 
   const deleteSchedule = async sId => {
     try {
-      return await axios.delete(
-        `http://70.12.246.66:8080/scheduleList/delete/${sId}`,
-        { headers: { userToken: userData.userToken } },
-      );
+      return await axios.delete(`scheduleList/delete/${sId}`, {
+        headers: { userToken: userData.userToken },
+      });
     } catch (error) {
       console.error(error);
     }
@@ -182,7 +179,7 @@ const PlanTravel = () => {
   const putPlanTravelServer = async () => {
     try {
       return await axios.put(
-        'http://70.12.246.66:8080/scheduleList/update',
+        'scheduleList/update',
         {
           uid: userData.uid,
           cid: cityUpdate,
