@@ -32,13 +32,13 @@
 		schedule_list (u_id, n_id, c_id, start_date, end_date, register_date, update_date)
 		values (#{uId}, #{nId}, #{cId}, #{startDate}, #{endDate}, current_timestamp(), current_timestamp())
 	</insert>
-	<delete id="deleteScheduleList" parameterType="int">
+	<delete id="deleteScheduleList" parameterType="map">
 		delete from schedule_list
-		where s_list_id = #{sListId}
+		where s_list_id = #{sListId} and u_id = #{uId}
 	</delete>
-	<update id="updateScheduleList">
+	<update id="updateScheduleList" parameterType="scheduleList">
 		update schedule_list
 		set n_id = #{nId}, c_id = #{cId}, start_date = #{startDate}, end_date = #{endDate}, update_date = current_timestamp()
-		where s_list_id = #{sListId}
+		where s_list_id = #{sListId} and u_id = #{uId}
 	</update>
 </mapper>
