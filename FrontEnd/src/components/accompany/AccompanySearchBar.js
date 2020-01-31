@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
@@ -28,18 +28,24 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const AccompanySearchBar = () => {
+const AccompanySearchBar = handleSearch => {
   const classes = useStyles();
+  const [text, setText] = useState();
+  const handleSearchClick = e => {
+    console.log(text);
+    handleSearch.handleSearch();
+  };
   return (
     <>
       <Paper elevation={0} className={classes.root}>
         <InputBase
           className={classes.input}
+          onChange={e => setText(e.target.value)}
           placeholder="검색어를 입력해주세요!"
         />
         <Divider className={classes.divider} orientation="vertical" />
         <IconButton
-          type="submit"
+          onClick={handleSearchClick}
           aria-label="search"
           className={classes.iconButton}
         >

@@ -32,7 +32,7 @@ const genders = [
     label: '남자',
   },
   {
-    value: 'w',
+    value: 'f',
     label: '여자',
   },
 ];
@@ -97,10 +97,12 @@ const Signup = props => {
     if (resData.data.status) {
       const jwtData = jwtDecode(resData.data.data);
       pushUserData('userToken', resData.data.data);
+      pushUserData('uid', jwtData.user.uid);
       pushUserData('nickname', jwtData.user.nickname);
       pushUserData('age', jwtData.user.age);
       pushUserData('gender', jwtData.user.gender);
       pushUserData('image', jwtData.user.image);
+      localStorage.setItem('token', resData.data.data);
       history.push({
         pathname: '/main',
       });

@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.moyo.MOYO.dto.AccompanyBoard;
+import com.moyo.MOYO.dto.City;
 import com.moyo.MOYO.dto.Filter;
+import com.moyo.MOYO.dto.Nation;
+import com.moyo.MOYO.dto.TravelType;
 import com.moyo.MOYO.repository.AccompanyBoardRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -60,5 +63,23 @@ public class AccompanyBoardServiceImpl implements AccompanyBoardService {
 	public List<AccompanyBoard> search(HashMap<String, Object> filter) {
 		log.trace("AccompanyBoardService - search : ",filter);
 		return acRepo.search(filter);
+	}
+
+	@Override
+	public List<Nation> selectNation() {
+		log.trace("AccompanyBoardService - selectNation ");
+		return acRepo.selectNation();
+	}
+
+	@Override
+	public List<City> selectCity(int nId) {
+		log.trace("AccompanyBoardService - selectCity : ",nId);
+		return acRepo.selectCity(nId);
+	}
+
+	@Override
+	public List<TravelType> selectTravelType() {
+		log.trace("AccompanyBoardService - selectTravelType ");
+		return acRepo.selectTravelType();
 	}
 }
