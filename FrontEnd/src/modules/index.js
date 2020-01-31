@@ -7,6 +7,8 @@ import loading from './loading';
 import planDate from './planDate';
 import morePlanTravel from './morePlanTravel';
 import Dm from './Dm';
+import morePlanCompanion from './morePlanCompanion';
+import morePlanMemo from './morePlanMemo';
 
 const rootReducer = combineReducers({
   auth,
@@ -17,6 +19,8 @@ const rootReducer = combineReducers({
   planDate,
   morePlanTravel,
   Dm,
+  morePlanCompanion,
+  morePlanMemo,
 });
 
 export default rootReducer;

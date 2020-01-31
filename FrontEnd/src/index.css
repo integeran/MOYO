@@ -25,11 +25,6 @@ body {
   height: 100%;
 }
 
-#root {
-  width: inherit;
-  height: inherit;
-}
-
 #googleMap > div {
   position: relative !important;
 }

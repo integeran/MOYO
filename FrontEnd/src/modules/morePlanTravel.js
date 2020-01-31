@@ -1,5 +1,4 @@
 import { createAction, handleActions } from 'redux-actions';
-import produce from 'immer';
 
 const GET_SCHEDULE = 'morePlanTravel/GET_SCHEDULE';
 
@@ -9,16 +8,7 @@ export const storeSchedule = createAction(
 );
 
 const initialState = {
-  planTravelList: [
-    // {
-    //   cid: '',
-    //   city: '',
-    //   nid: '',
-    //   nation: '',
-    //   startDate: '',
-    //   endDate: '',
-    // },
-  ],
+  planTravelList: [],
 };
 
 const morePlanTravel = handleActions(

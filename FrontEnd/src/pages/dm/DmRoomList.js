@@ -21,6 +21,7 @@ const DmRoomList = () => {
   const sender = useSelector(state => state.Dm.sender);
   const receiver = useSelector(state => state.Dm.receiver);
   const roomList = useSelector(state => state.Dm.roomList);
+  const userData = useSelector(state => state.auth.userData);
 
   var tempsender = '';
   var tempreceiver = '';
@@ -34,7 +35,9 @@ const DmRoomList = () => {
    */
   const onInit = useCallback(() => {
     axios
-      .get('http://localhost:8080/DM/testID')
+      .get('http://localhost:8080/DM/testID', {
+        headers: { userToken: userData.userToken },
+      })
       .then(res => {
         console.log('sender object: ', JSON.stringify(res.data.data.sender));
         console.log(

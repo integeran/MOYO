@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import Divider from '@material-ui/core/Divider';
 import Planner from '../../components/more/Planner';
@@ -8,9 +9,11 @@ import interactionPlugin from '@fullcalendar/interaction';
 import './styles.css';
 import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
-import { useSelector, useDispatch } from 'react-redux';
 import { changeField } from '../../modules/planDate';
 import { storeSchedule } from '../../modules/morePlanTravel';
+import { storeCompanion } from '../../modules/morePlanCompanion';
+import { storeMemo } from '../../modules/morePlanMemo';
+import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
 
 const MorePlan = () => {
   const dispatch = useDispatch();
@@ -33,6 +36,10 @@ const MorePlan = () => {
     state => state.morePlanTravel.planTravelList,
   );
 
+  const planCompanionList = useSelector(
+    state => state.morePlanCompanion.planCompanionList,
+  );
+
   const getSchedule = async () => {
     try {
       return await axios.get(
@@ -44,24 +51,46 @@ const MorePlan = () => {
     }
   };
 
+  const getCompanion = async () => {
+    try {
+      return await axios.get(
+        `http://70.12.246.66:8080/dailyAccompany/selectAllByUser/${userData.uid}`,
+        { headers: { userToken: userData.userToken } },
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getMemo = async () => {
+    try {
+      return await axios.get(
+        `http://70.12.246.66:8080/dailyMemo/selectAllByUser/${userData.uid}`,
+        { headers: { userToken: userData.userToken } },
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const onEventClick = props => {
+    console.log(props);
+  };
+
   useEffect(() => {
     async function getData() {
-      const resData = await getSchedule();
-      console.log(resData.data.data);
-      dispatch(storeSchedule(resData.data.data));
-      stateEvents(resData.data.data);
+      const schData = await getSchedule();
+      dispatch(storeSchedule(schData.data.data));
+      stateEvents(schData.data.data);
+      const comData = await getCompanion();
+      dispatch(storeCompanion(comData.data.data));
+      const memData = await getMemo();
+      dispatch(storeMemo(memData.data.data));
     }
     getData();
   }, []);
 
-  const [events, setEvents] = useState([
-    {
-      // title: 'The Title',
-      // start: '2020-01-01',
-      // end: '2020-01-03',
-      // allDay: 'false',
-    },
-  ]);
+  const [events, setEvents] = useState([{}]);
 
   const stateEvents = p => {
     setEvents(
@@ -81,6 +110,16 @@ const MorePlan = () => {
     }
   }, [planTravelList]);
 
+  const dayRenderFunction = data => {
+    const renderDate = moment(data.date).format('YYYY-MM-DD');
+    planCompanionList.forEach(element => {
+      if (renderDate === moment(element.day).format('YYYY-MM-DD')) {
+        data.el.innerHTML =
+          '<svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation"><path d="M20.5 6c-2.61.7-5.67 1-8.5 1s-5.89-.3-8.5-1L3 8c1.86.5 4 .83 6 1v13h2v-6h2v6h2V9c2-.17 4.14-.5 6-1l-.5-2zM12 6c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"></path></svg>';
+      }
+    });
+  };
+
   return (
     <div>
       <h1>일정 관리</h1>
@@ -91,6 +130,8 @@ const MorePlan = () => {
         dateClick={date => handleChangeSelectedDate(date)}
         events={events}
         displayEventTime={false}
+        eventClick={onEventClick}
+        dayRender={data => dayRenderFunction(data)}
       />
       {selectedDate && <Planner />}
     </div>

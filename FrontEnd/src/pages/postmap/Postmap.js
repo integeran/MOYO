@@ -64,8 +64,6 @@ export const Postmap = props => {
   useEffect(() => {
     if (timer > 0) {
       setTimeout(() => {
-        setInfoWindow(infoWindow ? infoWindow : null);
-        setInfoWindowCheck(infoWindowCheck ? true : false);
         setTimer(timer - 1);
       }, 1000);
     }
@@ -208,6 +206,7 @@ export const Postmap = props => {
           <Grid item xs={2} />
           <Grid item xs={7}>
             <TextField
+              placeholder="포스트맵을 작성하세요."
               onChange={onChatText}
               value={chatText}
               onKeyPress={enterSaveChat}
