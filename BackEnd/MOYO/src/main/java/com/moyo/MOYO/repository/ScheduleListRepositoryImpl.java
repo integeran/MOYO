@@ -1,6 +1,8 @@
 package com.moyo.MOYO.repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +44,12 @@ public class ScheduleListRepositoryImpl implements ScheduleListRepository {
 	}
 	
 	@Override
-	public int delete(int sListId) {
+	public int delete(int sListId, int uId) {
 		log.trace("ScheduleListRepository - delete");
-		return session.insert(ns + "deleteScheduleList", sListId);
+		Map<String, Object> param = new HashMap<String, Object>();
+    	param.put("sListId", sListId);
+    	param.put("uId", uId);
+		return session.insert(ns + "deleteScheduleList", param);
 	}
 	
 	@Override

@@ -42,9 +42,9 @@ public class DailyMemoServiceImpl implements DailyMemoService {
 	}
 	
 	@Override
-	public int delete(int dMemoId) {
+	public int delete(int dMemoId, int uId) {
 		log.trace("DailyMemoService - delete");
-		return dMemoRepo.delete(dMemoId);
+		return dMemoRepo.delete(dMemoId, uId);
 	}
 	
 	@Override
