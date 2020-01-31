@@ -12,6 +12,11 @@ import {
   accompanyCity,
 } from '../../modules/accompanyCondition';
 
+const HeaderTypo = styled(Typography)`
+  position: static;
+  padding: 2rem;
+  flex: 0 1 auto;
+`;
 const StyledDiv = styled.div`
   width: inherit;
   height: inherit;
@@ -24,7 +29,6 @@ const ListContainer = styled.div`
   min-height: 0;
   display: flex;
 `;
-
 const NationList = styled(List)`
   flex-grow: 1;
   overflow-y: scroll;
@@ -96,12 +100,7 @@ const AccompanyLocationSelect = () => {
 
   return (
     <StyledDiv>
-      <Typography
-        variant="h4"
-        style={{ position: 'static', padding: '2rem', flex: '0 1 auto' }}
-      >
-        어디로 가실건가요?
-      </Typography>
+      <HeaderTypo variant="h4">어디로 여행 가실건가요?</HeaderTypo>
       <ListContainer>
         <NationList component="nav">
           {nationList.map(item => (

@@ -5,11 +5,10 @@ import styled from 'styled-components';
 
 const ListComponent = styled.div`
   width: 90%;
-  margin: 0 auto;
+  min-height: 0;
+  margin: auto;
   margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 7rem;
+  margin-bottom: 6rem;
 `;
 
 const AccompanyListSet = ({ boardData }) => {
