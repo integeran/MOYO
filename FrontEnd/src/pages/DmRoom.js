@@ -7,14 +7,11 @@ import { Link } from 'react-router-dom';
 import {
   initAction,
   initUpload_updateAction,
-  isOpenRoomAction,
   roomList_updateAction,
   messageList_updateAction,
   changeReceiverAction,
 } from '../reducers/Dm';
-import Room from '../components/dm/Room';
 import Message from '../components/dm/Message';
-import FileMessage from '../components/dm/FileMessage';
 import UploadModal from '../components/dm/UploadModal';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -29,7 +26,6 @@ import AttachFileIcon from '@material-ui/icons/AttachFile';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Container from '@material-ui/core/Container';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -56,12 +52,12 @@ const DmRoom = ({ match }) => {
   const receiver = useSelector(state => state.Dm.receiver);
   const initUpload = useSelector(state => state.Dm.initUpload);
   const messageList = useSelector(state => state.Dm.messageList);
-  const waitTest = useSelector(state => state.Dm.waitTest);
 
   const [title, setTitle] = useState('Hong Gildong');
   const [curRoomId, setCurRoomId] = useState('');
   const [ivalue, setIvalue] = useState('');
   const [uploadModal, setUploadModal] = useState(false);
+  const [inish, setInish] = useState(true);
 
   const onChangeTitle = useCallback(e => {
     setTitle(e);
@@ -78,6 +74,10 @@ const DmRoom = ({ match }) => {
   const onChangeUploadModal = useCallback(e => {
     setUploadModal(e);
   }, []);
+
+  const onChangeInish = useCallback(e => {
+    inish ? setInish(false) : setInish(true);
+  });
 
   const modalOpen = () => {
     onChangeUploadModal(true);
@@ -284,14 +284,6 @@ const DmRoom = ({ match }) => {
   };
 
   /**
-   * 백버튼 클릭
-   */
-  const onBackBtnClick = () => {
-    dispatch(isOpenRoomAction(false));
-    // RoomList로 이동하기 만들기
-  };
-
-  /**
    * 신규 User를 IndexDB에서 체크 후 저장
    */
   const checkAndSaveUser = user => {
@@ -425,14 +417,6 @@ const DmRoom = ({ match }) => {
    */
 
   const saveMessages = (fileName, path, msg) => {
-    // 파일전송 메세지
-    // if (fileName && path) {
-    //   msg = {
-    //     fileName: { fileName },
-    //     path: { path },
-    //   };
-    // }
-
     console.log(msg);
 
     if (msg && msg !== '') {
@@ -486,7 +470,11 @@ const DmRoom = ({ match }) => {
       firebase
         .database()
         .ref()
-        .update(multiUpdates);
+        .update(multiUpdates)
+        .then(() => {
+          var list = document.getElementById('messageList');
+          list.scrollTop = list.scrollHeight;
+        });
     }
   };
 
@@ -580,15 +568,14 @@ const DmRoom = ({ match }) => {
     setAnchorEl(null);
   };
 
-  const loadMessage = e => {
+  const loadMessage = () => {
     saveMessages(null, null, ivalue);
     setIvalue('');
   };
 
   const onEnterKey = e => {
     if (e.key === 'Enter') {
-      saveMessages(null, null, ivalue);
-      setIvalue('');
+      loadMessage();
     }
   };
 
@@ -650,6 +637,10 @@ const DmRoom = ({ match }) => {
     }
   };
 
+  const Test = () => {
+    console.log('성공!');
+  };
+
   return (
     <>
       <div className={classes.root}>
@@ -706,7 +697,12 @@ const DmRoom = ({ match }) => {
 
       <div
         id="messageList"
-        style={{ border: '1px solid', width: '100%', height: '600px' }}
+        style={{
+          border: '1px solid',
+          width: '100%',
+          height: '600px',
+          overflow: 'auto',
+        }}
       >
         {messageList.map((message, index) => {
           console.log(message.userImage);
