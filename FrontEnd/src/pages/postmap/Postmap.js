@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { Map, GoogleApiWrapper, Marker, InfoWindow } from 'google-maps-react';
 import axios from 'axios';
 
@@ -32,6 +33,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const Postmap = props => {
+  const userData = useSelector(state => state.auth.userData);
+
   const [stores, setStores] = useState([]);
   const [pos, setPos] = useState([]);
   const [chatText, setChatText] = useState('');
@@ -73,7 +76,8 @@ export const Postmap = props => {
   const fetchMarker = () => {
     axios
       .get(
-        'http://70.12.247.75:8080/postmap/selectAll?latitude=37.5&longitude=127.03',
+        'http://localhost:8080/postmap/selectAll?latitude=37.5&longitude=127.03',
+        { headers: { userToken: userData.userToken } },
       )
       .then(res => {
         setStores(res.data.data);

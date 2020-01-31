@@ -79,7 +79,7 @@ const Signup = props => {
 
   const getResponse = async () => {
     try {
-      return await axios.post('http://70.12.246.66:8080/user/register', {
+      return await axios.post('http://localhost:8080/user/register', {
         provider: 0,
         socialId: userSocialId,
         nickname: userNickname,
