@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
-@CrossOrigin("*")
 public class CommunityRestController {
 	
 	@Autowired
@@ -30,39 +29,6 @@ public class CommunityRestController {
 		} catch(RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
-	}
-	
-	@GetMapping("/DM/testID")
-	public ResponseEntity<Map<String, Object>> testID() {
-		try {
-			Map<String, Object> resultMap = new HashMap<String, Object>();
-
-			resultMap.put("receiver", tempObject(5, "INDONG", 28, "m", null, 1, 2, "kunder@kakao.com", 0, 1, "2020-01-20 06:28:47", "2020-01-20 06:28:47"));
-			//resultMap.put("receiver", tempObject(6, "SUNGCHAN", 25, "m", null, 2, 5, "tjdcksdl00@kakao.com", 0, 2, "2020-01-22 16:28:47", "2020-01-23 19:21:43"));
-			resultMap.put("sender", tempObject(3, "SOOAN", 22, "w", null, 3, 7, "jmiha@kakao.com", 0, 2, "2020-01-23 15:22:37", "2020-01-24 19:22:15"));
-			return response(resultMap, HttpStatus.OK, true);
-		} catch(RuntimeException e) {
-			return response(e.getMessage(), HttpStatus.CONFLICT, false);
-		}
-	}
-	
-	private Map<String, Object> tempObject(int uId, String nickname, int age, String gender, String image, int beforePsId, 
-			int afterPsId, String socialId, int provider, int level, String registerDate, String updateDate) {
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("uId", uId);
-		resultMap.put("nickname", nickname);
-		resultMap.put("age", age);
-		resultMap.put("gender", gender);
-		resultMap.put("image", image);
-		resultMap.put("beforePsId", beforePsId);
-		resultMap.put("afterPsId", afterPsId);
-		resultMap.put("socialId", socialId);
-		resultMap.put("provider", provider);
-		resultMap.put("level", level);
-		resultMap.put("registerDate", registerDate);
-		resultMap.put("updateDate", updateDate);
-		
-		return resultMap;
 	}
 	
 	private ResponseEntity<Map<String, Object>> response(Object data, HttpStatus httpstatus, boolean status) {

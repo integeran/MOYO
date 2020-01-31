@@ -1,1 +1,0 @@
-React-Firebase-Chat v1.0.0
