@@ -9,14 +9,14 @@ import MoreMain from './pages/more/MoreMain';
 import MorePlan from './pages/more/MorePlan';
 import CategoryNav from './components/common/CategoryNav';
 import styled from 'styled-components';
-import { Route, Switch} from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { useLocation } from 'react-router';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Container from '@material-ui/core/Container';
 import AccompanyWrite from './pages/acc/AccompanyWrite';
-import DmRoom from './pages/DmRoom';
-import DmRoomList from './pages/DmRoomList';
+import DmRoom from './pages/dm/DmRoom';
+import DmRoomList from './pages/dm/DmRoomList';
 
 const StyledContainer = styled(Container)`
   position: relative;
@@ -25,7 +25,7 @@ const StyledContainer = styled(Container)`
   ::-webkit-scrollbar {
     display: none;
   }
-`
+`;
 
 const StyledDiv = styled.div`
   width: inherit;
