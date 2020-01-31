@@ -1,4 +1,5 @@
 import React from 'react';
+
 import AccompanyMain from './pages/acc/AccompanyMain';
 import AccompanyLocationSelect from './pages/acc/AccompanyLocationSelect';
 import AccompanyDateSelect from './pages/acc/AccompanyDateSelect';
@@ -8,12 +9,14 @@ import MoreMain from './pages/more/MoreMain';
 import MorePlan from './pages/more/MorePlan';
 import CategoryNav from './components/common/CategoryNav';
 import styled from 'styled-components';
-import { Route } from 'react-router-dom';
+import { Route, Switch} from 'react-router-dom';
 import { useLocation } from 'react-router';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Container from '@material-ui/core/Container';
 import AccompanyWrite from './pages/acc/AccompanyWrite';
+import DmRoom from './pages/DmRoom';
+import DmRoomList from './pages/DmRoomList';
 
 const StyledContainer = styled(Container)`
   position: relative;
@@ -22,7 +25,8 @@ const StyledContainer = styled(Container)`
   ::-webkit-scrollbar {
     display: none;
   }
-`;
+`
+
 const StyledDiv = styled.div`
   width: inherit;
   height: inherit;
@@ -46,6 +50,14 @@ const App = () => {
         <Route path="/acc/write" component={AccompanyWrite} />
         <Route exact path="/more" component={MoreMain} />
         <Route path="/more/morePlan" component={MorePlan} />
+        <Switch>
+          <Route
+            path="/DmRoom/:receiverId/:receiverName/:receiverImage"
+            component={DmRoom}
+          />
+          <Route path="/DmRoom/" component={DmRoom} />
+        </Switch>
+        <Route path="/DmRoomList" component={DmRoomList} />
       </StyledContainer>
       {!(location.pathname === '/' || location.pathname === '/signup') && (
         <CategoryNav />
