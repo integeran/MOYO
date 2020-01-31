@@ -28,13 +28,13 @@
 		daily_accompany (u_id, accompany_id, day, register_date, update_date)
 		values (#{uId}, #{accompanyId}, #{day}, current_timestamp(), current_timestamp())	
 	</insert>
-	<delete id="deleteDailyAccompany" parameterType="int">
+	<delete id="deleteDailyAccompany" parameterType="map">
 		delete from daily_accompany
-		where d_ac_id = #{dAcId}
+		where d_ac_id = #{dAcId} and u_id = #{uId}
 	</delete>
 	<update id="updateDailyAccompany" parameterType="dailyAccompany">
 		update daily_accompany
 		set day = #{day}, update_date = current_timestamp()
-		where d_ac_id = #{dAcId}
+		where d_ac_id = #{dAcId} and u_id = #{uId}
 	</update>
 </mapper>

@@ -13,7 +13,7 @@ public interface ScheduleListRepository {
 	
 	public int create(ScheduleList scheduleList);
 	
-	public int delete(int sListId);
+	public int delete(int sListId, int uId);
 	
 	public int update(ScheduleList scheduleList);
 
