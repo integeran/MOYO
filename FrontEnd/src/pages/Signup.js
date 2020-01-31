@@ -85,6 +85,7 @@ const Signup = props => {
         nickname: userNickname,
         age: age,
         gender: gender,
+        image: userImage,
       });
     } catch (error) {
       console.error(error);
@@ -104,7 +105,7 @@ const Signup = props => {
       pushUserData('image', jwtData.user.image);
       localStorage.setItem('token', resData.data.data);
       history.push({
-        pathname: '/main',
+        pathname: '/acc',
       });
     } else {
       console.log('error');

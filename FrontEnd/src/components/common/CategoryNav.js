@@ -27,6 +27,12 @@ const CategoryNav = () => {
   const handleMoreClick = () => {
     history.push('/more');
   };
+  const handlePostMapClick = () => {
+    history.push('/postmap');
+  };
+  const handleDMClick = () => {
+    history.push('/dmroomlist');
+  };
 
   return (
     <BottomNavigationStyled value={value} onChange={handleChange}>
@@ -39,11 +45,13 @@ const CategoryNav = () => {
         label="포스트맵"
         value="postmap"
         icon={<RoomIcon />}
+        onClick={handlePostMapClick}
       />
       <BottomNavigationActionStyled
         label="채팅"
         value="dm"
         icon={<ChatIcon />}
+        onClick={handleDMClick}
       />
       <BottomNavigationActionStyled
         label="커뮤니티"
