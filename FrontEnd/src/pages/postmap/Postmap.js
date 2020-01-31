@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Map, GoogleApiWrapper, Marker, InfoWindow } from 'google-maps-react';
-import axios from 'axios';
+import axios from '../../api/axios';
 
 import NearMeIcon from '@material-ui/icons/NearMe';
 import { makeStyles } from '@material-ui/core/styles';
@@ -73,10 +73,9 @@ export const Postmap = props => {
 
   const fetchMarker = () => {
     axios
-      .get(
-        'http://localhost:8080/postmap/selectAll?latitude=37.5&longitude=127.03',
-        { headers: { userToken: userData.userToken } },
-      )
+      .get('postmap/selectAll?latitude=37.5&longitude=127.03', {
+        headers: { userToken: userData.userToken },
+      })
       .then(res => {
         setStores(res.data.data);
       })

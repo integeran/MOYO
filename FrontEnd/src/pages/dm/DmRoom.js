@@ -119,7 +119,7 @@ const DmRoom = ({ match }) => {
    */
   const onInit = useCallback(() => {
     axios
-      .get('http://localhost:8080/DM/testID', {
+      .get('DM/testID', {
         headers: { userToken: userData.userToken },
       })
       .then(res => {

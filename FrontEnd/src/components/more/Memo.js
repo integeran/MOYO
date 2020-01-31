@@ -4,9 +4,9 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { storeMemo } from '../../modules/morePlanMemo';
 import moment from 'moment';
+import axios from '../../api/axios';
 
 const Memo = () => {
-  const axios = require('axios');
   const dispatch = useDispatch();
 
   const userData = useSelector(state => state.auth.userData);
@@ -36,10 +36,9 @@ const Memo = () => {
 
   const getMemo = async () => {
     try {
-      return await axios.get(
-        `http://70.12.246.66:8080/dailyMemo/selectAllByUser/${userData.uid}`,
-        { headers: { userToken: userData.userToken } },
-      );
+      return await axios.get(`dailyMemo/selectAllByUser/${userData.uid}`, {
+        headers: { userToken: userData.userToken },
+      });
     } catch (error) {
       console.error(error);
     }
@@ -48,7 +47,7 @@ const Memo = () => {
   const postMemo = async () => {
     try {
       return await axios.post(
-        'http://70.12.246.66:8080/dailyMemo/post/',
+        'dailyMemo/post/',
         {
           uid: userData.uid,
           day: moment(selectedDate).format('YYYY-MM-DD'),
@@ -65,12 +64,9 @@ const Memo = () => {
 
   const deleteMemo = async () => {
     try {
-      return await axios.delete(
-        `http://70.12.246.66:8080/dailyMemo/delete/${todayMemo[0].dmemoId}`,
-        {
-          headers: { userToken: userData.userToken },
-        },
-      );
+      return await axios.delete(`dailyMemo/delete/${todayMemo[0].dmemoId}`, {
+        headers: { userToken: userData.userToken },
+      });
     } catch (error) {
       console.error(error);
     }
