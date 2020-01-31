@@ -6,6 +6,8 @@ html {
 }
 
 body {
+  width: inherit;
+  height: inherit;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -21,6 +23,19 @@ body {
 #root {
   width: 100%;
   height: 100%;
+}
+
+#root {
+  width: inherit;
+  height: inherit;
+}
+
+#googleMap > div {
+  position: relative !important;
+}
+
+#googleMap > div > div {
+  position: relative !important;
 }
 
 code {

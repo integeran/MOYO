@@ -17,6 +17,7 @@ import Container from '@material-ui/core/Container';
 import AccompanyWrite from './pages/acc/AccompanyWrite';
 import DmRoom from './pages/dm/DmRoom';
 import DmRoomList from './pages/dm/DmRoomList';
+import PostMap from './pages/postmap/Postmap';
 
 const StyledContainer = styled(Container)`
   position: relative;
@@ -52,12 +53,13 @@ const App = () => {
         <Route path="/more/morePlan" component={MorePlan} />
         <Switch>
           <Route
-            path="/DmRoom/:receiverId/:receiverName/:receiverImage"
+            path="/dmroom/:receiverId/:receiverName/:receiverImage"
             component={DmRoom}
           />
-          <Route path="/DmRoom/" component={DmRoom} />
+          <Route path="/dmroom/" component={DmRoom} />
         </Switch>
-        <Route path="/DmRoomList" component={DmRoomList} />
+        <Route path="/dmroomlist" component={DmRoomList} />
+        <Route path="/postmap" component={PostMap} />
       </StyledContainer>
       {!(location.pathname === '/' || location.pathname === '/signup') && (
         <CategoryNav />
