@@ -39,6 +39,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+// DmRoom
 const DmRoom = ({ match }) => {
   const dispatch = useDispatch();
 
