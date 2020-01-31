@@ -118,7 +118,7 @@ const PlanTravel = () => {
   };
 
   const postPlanTravel = async () => {
-    const resData = await postPlanTravelServer();
+    await postPlanTravelServer();
     const schData = await getSchedule();
     dispatch(storeSchedule(schData.data.data));
     setOpenCreate(false);
@@ -140,7 +140,7 @@ const PlanTravel = () => {
   };
 
   const handleDeleteSchedule = async sId => {
-    const resData = await deleteSchedule(sId);
+    await deleteSchedule(sId);
     const schData = await getSchedule();
     dispatch(storeSchedule(schData.data.data));
   };
@@ -199,7 +199,7 @@ const PlanTravel = () => {
   };
 
   const putPlanTravel = async () => {
-    const resData = await putPlanTravelServer();
+    await putPlanTravelServer();
     const schData = await getSchedule();
     dispatch(storeSchedule(schData.data.data));
     setOpenUpdate(false);

@@ -1,29 +1,13 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import { storeMemo } from '../../modules/morePlanMemo';
 import moment from 'moment';
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'flex',
-    '& > *': {
-      margin: theme.spacing(1),
-      width: theme.spacing(16),
-      height: theme.spacing(16),
-    },
-  },
-}));
-
 const Memo = () => {
   const axios = require('axios');
   const dispatch = useDispatch();
-
-  const classes = useStyles();
 
   const userData = useSelector(state => state.auth.userData);
   const selectedDate = useSelector(state => state.planDate.selectedDate);
@@ -94,11 +78,11 @@ const Memo = () => {
 
   const handleMemo = async () => {
     if (memoText.trim()) {
-      const resData = await postMemo();
+      await postMemo();
       const memData = await getMemo();
       dispatch(storeMemo(memData.data.data));
     } else {
-      const resData = await deleteMemo();
+      await deleteMemo();
       const memData = await getMemo();
       dispatch(storeMemo(memData.data.data));
     }
@@ -106,17 +90,16 @@ const Memo = () => {
 
   return (
     <div>
-      <div className={classes.root}>
-        <TextField
-          id="outlined-multiline-static"
-          multiline
-          rows="4"
-          value={memoText}
-          onChange={handleChangeMemo}
-          variant="outlined"
-        ></TextField>
-        <Button onClick={handleMemo}>저장하기</Button>
-      </div>
+      <TextField
+        id="outlined-multiline-static"
+        multiline
+        fullWidth
+        rows="4"
+        value={memoText}
+        onChange={handleChangeMemo}
+        variant="outlined"
+      ></TextField>
+      <Button onClick={handleMemo}>저장하기</Button>
     </div>
   );
 };
