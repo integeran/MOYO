@@ -31,7 +31,6 @@ const BaseAppBar = ({ title, Icon1, handleClick1, Icon2, handleClick2 }) => {
         {Icon1 && (
           <IconButtonContainer
             pos="start"
-            label="back"
             IconDesign={Icon1}
             handleClick={handleClick1}
           />
@@ -40,7 +39,6 @@ const BaseAppBar = ({ title, Icon1, handleClick1, Icon2, handleClick2 }) => {
         {Icon2 && (
           <IconButtonContainer
             pos="end"
-            label="back"
             IconDesign={Icon2}
             handleClick={handleClick2}
           />
