@@ -8,10 +8,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.moyo.MOYO.dto.AccompanyBoard;
@@ -28,12 +30,13 @@ public class AccompanyBoardRestController {
 	AccompanyBoardService acService;
 	
 	@GetMapping("accompanyBoard/selectAll")
-	public ResponseEntity<Map<String, Object>> selectAll(@RequestBody Filter filter) {
+	public ResponseEntity<Map<String, Object>> selectAll(@ModelAttribute Filter filter) {
+		System.out.println(filter);
 		try {
 			log.trace("AccompanyBoardRestController - selectAll : ",filter);
 			return response(acService.selectAll(filter), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			log.error("AccompanyBoardRestController - selectAll : ",filter);
+			log.trace("AccompanyBoardRestController - selectAll : ",filter);
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
@@ -51,6 +54,7 @@ public class AccompanyBoardRestController {
 	
 	@PostMapping("accompanyBoard/create")
 	public ResponseEntity<Map<String, Object>> create(@RequestBody AccompanyBoard accompanyBoard) {
+		System.out.println(accompanyBoard);
 		try {
 			log.trace("AccompanyBoardRestController - create : ",accompanyBoard);
 			return response(acService.create(accompanyBoard), HttpStatus.OK, true);
@@ -81,6 +85,40 @@ public class AccompanyBoardRestController {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
+	
+	@GetMapping("accompanyBoard/selectNation")
+	public ResponseEntity<Map<String, Object>> selectNation() {
+		try {
+			log.trace("AccompanyBoardRestController - selectNation ");
+			return response(acService.selectNation(), HttpStatus.OK, true);
+		} catch (RuntimeException e) {
+			log.error("AccompanyBoardRestController - selectNation ");
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
+	@GetMapping("accompanyBoard/selectCity/{nId}")
+	public ResponseEntity<Map<String, Object>> selectCity(@PathVariable int nId) {
+		try {
+			log.trace("AccompanyBoardRestController - selectCity : ",nId);
+			return response(acService.selectCity(nId), HttpStatus.OK, true);
+		} catch (RuntimeException e) {
+			log.error("AccompanyBoardRestController - selectCity : ",nId);
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
+	@GetMapping("accompanyBoard/selectTravelType")
+	public ResponseEntity<Map<String, Object>> selectTravelType() {
+		try {
+			log.trace("AccompanyBoardRestController - selectTravelType ");
+			return response(acService.selectTravelType(), HttpStatus.OK, true);
+		} catch (RuntimeException e) {
+			log.error("AccompanyBoardRestController - selectTravelType ");
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
 	public ResponseEntity<Map<String, Object>> response(Object data, HttpStatus httpstatus, boolean status) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("data", data);
