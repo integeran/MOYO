@@ -3,5 +3,5 @@ RoomUsers/roomId /userId : 채팅방에 있는 유저
 UserRooms/userId/roomId => (roomId, roomUserName, roomUserlist, roomType, roomOneVSOneTarget, lastMessage, image, timestamp): 유저가 속해있는 채팅방
 
 수정본
-Messages/{roomId}/{messageId} => (userImage, userName, message, timeStamp, direct)
-UserRooms/{senderId}/{receiverId} => (roomId, roomTitle, userId, userName, userImage, lastMessage, timeStamp)
+Messages/{roomId}/{messageId} => (userId, sender, receiver, message, timeStamp, fileName, path)
+UserRooms/{senderId}/{receiverId} => (roomId, receiver, lastMessage, timeStamp)

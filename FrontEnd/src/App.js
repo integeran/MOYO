@@ -52,10 +52,7 @@ const App = () => {
         <Route exact path="/more" component={MoreMain} />
         <Route path="/more/morePlan" component={MorePlan} />
         <Switch>
-          <Route
-            path="/dmroom/:receiverId/:receiverName/:receiverImage"
-            component={DmRoom}
-          />
+          <Route path="/dmroom/:receiverId" component={DmRoom} />
           <Route path="/dmroom/" component={DmRoom} />
         </Switch>
         <Route path="/dmroomlist" component={DmRoomList} />
