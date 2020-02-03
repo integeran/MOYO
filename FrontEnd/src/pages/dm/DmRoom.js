@@ -163,9 +163,8 @@ const DmRoom = ({ match }) => {
         var val = snapshot.val();
 
         const MessageInfo = {
-          userId: val.userId,
           sender: val.sender,
-          receiver: val.receiver,
+          curUser: sender,
           message: val.message,
           timeStamp: val.timeStamp,
           fileName: val.fileName,
@@ -198,9 +197,7 @@ const DmRoom = ({ match }) => {
 
       // 메세지 저장
       multiUpdates['Messages/' + hookRoomId + '/' + messageId] = {
-        userId: hookSender.uId,
         sender: hookSender,
-        receiver: hookReceiver,
         message: msg,
         timeStamp: moment().format('MMMM Do YYYY, h:mm:ss a'), // 서버시간 등록
         fileName: fileName ? fileName : null,
@@ -369,9 +366,8 @@ const DmRoom = ({ match }) => {
           return (
             <Message
               key={index}
-              userId={message.userId}
               sender={message.sender}
-              receiver={message.receiver}
+              curUser={message.curUser}
               message={message.message}
               timeStamp={message.timeStamp}
               fileName={message.fileName}
