@@ -4,9 +4,9 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
-import axios from '../../api/axios';
+import { getNationList, getCityList } from '../../api/commonData';
 import {
   accompanyNation,
   accompanyCity,
@@ -48,42 +48,21 @@ const AccompanyLocationSelect = () => {
   const history = useHistory();
   const [nationList, setNationList] = useState([]);
   const [cityList, setCityList] = useState([]);
-  const userData = useSelector(state => state.auth.userData, []);
   const dispatch = useDispatch();
 
-  const getAccompanyNationList = async () => {
-    try {
-      return await axios.get('accompanyBoard/selectNation', {
-        headers: { userToken: userData.userToken },
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const getAccompanyCityList = async nid => {
-    try {
-      return await axios.get(`accompanyBoard/selectCity/${nid}`, {
-        headers: { userToken: userData.userToken },
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   useEffect(() => {
-    console.log('accloc');
-    const fetchNationList = async () => {
-      const res = await getAccompanyNationList();
-      setNationList(res.data.data);
-    };
-    fetchNationList();
+    getNationList().then(data => {
+      setNationList(data);
+    });
   }, []);
 
   const onNationClick = async nationItem => {
-    const cityRes = await getAccompanyCityList(nationItem.nid);
-    setCityList(cityRes.data.data);
-    dispatch(accompanyNation({ code: nationItem.nid, name: nationItem.name }));
+    getCityList(nationItem.nid).then(data => {
+      setCityList(data);
+      dispatch(
+        accompanyNation({ code: nationItem.nid, name: nationItem.name }),
+      );
+    });
   };
 
   const onCityClick = cityItem => {
