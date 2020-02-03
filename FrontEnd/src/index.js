@@ -1,16 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { BrowserRouter, Route } from 'react-router-dom';
-import * as firebase from 'firebase';
-import { Provider } from 'react-redux';
-import reducer from './reducers';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 import { createStore } from 'redux';
-import DmRoom from './pages/DmRoom';
-import DmRoomList from './pages/DmRoomList';
+import { changeField } from './modules/auth';
+import rootReducer from './modules';
+import App from './App';
+import * as firebase from 'firebase';
+
+const jwtDecode = require('jwt-decode');
 
 const config = {
   apiKey: 'AIzaSyA0CkmtA7OKgn_qX56-LzpaIwGr1A_eV-0',
@@ -25,7 +26,25 @@ const config = {
 
 firebase.initializeApp(config);
 
-const store = createStore(reducer, composeWithDevTools());
+const store = createStore(rootReducer, composeWithDevTools());
+
+const pushUserData = (k, v) => {
+  store.dispatch(changeField({ form: 'userData', key: k, value: v }));
+};
+
+function loadUser() {
+  if (localStorage.token) {
+    const jwtToken = jwtDecode(localStorage.token);
+    pushUserData('userToken', localStorage.token);
+    pushUserData('uid', jwtToken.user.uid);
+    pushUserData('nickname', jwtToken.user.nickname);
+    pushUserData('age', jwtToken.user.age);
+    pushUserData('gender', jwtToken.user.gender);
+    pushUserData('image', jwtToken.user.image);
+  }
+}
+
+loadUser();
 
 ReactDOM.render(
   <Provider store={store}>
