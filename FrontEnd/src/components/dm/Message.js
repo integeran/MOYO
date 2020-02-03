@@ -5,20 +5,12 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import FileMessage from './FileMessage';
 
-const Message = ({
-  userId,
-  sender,
-  receiver,
-  message,
-  timeStamp,
-  fileName,
-  path,
-}) => {
+const Message = ({ sender, curUser, message, timeStamp, fileName, path }) => {
   const useStyles = makeStyles({
     card: {
       minWidth: 275,
       width: 150,
-      float: userId === sender.uId ? 'right' : '',
+      float: curUser.uId === sender.uId ? 'right' : '',
     },
     bullet: {
       display: 'inline-block',
@@ -37,7 +29,7 @@ const Message = ({
   const bull = <span className={classes.bullet}>•</span>;
 
   var gab = <span></span>;
-  if (userId === sender.uId) {
+  if (curUser.uId === sender.uId) {
     gab = <p style={{ clear: 'both' }}></p>;
   }
 
@@ -53,12 +45,12 @@ const Message = ({
             >
               <img
                 alt="메세지 보낸 사람의 프로필"
-                src={userId === sender.uId ? sender.image : receiver.image}
+                src={sender.image}
                 style={{ width: '40px', height: '40px' }}
               ></img>
             </Typography>
             <Typography variant="h5" component="h2">
-              {userId === sender.uId ? sender.nickname : receiver.nickname}
+              {sender.nickname}
             </Typography>
             {path ? (
               <FileMessage path={path} fileName={fileName} />
