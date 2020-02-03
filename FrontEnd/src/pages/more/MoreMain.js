@@ -25,6 +25,9 @@ const MoreMain = ({ history }) => {
   const handlePlanClick = () => {
     history.push('/more/morePlan');
   };
+  const handleSettingsClick = () => {
+    history.push('/more/moreSettings');
+  };
   return (
     <div>
       <br />
@@ -45,7 +48,7 @@ const MoreMain = ({ history }) => {
       <Divider />
       <h1>공통</h1>
       <h3 onClick={handlePlanClick}>공지사항</h3>
-      <h3 onClick={handlePlanClick}>앱 설정</h3>
+      <h3 onClick={handleSettingsClick}>앱 설정</h3>
     </div>
   );
 };
