@@ -278,11 +278,16 @@ export const Postmap = props => {
                           className={classes.inline}
                           color="textPrimary"
                         >
-                          {chat.register_date}
+                          {chat.registerDate}
+                          <span style={{ float: 'right' }}>x{chat.likes}</span>
                         </Typography>
                         {chat.like ? (
                           <FavoriteIcon
-                            style={{ float: 'right', cursor: 'pointer' }}
+                            style={{
+                              float: 'right',
+                              cursor: 'pointer',
+                              color: 'red',
+                            }}
                             onClick={() => {
                               chat.like = chat.like ? false : true;
                               onSetInish();
