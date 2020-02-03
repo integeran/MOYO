@@ -15,6 +15,7 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
+import moment from 'moment';
 
 const mapStyles = {
   width: '400px',
@@ -35,10 +36,9 @@ const useStyles = makeStyles(theme => ({
 export const Postmap = props => {
   const userData = useSelector(state => state.auth.userData);
 
-  const [stores, setStores] = useState([]);
+  const [postList, setPostList] = useState([]);
   const [pos, setPos] = useState([]);
   const [chatText, setChatText] = useState('');
-  const [chatList, setChatList] = useState([]);
   const [timer, setTimer] = useState(0);
   const [inish, setInish] = useState(true);
   const [infoWindow, setInfoWindow] = useState(null);
@@ -57,8 +57,8 @@ export const Postmap = props => {
   };
 
   useEffect(() => {
-    fetchMarker();
     getPosition();
+    // fetchMarker();
   }, []);
 
   useEffect(() => {
@@ -71,13 +71,16 @@ export const Postmap = props => {
 
   const classes = useStyles();
 
-  const fetchMarker = () => {
+  const fetchMarker = pos => {
     axios
-      .get('postmap/selectAll?latitude=37.5&longitude=127.03', {
-        headers: { userToken: userData.userToken },
-      })
+      .get(
+        `postmap/selectAll?latitude=${pos.latitude}&longitude=${pos.longitude}`,
+        {
+          headers: { userToken: userData.userToken },
+        },
+      )
       .then(res => {
-        setStores(res.data.data);
+        setPostList(res.data.data);
       })
       .catch(e => {
         console.log(e);
@@ -99,6 +102,8 @@ export const Postmap = props => {
         savepos.push(curpos);
 
         setPos(savepos);
+
+        fetchMarker(curpos);
       });
     } else {
       console.log('navigator error');
@@ -106,9 +111,9 @@ export const Postmap = props => {
   };
 
   const displayMarkers = () => {
-    console.log('displayMarkers: ', chatList);
+    console.log('displayMarkers: ', postList);
 
-    return chatList.map((chat, index) => {
+    return postList.map((chat, index) => {
       return (
         <Marker
           key={index}
@@ -118,6 +123,7 @@ export const Postmap = props => {
             lng: chat.longitude,
           }}
           onClick={() => {
+            console.log(chat);
             setInfoWindow(chat);
             setInfoWindowCheck(true);
             onSetInish();
@@ -128,22 +134,47 @@ export const Postmap = props => {
   };
 
   const saveChat = () => {
+    let nowDate = moment(new Date()).format('YYYY-MM-DD');
     if (timer > 0) {
       alert('재사용 시간이 도달하지 않았습니다.');
     } else if (chatText.length > 0) {
-      var curChat = {
-        chat_id: 1,
-        contents: chatText,
-        latitude: pos[0].latitude,
-        longitude: pos[0].longitude,
-        register_id: 1828,
-        like: false,
-        register_date: '20/01/30 14:47',
-      };
+      // var curChat = {
+      //   chat_id: 1,
+      //   contents: chatText,
+      //   latitude: pos[0].latitude,
+      //   longitude: pos[0].longitude,
+      //   register_id: userData.uid,
+      //   like: false,
+      //   register_date: nowDate,
+      // };
 
-      var temp = chatList;
-      temp.push(curChat);
-      setChatList(temp);
+      axios
+        .post(
+          `postmap/insertPostmap/`,
+          {
+            contents: chatText,
+            latitude: pos[0].latitude,
+            longitude: pos[0].longitude,
+            likes: 0,
+            pmId: 0,
+            registerDate: nowDate,
+            registerId: userData.uid,
+          },
+          {
+            headers: { userToken: userData.userToken },
+          },
+        )
+        .then(res => {
+          var curpos = {
+            latitude: pos[0].latitude,
+            longitude: pos[0].longitude,
+          };
+          fetchMarker(curpos);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+
       setChatText('');
 
       setTimer(5);
@@ -164,7 +195,7 @@ export const Postmap = props => {
             <Map
               key={index}
               google={props.google}
-              zoom={8}
+              zoom={13}
               style={mapStyles}
               initialCenter={{ lat: curpos.latitude, lng: curpos.longitude }}
               onClick={() => {
@@ -185,7 +216,7 @@ export const Postmap = props => {
                   visible={infoWindowCheck}
                 >
                   <div>
-                    <h2>{infoWindow.register_id}</h2>
+                    <h2>{infoWindow.registerId}</h2>
                     <p>{infoWindow.contents}</p>
                   </div>
                 </InfoWindow>
@@ -232,7 +263,7 @@ export const Postmap = props => {
         id="chatList"
         style={{ overflow: 'auto', width: '400px', height: '400px' }}
       >
-        {chatList.map((chat, index) => {
+        {postList.map((chat, index) => {
           return (
             <>
               <List className={classes.root} key={index}>
