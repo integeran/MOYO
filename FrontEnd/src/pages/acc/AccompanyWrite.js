@@ -9,49 +9,45 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import {
-  TextField,
-  MenuItem,
-  Grid,
-  Typography,
-  FormControl,
-  FormGroup,
-  FormControlLabel,
-  RadioGroup,
-  Radio,
-  Checkbox,
-} from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import axios from '../../api/axios';
-import {
-  getNationList,
-  getCityList,
-  getGenderList,
-  getAgeList,
-  getTypeList,
-} from '../../api/commonData';
 import moment from 'moment';
 import { Divider } from '@material-ui/core';
 
 const AccompanyWrite = () => {
-  const userData = useSelector(state => state.auth.userData, []);
-  const history = useHistory();
-
   const [cityList, setCityList] = useState([]);
   const [nationList, setNationList] = useState([]);
-  const [genderList, setGenderList] = useState([]);
-  const [ageList, setAgeList] = useState([]);
-  const [typeList, setTypeList] = useState([]);
-
   const [title, setTitle] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [nation, setNation] = useState('');
   const [city, setCity] = useState('');
   const [content, setContent] = useState('');
+  const userData = useSelector(state => state.auth.userData, []);
+  const history = useHistory();
 
-  const [gender, setGender] = useState('N');
-  const [age, setAge] = useState('');
-  const [type, setType] = useState('');
+  const getAccompanyNationList = async () => {
+    try {
+      return await axios.get('accompanyBoard/selectNation', {
+        headers: { userToken: userData.userToken },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getAccompanyCityList = async nid => {
+    try {
+      return await axios.get(`accompanyBoard/selectCity/${nid}`, {
+        headers: { userToken: userData.userToken },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const inputAccompanyBoard = async boardData => {
     try {
@@ -65,10 +61,8 @@ const AccompanyWrite = () => {
 
   useEffect(() => {
     const fetchNationList = async () => {
-      setNationList(await getNationList());
-      setGenderList(await getGenderList(true));
-      setAgeList(await getAgeList());
-      setTypeList(await getTypeList());
+      const res = await getAccompanyNationList();
+      setNationList(res.data.data);
     };
     fetchNationList();
   }, []);
@@ -85,11 +79,13 @@ const AccompanyWrite = () => {
   };
   const handleNationChange = async e => {
     setNation(e.target.value);
-    const res = await getCityList(e.target.value);
-    setCityList(res);
+    console.log(e.target.value);
+    const res = await getAccompanyCityList(e.target.value);
+    setCityList(res.data.data);
   };
 
   const handleCityChange = e => {
+    console.log(e);
     setCity(e.target.value);
   };
 
@@ -97,39 +93,27 @@ const AccompanyWrite = () => {
     setContent(e.target.value);
   };
 
-  const handleTypeChange = e => {
-    let tempType = type.split('|');
-    const duplicatePos = tempType.indexOf(e.targe.value);
-    if (duplicatePos >= 0) {
-      tempType.splice(duplicatePos, 1);
-    } else {
-    }
-  };
-
-  const handleTypeCheck = () => {};
-
   const handleBackClick = () => {
     history.goBack();
   };
-
   const handleSubmitClick = async () => {
+    const boardData = {
+      nid: nation,
+      cid: city,
+      contents: content,
+      startDate: moment(startDate).format('YYYY-MM-DD'),
+      endDate: moment(endDate).format('YYYY-MM-DD'),
+      title: title,
+      ttypeId: '0',
+      uid: userData.uid,
+      wantAge: '0',
+      wantGender: 'N',
+    };
     const fetchBoard = async () => {
-      const boardData = {
-        nid: nation,
-        cid: city,
-        contents: content,
-        startDate: moment(startDate).format('YYYY-MM-DD'),
-        endDate: moment(endDate).format('YYYY-MM-DD'),
-        title: title,
-        ttypeId: '0',
-        uid: userData.uid,
-        wantAge: '0',
-        wantGender: 'N',
-      };
       await inputAccompanyBoard(boardData);
+      history.goBack();
     };
     fetchBoard();
-    history.goBack();
   };
 
   return (
@@ -253,61 +237,29 @@ const AccompanyWrite = () => {
           <Grid container direction="column">
             <Grid item>
               <Typography variant="subtitle1" align="center">
+                여행 타입
+              </Typography>
+            </Grid>
+            <Grid item></Grid>
+            <Grid item>
+              <Typography variant="subtitle1" align="center">
                 원하는 성별
               </Typography>
             </Grid>
-            <Grid item>
-              <FormControl fullWidth>
-                <RadioGroup
-                  name="gender"
-                  value={gender}
-                  onChange={e => {
-                    setGender(e.target.value);
-                  }}
-                  row
-                >
-                  {genderList.map(item => (
-                    <FormControlLabel
-                      key={item.value}
-                      value={item.value}
-                      control={<Radio />}
-                      label={item.name}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
+            <Grid item container>
+              <Grid item xs={4}></Grid>
+              <Grid item xs={4}></Grid>
+              <Grid item xs={4}></Grid>
             </Grid>
             <Grid item>
               <Typography variant="subtitle1" align="center">
                 원하는 나이대
               </Typography>
             </Grid>
-            <Grid item>
-              <FormControl fullWidth>
-                <FormGroup row>
-                  {typeList.map(item => (
-                    <FormControlLabel
-                      key={item.ttypeId}
-                      value={item.ttypeId}
-                      control={
-                        <Checkbox
-                          checked={handleTypeCheck}
-                          onChange={handleTypeChange}
-                          value={item.value}
-                        />
-                      }
-                      label={item.name}
-                    />
-                  ))}
-                </FormGroup>
-              </FormControl>
-            </Grid>
-            <Grid item>
-              <Typography variant="subtitle1" align="center">
-                여행 타입
-              </Typography>
-            </Grid>
             <Grid item container>
+              <Grid item xs={4}></Grid>
+              <Grid item xs={4}></Grid>
+              <Grid item xs={4}></Grid>
               <Grid item xs={4}></Grid>
               <Grid item xs={4}></Grid>
               <Grid item xs={4}></Grid>
