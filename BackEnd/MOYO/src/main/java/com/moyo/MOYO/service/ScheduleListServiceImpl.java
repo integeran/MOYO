@@ -1,9 +1,12 @@
 package com.moyo.MOYO.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.moyo.MOYO.dto.ScheduleList;
 import com.moyo.MOYO.repository.ScheduleListRepository;
@@ -36,18 +39,24 @@ public class ScheduleListServiceImpl implements ScheduleListService {
 	}
 	
 	@Override
+	@Transactional
 	public int create(ScheduleList scheduleList) {
 		log.trace("ScheduleListService - create");
 		return sListRepo.create(scheduleList);
 	}
 	
 	@Override
+	@Transactional
 	public int delete(int sListId, int uId) {
 		log.trace("ScheduleListService - delete");
-		return sListRepo.delete(sListId, uId);
+		Map<String, Integer> param = new HashMap<String, Integer>();
+    	param.put("sListId", sListId);
+    	param.put("uId", uId);
+		return sListRepo.delete(param);
 	}
 	
 	@Override
+	@Transactional
 	public int update(ScheduleList scheduleList) {
 		log.trace("ScheduleListService - update");
 		return sListRepo.update(scheduleList);
