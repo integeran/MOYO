@@ -1,8 +1,11 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import Divider from '@material-ui/core/Divider';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
+import EditIcon from '@material-ui/icons/Edit';
+import Divider from '@material-ui/core/Divider';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 
 const MoreMain = ({ history }) => {
   const useStyles = makeStyles(theme => ({
@@ -28,28 +31,80 @@ const MoreMain = ({ history }) => {
   const handleSettingsClick = () => {
     history.push('/more/moreSettings');
   };
+
+  const handleProfileEditClick = () => {
+    history.push({
+      pathname: '/profile',
+      state: {
+        userSocialId: '',
+        userProfileImage: userData.image,
+        userNickname: userData.nickname,
+        userAgeRange: userData.age,
+        userGender: userData.gender,
+        prevPath: history.location.pathname,
+      },
+    });
+  };
+
   return (
-    <div>
-      <br />
-      <div className={classes.rootAvatar}>
-        <Avatar
-          alt="Jeesoo Haa"
-          src={userData.image}
-          className={classes.large}
-        />
-      </div>
-      <Divider />
-      <h1>일정</h1>
-      <h3 onClick={handlePlanClick}>일정 관리</h3>
-      <Divider />
-      <h1>관리</h1>
-      <h3 onClick={handlePlanClick}>내 동행 관리하기</h3>
-      <h3 onClick={handlePlanClick}>내 커뮤니티 관리하기</h3>
-      <Divider />
-      <h1>공통</h1>
-      <h3 onClick={handlePlanClick}>공지사항</h3>
-      <h3 onClick={handleSettingsClick}>앱 설정</h3>
-    </div>
+    <>
+      <Grid
+        container
+        direction="column"
+        justify="space-evenly"
+        style={{ width: 'inherit', height: 'inherit' }}
+      >
+        <Grid item container>
+          <Grid item className={classes.rootAvatar}>
+            <Avatar
+              alt="Jeesoo Haa"
+              src={userData.image}
+              className={classes.large}
+            />
+          </Grid>
+          <EditIcon onClick={handleProfileEditClick} />
+        </Grid>
+        <Grid item>
+          <Divider variant="fullWidth" />
+        </Grid>
+        <Grid item>
+          <Typography variant="h4" gutterBottom>
+            일정
+          </Typography>
+          <Typography variant="h5" gutterBottom onClick={handlePlanClick}>
+            일정 관리
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Divider />
+        </Grid>
+        <Grid item>
+          <Typography variant="h4" gutterBottom>
+            관리
+          </Typography>
+          <Typography variant="h5" gutterBottom onClick={handlePlanClick}>
+            내 동행 관리하기
+          </Typography>
+          <Typography variant="h5" gutterBottom onClick={handlePlanClick}>
+            내 커뮤니티 관리하기
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Divider />
+        </Grid>
+        <Grid item>
+          <Typography variant="h4" gutterBottom>
+            공통
+          </Typography>
+          <Typography variant="h5" gutterBottom onClick={handlePlanClick}>
+            공지사항
+          </Typography>
+          <Typography variant="h5" gutterBottom onClick={handleSettingsClick}>
+            앱 설정
+          </Typography>
+        </Grid>
+      </Grid>
+    </>
   );
 };
 
