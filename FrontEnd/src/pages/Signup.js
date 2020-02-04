@@ -39,7 +39,6 @@ const genders = [
 ];
 
 const Signup = props => {
-  // const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
   const userSocialId = props.location.state.userSocialId;
   let userImage = props.location.state.userProfileImage;
   let userNickname = props.location.state.userNickname;
