@@ -55,7 +55,7 @@ export const getCityList = async (nid, useNone = false) => {
   return result;
 };
 
-export const getAgeList = async (useNone = false) => {
+export const getAgeList = (useNone = false) => {
   let res = [
     { value: 1, age: 10, name: '10대' },
     { value: 2, age: 20, name: '20대' },
@@ -70,10 +70,10 @@ export const getAgeList = async (useNone = false) => {
 };
 
 // 성별
-export const getGenderList = async (useNone = false) => {
+export const getGenderList = (useNone = false) => {
   let res = [
-    { value: 'M', name: '남자' },
-    { value: 'F', name: '여자' },
+    { value: 'M', name: '여자' },
+    { value: 'F', name: '남자' },
   ];
   if (useNone) {
     res.unshift({ value: 'N', name: '무관' });
@@ -89,7 +89,7 @@ export const getTypeList = async (useNone = false) => {
     result = res.data.data;
   }
   if (useNone) {
-    result.unshift({ ttypeId: 0, name: '무관' });
+    result.unshift({ tTypeId: 0, name: '무관' });
   }
   return result;
 };
