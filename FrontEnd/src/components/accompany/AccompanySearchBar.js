@@ -1,16 +1,10 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  Divider,
-  Paper,
-  InputBase,
-  IconButton,
-  FormControl,
-  Select,
-  MenuItem,
-} from '@material-ui/core';
-
+import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
+import Paper from '@material-ui/core/Paper';
+import InputBase from '@material-ui/core/InputBase';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -34,10 +28,10 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const AccompanySearchBar = ({ searchTextCondition, onClick, onChange }) => {
+const AccompanySearchBar = ({ onClick }) => {
   const classes = useStyles();
   const [text, setText] = useState('');
-  const handleTextChange = e => {
+  const onChange = e => {
     setText(e.target.value);
   };
   const handleSearchClick = e => {
@@ -50,7 +44,7 @@ const AccompanySearchBar = ({ searchTextCondition, onClick, onChange }) => {
         <InputBase
           className={classes.input}
           value={text}
-          onChange={handleTextChange}
+          onChange={onChange}
           placeholder="검색어를 입력해주세요!"
         />
         <Divider className={classes.divider} orientation="vertical" />
@@ -61,14 +55,6 @@ const AccompanySearchBar = ({ searchTextCondition, onClick, onChange }) => {
         >
           <SearchIcon />
         </IconButton>
-        <Divider className={classes.divider} orientation="vertical" />
-        <FormControl>
-          <Select value={searchTextCondition} onChange={onChange}>
-            <MenuItem value={'title'}>제목</MenuItem>
-            <MenuItem value={'contents'}>내용</MenuItem>
-            <MenuItem value={'all'}>전체</MenuItem>
-          </Select>
-        </FormControl>
       </Paper>
     </>
   );
