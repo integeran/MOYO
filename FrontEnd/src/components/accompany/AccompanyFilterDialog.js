@@ -1,34 +1,88 @@
-import React from 'react';
-
+import React, { useState, useEffect } from 'react';
+import { getAgeList, getGenderList, getTypeList } from '../../api/commonData';
 import {
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-} from '@material-ui/core';
-import {
   FormControl,
   FormLabel,
   FormControlLabel,
   FormGroup,
   RadioGroup,
   Radio,
+  Checkbox,
+  Button,
 } from '@material-ui/core';
-import Checkbox from '@material-ui/core/Checkbox';
-import Button from '@material-ui/core/Button';
 
 const AccompanyFilterDialog = ({
-  filterGender,
-  filterAge,
-  filterType,
-  onGenderChange,
-  onAgeChange,
-  onTypeChange,
+  filterCondition,
   open,
   handleClose,
   handleSubmit,
 }) => {
-  const getAgeLabel = age => age + '대' + (age === '50' ? '+' : '');
+  const [genderList, setGenderList] = useState([]);
+  const [ageList, setAgeList] = useState([]);
+  const [typeList, setTypeList] = useState([]);
+  const sortList = [
+    { value: 'start', name: '여행시작일순' },
+    { value: 'end', name: '여행종료일순' },
+    { value: 'update', name: '등록일순' },
+  ];
+
+  const [gender, setGender] = useState(filterCondition.gender);
+  const [age, setAge] = useState(filterCondition.age);
+  const [type, setType] = useState(filterCondition.type);
+  const [sort, setSort] = useState(filterCondition.sort);
+
+  // lifecycle
+  useEffect(() => {
+    const setLists = async () => {
+      setGenderList(await getGenderList(true));
+      setAgeList(await getAgeList());
+      setTypeList(await getTypeList());
+    };
+    setLists();
+  }, []);
+
+  // functions
+  const handleChange = (e, name) => {
+    const baseArr = name === 'age' ? age : type;
+    const changeValue = Number(e.target.value);
+    let replaceArr;
+    if (baseArr.indexOf(changeValue) >= 0) {
+      replaceArr = baseArr.filter(item => item !== changeValue);
+      replaceArr =
+        replaceArr.length === 0 ? replaceArr.concat([0]) : replaceArr;
+    } else {
+      replaceArr = baseArr.filter(item => item !== 0).concat([changeValue]);
+    }
+    name === 'age' ? setAge(replaceArr) : setType(replaceArr);
+  };
+
+  const handleCheck = (value, name) => {
+    const baseArr = name === 'age' ? age : type;
+    return baseArr.indexOf(Number(value)) >= 0;
+  };
+
+  const handleFilterSubmit = () => {
+    const wrapped = {
+      gender,
+      age,
+      type,
+      sort,
+    };
+    handleSubmit(wrapped);
+  };
+
+  const handleFilterClose = () => {
+    setGender(filterCondition.gender);
+    setAge(filterCondition.age);
+    setType(filterCondition.type);
+    setSort(filterCondition.sort);
+    handleClose();
+  };
+
   return (
     <Dialog open={open} maxWidth="md" fullWidth onClose={handleClose}>
       <DialogTitle>필터링</DialogTitle>
@@ -37,31 +91,38 @@ const AccompanyFilterDialog = ({
           <FormLabel>성별</FormLabel>
           <RadioGroup
             name="gender"
-            value={filterGender}
-            onChange={onGenderChange}
+            value={gender}
+            onChange={e => {
+              setGender(e.target.value);
+            }}
             row
           >
-            <FormControlLabel value="N" control={<Radio />} label="무관" />
-            <FormControlLabel value="M" control={<Radio />} label="남성" />
-            <FormControlLabel value="F" control={<Radio />} label="여성" />
+            {genderList.map(gender => (
+              <FormControlLabel
+                key={gender.value}
+                value={gender.value}
+                control={<Radio />}
+                label={gender.name}
+              />
+            ))}
           </RadioGroup>
         </FormControl>
 
         <FormControl fullWidth>
           <FormLabel>나이</FormLabel>
           <FormGroup row>
-            {Object.keys(filterAge).map(age => (
+            {ageList.map(item => (
               <FormControlLabel
-                key={age}
-                value={age}
+                key={item.value}
+                value={item.value}
                 control={
                   <Checkbox
-                    checked={filterAge[{ age }.age]}
-                    onChange={onAgeChange({ age })}
-                    value={age}
+                    checked={handleCheck(item.value, 'age')}
+                    onChange={e => handleChange(e, 'age')}
+                    value={item.value}
                   />
                 }
-                label={getAgeLabel(`${age}`)}
+                label={item.name}
               />
             ))}
           </FormGroup>
@@ -70,28 +131,48 @@ const AccompanyFilterDialog = ({
         <FormControl fullWidth>
           <FormLabel>여행타입</FormLabel>
           <FormGroup row>
-            {Object.keys(filterType).map(type => (
+            {typeList.map(item => (
               <FormControlLabel
-                key={type}
-                value={type}
+                key={item.ttypeId}
+                value={item.ttypeId}
                 control={
                   <Checkbox
-                    checked={filterType[{ type }.type]}
-                    onChange={onTypeChange({ type })}
-                    value={type}
+                    checked={handleCheck(item.ttypeId, 'type')}
+                    onChange={e => handleChange(e, 'type')}
+                    value={item.value}
                   />
                 }
-                label={type}
+                label={item.name}
               />
             ))}
           </FormGroup>
         </FormControl>
+        <FormControl fullWidth>
+          <FormLabel>정렬순</FormLabel>
+          <RadioGroup
+            name="sort"
+            value={sort}
+            onChange={e => {
+              setSort(e.target.value);
+            }}
+            row
+          >
+            {sortList.map(sort => (
+              <FormControlLabel
+                key={sort.value}
+                value={sort.value}
+                control={<Radio />}
+                label={sort.name}
+              />
+            ))}
+          </RadioGroup>
+        </FormControl>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary">
+        <Button onClick={handleFilterClose} color="primary">
           취소
         </Button>
-        <Button onClick={handleSubmit} color="primary">
+        <Button onClick={handleFilterSubmit} color="primary">
           적용
         </Button>
       </DialogActions>

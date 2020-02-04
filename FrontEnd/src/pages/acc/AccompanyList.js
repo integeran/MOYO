@@ -9,11 +9,6 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import AccompanyFilterDialog from '../../components/accompany/AccompanyFilterDialog';
-import {
-  accompanyFilterGender,
-  accompanyFilterAge,
-  accompanyFilterType,
-} from '../../modules/accompanyFilter';
 import { accompanyDate } from '../../modules/accompanyCondition';
 import axios from '../../api/axios';
 import moment from 'moment';
@@ -99,6 +94,7 @@ const AccompanyList = () => {
   const dispatch = useDispatch();
   const userData = useSelector(state => state.auth.userData, []);
   const [searchText, setSearchText] = useState('');
+  const [searchTextCondition, setSearchTextCondition] = useState('title');
   const [dialogOpen, setDialogOpen] = useState(false);
   const { accNation, accCity, accDate } = useSelector(
     state => ({
@@ -108,48 +104,34 @@ const AccompanyList = () => {
     }),
     [],
   );
-  const { filterGender, filterAge, filterType } = useSelector(state => ({
-    filterGender: state.accompanyFilter.gender,
-    filterAge: state.accompanyFilter.age,
-    filterType: state.accompanyFilter.type,
-  }));
+  const [filterCondition, setFilterCondition] = useState({
+    gender: 'N',
+    age: [0],
+    type: [0],
+    sort: 'update',
+  });
   const [boardData, setBoardData] = useState([]);
-  const convertFilterType = types => {
-    const arr = ['식사', '관광', '카페', '투어'];
-    const converted = Object.keys(types)
-      .filter(item => types[item])
-      .map(item => arr.indexOf(item) + 1);
-    return converted.length === 0 ? [0] : converted;
-  };
-
-  const convertAgeType = ages => {
-    const converted = Object.keys(ages)
-      .filter(item => ages[item])
-      .map(item => Number(item) / 10);
-    return converted.length === 0 ? [0] : converted;
-  };
-
   const convertDate = date => moment(date).format('YYYY-MM-DD');
 
-  const filterCondition = useCallback(
+  const listCondition = useCallback(
     {
       searchDate: convertDate(accDate),
       cId: accCity.code,
       nId: accNation.code,
-      searchAge: convertAgeType(filterAge),
-      searchGender: filterGender || 'N',
-      searchType: convertFilterType(filterType),
-      searchCondition: '',
+      searchAge: filterCondition.age,
+      searchGender: filterCondition.gender,
+      searchType: filterCondition.type,
+      searchCondition: searchTextCondition,
       searchWord: searchText,
-      searchSort: '',
+      searchSort: filterCondition.sort,
     },
-    [filterGender, filterAge, filterType, searchText, accDate],
+    [filterCondition, searchText, searchTextCondition, accDate],
   );
 
   const getAccompanyBoardList = async () => {
     try {
       return await axios.get('accompanyBoard/selectAll', {
-        params: filterCondition,
+        params: listCondition,
         paramsSerializer: params => qs.stringify(params),
         headers: { userToken: userData.userToken },
       });
@@ -171,26 +153,20 @@ const AccompanyList = () => {
       setBoardData(resData);
     };
     getBoards();
-  }, [filterCondition, accDate]);
+  }, [listCondition, accDate]);
 
   // ----------------------event-----------------------
   const handleSearchClick = text => {
     setSearchText(text);
   };
-  const handleFilterGenderChange = e =>
-    dispatch(accompanyFilterGender(e.target.value));
-  const handleFilterAgeChange = name => e =>
-    dispatch(
-      accompanyFilterAge({ ...filterAge, [name.age]: e.target.checked }),
-    );
-  const handleFilterTypeChange = name => e =>
-    dispatch(
-      accompanyFilterType({ ...filterType, [name.type]: e.target.checked }),
-    );
+  const handleSearchConditinChange = e => {
+    setSearchTextCondition(e.target.value);
+  };
   const handleFilteringClick = () => {
     setDialogOpen(true);
   };
-  const handleSubmit = () => {
+  const handleDialogSubmit = filters => {
+    setFilterCondition(filters);
     setDialogOpen(false);
   };
 
@@ -275,7 +251,11 @@ const AccompanyList = () => {
         </Grid>
 
         <Grid item style={{ flex: '0 1 auto', marginBottom: '1rem' }}>
-          <AccompanySearchBar onClick={handleSearchClick} />
+          <AccompanySearchBar
+            searchTextCondition={searchTextCondition}
+            onClick={handleSearchClick}
+            onChange={handleSearchConditinChange}
+          />
         </Grid>
         <ScrollGrid item>
           <AccompanyListSet boardData={boardData} />
@@ -290,17 +270,12 @@ const AccompanyList = () => {
         필터
       </CenterFab>
       <AccompanyFilterDialog
-        filterGender={filterGender}
-        filterAge={filterAge}
-        filterType={filterType}
-        onGenderChange={handleFilterGenderChange}
-        onAgeChange={handleFilterAgeChange}
-        onTypeChange={handleFilterTypeChange}
+        filterCondition={filterCondition}
         open={dialogOpen}
         handleClose={() => {
           setDialogOpen(false);
         }}
-        handleSubmit={() => handleSubmit()}
+        handleSubmit={handleDialogSubmit}
       />
     </>
   );
