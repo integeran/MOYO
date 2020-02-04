@@ -1,24 +1,26 @@
 export const initialState = {
   MAKEID_CHAR: '@make@',
   DATETIME_CHAR: '@time@',
+  lastMessageUser: '',
 };
 
-// export const DM_INIT = 'DM_INIT';
+export const DM_LASTMESSAGEUSER = 'DM_LASTMESSAGEUSER';
 
-// export const initAction = res => {
-//   return {
-//     type: DM_INIT,
-//     payload: res,
-//   };
-// };
+export const changeLastMessageUserAction = res => {
+  return {
+    type: DM_LASTMESSAGEUSER,
+    payload: res,
+  };
+};
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    // case DM_INIT: {
-    //   return {
-    //     ...state,
-    //   }
-    // }
+    case DM_LASTMESSAGEUSER: {
+      return {
+        ...state,
+        lastMessageUser: action.payload,
+      };
+    }
 
     default: {
       return {
