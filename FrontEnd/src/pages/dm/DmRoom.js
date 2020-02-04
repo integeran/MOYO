@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from '../../api/axios';
 import * as firebase from 'firebase';
 import { Link } from 'react-router-dom';
@@ -36,6 +36,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const DmRoom = ({ match }) => {
+  const dispatch = useDispatch();
+
   const MAKEID_CHAR = useSelector(state => state.Dm.MAKEID_CHAR);
   const DATETIME_CHAR = useSelector(state => state.Dm.DATETIME_CHAR);
   const userData = useSelector(state => state.auth.userData);
@@ -168,7 +170,7 @@ const DmRoom = ({ match }) => {
           message: val.message,
           timeStamp: val.timeStamp,
           fileName: val.fileName,
-          path: val.path,
+          url: val.url,
         };
 
         setMessageList(prevState => [...prevState, MessageInfo]);
@@ -188,7 +190,7 @@ const DmRoom = ({ match }) => {
   /**
    * 메세지 전송
    */
-  const saveMessages = (msg, fileName, path) => {
+  const saveMessages = (msg, fileName, url) => {
     if (msg && msg !== '') {
       var multiUpdates = {};
       var messageId = firebase.database().ref('Messages/' + hookRoomId).key; // 메세지 키 값 구하기 => push는 자동으로 키값을 생성하면서 데이터를 저장
@@ -201,21 +203,21 @@ const DmRoom = ({ match }) => {
         message: msg,
         timeStamp: moment().format('MMMM Do YYYY, h:mm:ss a'), // 서버시간 등록
         fileName: fileName ? fileName : null,
-        path: path ? path : null,
+        url: url ? url : null,
       };
 
       // 유저별 룸 리스트 저장
       multiUpdates['UserRooms/' + hookSender.uId + '/' + hookReceiver.uId] = {
         roomId: hookRoomId,
         receiver: hookReceiver,
-        lastMessage: path ? '다운로드' : msg,
+        lastMessage: url ? '다운로드' : msg,
         timeStamp: moment().format('MMMM Do YYYY, h:mm:ss a'),
       };
 
       multiUpdates['UserRooms/' + hookReceiver.uId + '/' + hookSender.uId] = {
         roomId: hookRoomId,
         receiver: hookSender,
-        lastMessage: path ? '다운로드' : msg,
+        lastMessage: url ? '다운로드' : msg,
         timeStamp: moment().format('MMMM Do YYYY, h:mm:ss a'),
       };
 
@@ -286,7 +288,14 @@ const DmRoom = ({ match }) => {
         // 프로그레스바 닫기
         closeModal();
         // 완료 다운로드 링크 메세지 보내기
-        saveMessages('다운로드', fileName, path);
+        firebase
+          .storage()
+          .ref()
+          .child(path)
+          .getDownloadURL()
+          .then(url => {
+            saveMessages('다운로드', fileName, url);
+          });
       };
 
       // 프로그레스바
@@ -298,6 +307,8 @@ const DmRoom = ({ match }) => {
         .on('state_changed', callbackProgress, callbackError, callbackComplete);
     }
   };
+
+  var lastMessageUser = '';
 
   return (
     <>
@@ -356,13 +367,15 @@ const DmRoom = ({ match }) => {
       <div
         id="messageList"
         style={{
-          border: '1px solid',
           width: '100%',
-          height: '400px',
+          height: '100%',
           overflow: 'auto',
         }}
       >
         {messageList.map((message, index) => {
+          var tempLastMessageUser = lastMessageUser;
+          lastMessageUser = message.sender;
+
           return (
             <Message
               key={index}
@@ -371,7 +384,8 @@ const DmRoom = ({ match }) => {
               message={message.message}
               timeStamp={message.timeStamp}
               fileName={message.fileName}
-              path={message.path}
+              url={message.url}
+              lastMessageUser={tempLastMessageUser}
             />
           );
         })}
@@ -380,12 +394,23 @@ const DmRoom = ({ match }) => {
       <div id="chatdiv" style={{ marginBottom: '40px' }}>
         <Grid
           container
-          style={{ width: '400px' }}
-          justify="center"
+          style={{ width: '100%', backgroundColor: '#bebfc6' }}
+          justify="flex-start"
           alignItems="center"
         >
+          <Grid item xs={1}>
+            <IconButton className={classes.margin}>
+              <AttachFileIcon
+                color="primary"
+                style={{ cursor: 'pointer' }}
+                onClick={onAttachButton}
+              />
+            </IconButton>
+          </Grid>
+
           <Grid item xs={1} />
-          <Grid item xs={9}>
+
+          <Grid item xs={8}>
             <TextField
               placeholder="텍스트를 입력하세요"
               onChange={onChangeIvalue}
@@ -396,20 +421,11 @@ const DmRoom = ({ match }) => {
             />
           </Grid>
           <Grid item xs={1}>
-            <IconButton aria-label="delete" className={classes.margin}>
+            <IconButton className={classes.margin}>
               <TelegramIcon
                 color="primary"
                 style={{ cursor: 'pointer' }}
                 onClick={loadMessage}
-              />
-            </IconButton>
-          </Grid>
-          <Grid item xs={1}>
-            <IconButton aria-label="delete" className={classes.margin}>
-              <AttachFileIcon
-                color="primary"
-                style={{ cursor: 'pointer' }}
-                onClick={onAttachButton}
               />
             </IconButton>
           </Grid>

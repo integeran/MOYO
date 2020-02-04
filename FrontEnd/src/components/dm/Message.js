@@ -1,71 +1,71 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
+
 import FileMessage from './FileMessage';
 
-const Message = ({ sender, curUser, message, timeStamp, fileName, path }) => {
-  const useStyles = makeStyles({
-    card: {
-      minWidth: 275,
-      width: 150,
-      float: curUser.uId === sender.uId ? 'right' : '',
-    },
-    bullet: {
-      display: 'inline-block',
-      margin: '0 2px',
-      transform: 'scale(0.8)',
-    },
-    title: {
-      fontSize: 14,
-    },
-    pos: {
-      marginBottom: 12,
-    },
-  });
+import Typography from '@material-ui/core/Typography';
+import Avatar from '@material-ui/core/Avatar';
+import moment from 'moment';
+import Grid from '@material-ui/core/Grid';
 
-  const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
-
-  var gab = <span></span>;
-  if (curUser.uId === sender.uId) {
-    gab = <p style={{ clear: 'both' }}></p>;
-  }
-
+const Message = ({
+  sender,
+  curUser,
+  message,
+  timeStamp,
+  fileName,
+  url,
+  lastMessageUser,
+}) => {
   return (
     <>
-      <div>
-        <Card className={classes.card}>
-          <CardContent>
-            <Typography
-              className={classes.title}
-              color="textSecondary"
-              gutterBottom
+      {curUser.uId === sender.uId ? (
+        <Grid container justify="flex-end" style={{ padding: '1%' }}>
+          <Grid item xs={7} style={{ padding: '1%' }}>
+            <div style={{ textAlign: 'right' }}>
+              <Typography variant="caption">{moment().format('LT')}</Typography>
+            </div>
+            <div
+              style={{
+                textAlign: 'right',
+                backgroundColor: '#e6dbdb',
+                borderRadius: '8px',
+              }}
             >
-              <img
-                alt="메세지 보낸 사람의 프로필"
-                src={sender.image}
-                style={{ width: '40px', height: '40px' }}
-              ></img>
-            </Typography>
-            <Typography variant="h5" component="h2">
-              {sender.nickname}
-            </Typography>
-            {path ? (
-              <FileMessage path={path} fileName={fileName} />
-            ) : (
-              <Typography className={classes.pos} color="textSecondary">
-                {message}
-              </Typography>
-            )}
-            <Typography variant="body2" component="p">
-              {timeStamp}
-            </Typography>
-          </CardContent>
-        </Card>
-        {gab}
-      </div>
+              {url ? (
+                <FileMessage url={url} fileName={fileName} />
+              ) : (
+                <Typography variant="subtitle1">{message}</Typography>
+              )}
+            </div>
+          </Grid>
+        </Grid>
+      ) : (
+        <Grid container style={{ padding: '1%' }}>
+          <Grid item xs={1} style={{ paddingRight: '1%', marginTop: '5%' }}>
+            {sender.uId !== lastMessageUser.uId &&
+              sender.uId !== curUser.uId && (
+                <Avatar
+                  alt="메세지 보낸 사람의 프로필"
+                  src={sender.image}
+                  style={{ width: '30px', height: '30px' }}
+                />
+              )}
+          </Grid>
+
+          <Grid item xs={7} style={{ padding: '1%' }}>
+            <div>
+              <Typography variant="caption">{moment().format('LT')}</Typography>
+            </div>
+            <div style={{ backgroundColor: '#e6dbdb', borderRadius: '8px' }}>
+              {url ? (
+                <FileMessage url={url} fileName={fileName} />
+              ) : (
+                <Typography variant="subtitle1">{message}</Typography>
+              )}
+            </div>
+          </Grid>
+        </Grid>
+      )}
     </>
   );
 };
