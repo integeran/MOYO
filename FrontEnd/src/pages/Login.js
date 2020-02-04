@@ -9,7 +9,6 @@ const Login = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const jwtDecode = require('jwt-decode');
-  // const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
 
   const pushUserData = (k, v) => {
     dispatch(changeField({ form: 'userData', key: k, value: v }));
@@ -95,19 +94,6 @@ const Login = () => {
     }
   };
 
-  // useEffect(() => {
-  //   window.Kakao.init(process.env.REACT_APP_KAKAO_KEY);
-  //   window.Kakao.Auth.createLoginButton({
-  //     container: '#kakao-login-btn',
-  //     success: function(authObj) {
-  //       alert(JSON.stringify(authObj));
-  //     },
-  //     fail: function(err) {
-  //       alert(JSON.stringify(err));
-  //     },
-  //   });
-  // }, []);
-
   useEffect(() => {
     window.Kakao.init(process.env.REACT_APP_KAKAO_KEY);
   }, []);
@@ -125,6 +111,7 @@ const Login = () => {
             // console.log(res.properties.profile_image);
             // console.log(res.kakao_account.age_range);
             // console.log(res.kakao_account.gender);
+            window.Kakao.Auth.logout();
           },
           fail: function(error) {
             console.log(JSON.stringify(error));

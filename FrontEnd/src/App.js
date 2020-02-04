@@ -20,7 +20,6 @@ import AccompanyWrite from './pages/acc/AccompanyWrite';
 import DmRoom from './pages/dm/DmRoom';
 import DmRoomList from './pages/dm/DmRoomList';
 import PostMap from './pages/postmap/Postmap';
-
 import { changeBool } from './modules/auth';
 
 const StyledContainer = styled(Container)`
