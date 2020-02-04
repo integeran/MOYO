@@ -44,11 +44,8 @@ public class ScheduleListRepositoryImpl implements ScheduleListRepository {
 	}
 	
 	@Override
-	public int delete(int sListId, int uId) {
+	public int delete(Map<String, Integer> param) {
 		log.trace("ScheduleListRepository - delete");
-		Map<String, Object> param = new HashMap<String, Object>();
-    	param.put("sListId", sListId);
-    	param.put("uId", uId);
 		return session.insert(ns + "deleteScheduleList", param);
 	}
 	
