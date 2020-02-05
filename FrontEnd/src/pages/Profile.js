@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Avatar from '@material-ui/core/Avatar';
-import MenuItem from '@material-ui/core/MenuItem';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { changeField, changeBool } from '../modules/auth';
 import axios from '../api/axios';
+import { changeField, changeBool } from '../modules/auth';
 import BaseAppBar from '../components/common/BaseAppBar';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
+import Avatar from '@material-ui/core/Avatar';
+import Badge from '@material-ui/core/Badge';
+import AddIcon from '@material-ui/icons/Add';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
 const ageRange = [
@@ -215,6 +222,42 @@ const Profile = props => {
     history.push('/more');
   };
 
+  const handleProfileImage = () => {
+    setOpenDialog(true);
+  };
+
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const [imageFile, setImageFile] = useState('');
+
+  const changeImageFile = file => {
+    setImageFile(file);
+  };
+
+  const postImageRequest = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('file', imageFile);
+      return await axios.post('user/postImage', formData, {
+        headers: {
+          userToken: userData.userToken,
+          // 'Content-Type': 'multipart/form-data',
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const postImage = async () => {
+    const resData = await postImageRequest();
+    console.log(resData);
+  };
+
   return (
     <div>
       {prevPath === '/more' && (
@@ -227,7 +270,20 @@ const Profile = props => {
       )}
       <div className={classes.root}>
         <div className={classes.rootAvatar}>
-          <Avatar alt="Jeesoo Haa" src={userImage} className={classes.large} />
+          <Badge
+            color="primary"
+            badgeContent={<AddIcon />}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            overlap="circle"
+            variant="standard"
+          >
+            <Avatar
+              alt="Jeesoo Haa"
+              src={userImage}
+              className={classes.large}
+              onClick={handleProfileImage}
+            />
+          </Badge>
         </div>
         <div className={classes.rootTextfield}>
           <TextField
@@ -287,6 +343,28 @@ const Profile = props => {
           <button onClick={requestUpdate}>수정하기</button>
         )}
       </div>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">사진을 올려주세요!</DialogTitle>
+        <DialogContent>
+          <input
+            type="file"
+            name="file"
+            onChange={e => changeImageFile(e.target.files[0])}
+          ></input>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            취소
+          </Button>
+          <Button onClick={postImage} color="primary">
+            수정
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
