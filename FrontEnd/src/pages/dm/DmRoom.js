@@ -76,8 +76,8 @@ const DmRoom = ({ match }) => {
     });
   };
 
-  const onAxiosReceiver = async receiverId => {
-    return await axios.get('DM/getReceiver?uId=' + receiverId, {
+  const onAxiosGetUser = async id => {
+    return await axios.get('DM/getUser?uId=' + id, {
       headers: { userToken: userData.userToken },
     });
   };
@@ -103,12 +103,9 @@ const DmRoom = ({ match }) => {
     setHookReceiver(axiosInitData.data.data.receiver);
 
     if (match.params.receiverId) {
-      const axiosReceiverData = await onAxiosReceiver(match.params.receiverId);
-      setHookReceiver(axiosReceiverData.data.data.receiver);
-      loadRoom(
-        axiosInitData.data.data.sender,
-        axiosReceiverData.data.data.receiver,
-      );
+      const axiosUserData = await onAxiosGetUser(match.params.receiverId);
+      setHookReceiver(axiosUserData.data.data.user);
+      loadRoom(axiosInitData.data.data.sender, axiosUserData.data.data.user);
     } else {
       loadRoom(
         axiosInitData.data.data.sender,
@@ -120,7 +117,7 @@ const DmRoom = ({ match }) => {
   /*
    * 방 로드하기
    */
-  const loadRoom = async (sender, receiver) => {
+  const loadRoom = (sender, receiver) => {
     console.log('loadRoom');
     setTitle(receiver.nickname);
 
@@ -155,17 +152,17 @@ const DmRoom = ({ match }) => {
   /**
    * 메세지 로드
    */
-  const loadMessageList = async (roomId, roomTitle, sender, receiver) => {
+  const loadMessageList = (roomId, roomTitle, sender, receiver) => {
     console.log('loadMessageList');
     if (roomId) {
       setHookRoomId(roomId);
       setMessageList([]);
 
-      const callback = async snapshot => {
+      const callback = snapshot => {
         var val = snapshot.val();
 
         const MessageInfo = {
-          sender: val.sender,
+          senderId: val.senderId,
           curUser: sender,
           message: val.message,
           timeStamp: val.timeStamp,
@@ -178,12 +175,12 @@ const DmRoom = ({ match }) => {
         list.scrollTop = list.scrollHeight;
       };
 
-      const firebaseTest = firebase
+      firebase
         .database()
         .ref('Messages/' + roomId)
-        .limitToLast(50);
-
-      firebaseTest.on('child_added', callback);
+        .orderByChild('timeStamp')
+        .limitToLast(50)
+        .on('child_added', callback);
     }
   };
 
@@ -196,12 +193,14 @@ const DmRoom = ({ match }) => {
       var messageId = firebase.database().ref('Messages/' + hookRoomId).key; // 메세지 키 값 구하기 => push는 자동으로 키값을 생성하면서 데이터를 저장
       //                        즉, 여기서는 자동으로 키를 생성해서 받을 수 있음
       messageId = messageId + DATETIME_CHAR + moment().format('YYYYMMDDhhmmss');
+      var curTimeStamp =
+        moment().format('YYYY/MM/DD') + ' ' + moment().format('LT');
 
       // 메세지 저장
       multiUpdates['Messages/' + hookRoomId + '/' + messageId] = {
-        sender: hookSender,
+        senderId: hookSender.uId,
         message: msg,
-        timeStamp: moment().format('MMMM Do YYYY, h:mm:ss a'), // 서버시간 등록
+        timeStamp: curTimeStamp,
         fileName: fileName ? fileName : null,
         url: url ? url : null,
       };
@@ -209,16 +208,16 @@ const DmRoom = ({ match }) => {
       // 유저별 룸 리스트 저장
       multiUpdates['UserRooms/' + hookSender.uId + '/' + hookReceiver.uId] = {
         roomId: hookRoomId,
-        receiver: hookReceiver,
+        receiverId: hookReceiver.uId,
         lastMessage: url ? '다운로드' : msg,
-        timeStamp: moment().format('MMMM Do YYYY, h:mm:ss a'),
+        timeStamp: curTimeStamp,
       };
 
       multiUpdates['UserRooms/' + hookReceiver.uId + '/' + hookSender.uId] = {
         roomId: hookRoomId,
-        receiver: hookSender,
+        receiverId: hookSender.uId,
         lastMessage: url ? '다운로드' : msg,
-        timeStamp: moment().format('MMMM Do YYYY, h:mm:ss a'),
+        timeStamp: curTimeStamp,
       };
 
       firebase
@@ -229,6 +228,7 @@ const DmRoom = ({ match }) => {
           var list = document.getElementById('messageList');
           list.scrollTop = list.scrollHeight;
         });
+      console.log('3: multiUpdate');
     }
   };
 
@@ -308,7 +308,8 @@ const DmRoom = ({ match }) => {
     }
   };
 
-  var lastMessageUser = '';
+  var lastMessageUserId = '';
+  var lastTimeStamp = '';
 
   return (
     <>
@@ -370,22 +371,26 @@ const DmRoom = ({ match }) => {
           width: '100%',
           height: '100%',
           overflow: 'auto',
+          backgroundColor: '#e6dbdb',
         }}
       >
         {messageList.map((message, index) => {
-          var tempLastMessageUser = lastMessageUser;
-          lastMessageUser = message.sender;
+          var tempLastMessageUserId = lastMessageUserId;
+          var tempLastTimeStamp = lastTimeStamp;
+          lastMessageUserId = message.senderId;
+          lastTimeStamp = message.timeStamp;
 
           return (
             <Message
               key={index}
-              sender={message.sender}
+              senderId={message.senderId}
               curUser={message.curUser}
               message={message.message}
               timeStamp={message.timeStamp}
               fileName={message.fileName}
               url={message.url}
-              lastMessageUser={tempLastMessageUser}
+              lastMessageUserId={tempLastMessageUserId}
+              lastTimeStamp={tempLastTimeStamp}
             />
           );
         })}
@@ -394,7 +399,7 @@ const DmRoom = ({ match }) => {
       <div id="chatdiv" style={{ marginBottom: '40px' }}>
         <Grid
           container
-          style={{ width: '100%', backgroundColor: '#bebfc6' }}
+          style={{ width: '100%', backgroundColor: 'white' }}
           justify="flex-start"
           alignItems="center"
         >
