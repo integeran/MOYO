@@ -37,8 +37,8 @@ const ButtonContents = ({ onFindClick, onWriteClick }) => {
   return (
     <Grid container direction="column" spacing={2}>
       <Grid item>
-        <TitleTypo variant="h4">
-          모두를 위한 여행 동행.
+        <TitleTypo variant="h5">
+          모두를 위한 여행 동행
           <br />
           MOYO
         </TitleTypo>
