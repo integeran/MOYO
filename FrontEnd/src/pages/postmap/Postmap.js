@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Map, GoogleApiWrapper, Marker, InfoWindow } from 'google-maps-react';
 import axios from '../../api/axios';
@@ -18,7 +18,6 @@ import IconButton from '@material-ui/core/IconButton';
 import moment from 'moment';
 
 const mapStyles = {
-  width: '400px',
   height: '300px',
 };
 
@@ -33,7 +32,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export const Postmap = props => {
+const Postmap = props => {
   const userData = useSelector(state => state.auth.userData);
 
   const [postList, setPostList] = useState([]);
@@ -44,13 +43,14 @@ export const Postmap = props => {
   const [infoWindow, setInfoWindow] = useState(null);
   const [infoWindowCheck, setInfoWindowCheck] = useState(false);
 
-  const onChatText = e => {
-    if (e.target.value.length < 30) {
-      setChatText(e.target.value);
-    }
-  };
+  // const onChatText = e => {
+  //   if (e.target.value.length < 30) {
+  //     setChatText(e.target.value);
+  //   }
+  // };
 
   const onSetInish = () => {
+    console.log(infoWindow + ' : ' + infoWindowCheck);
     setInfoWindow(infoWindow ? infoWindow : null);
     setInfoWindowCheck(infoWindowCheck ? true : false);
     inish ? setInish(false) : setInish(true);
@@ -74,7 +74,7 @@ export const Postmap = props => {
   const fetchMarker = pos => {
     axios
       .get(
-        `postmap/selectAll?latitude=${pos.latitude}&longitude=${pos.longitude}`,
+        `postmap/selectAll?latitude=${pos.latitude}&longitude=${pos.longitude}&uId=${userData.uid}`,
         {
           headers: { userToken: userData.userToken },
         },
@@ -90,7 +90,7 @@ export const Postmap = props => {
   const getPosition = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function(position) {
-        console.log('getCurrentPosition');
+        // console.log('getCurrentPosition');
         setPos([]);
 
         var curpos = {
@@ -111,8 +111,6 @@ export const Postmap = props => {
   };
 
   const displayMarkers = () => {
-    console.log('displayMarkers: ', postList);
-
     return postList.map((chat, index) => {
       return (
         <Marker
@@ -122,11 +120,21 @@ export const Postmap = props => {
             lat: chat.latitude,
             lng: chat.longitude,
           }}
+          animation={props.google.maps.Animation.DROP}
           onClick={() => {
-            console.log(chat);
+            // console.log(chat);
             setInfoWindow(chat);
             setInfoWindowCheck(true);
             onSetInish();
+          }}
+          icon={{
+            path: props.google.maps.SymbolPath.CIRCLE,
+            fillColor: '#D03A3A',
+            fillOpacity: 1,
+            strokeColor: '#912626',
+            strokeOpacity: 1,
+            strokeWeight: 1,
+            scale: 7,
           }}
         />
       );
@@ -138,16 +146,6 @@ export const Postmap = props => {
     if (timer > 0) {
       alert('재사용 시간이 도달하지 않았습니다.');
     } else if (chatText.length > 0) {
-      // var curChat = {
-      //   chat_id: 1,
-      //   contents: chatText,
-      //   latitude: pos[0].latitude,
-      //   longitude: pos[0].longitude,
-      //   register_id: userData.uid,
-      //   like: false,
-      //   register_date: nowDate,
-      // };
-
       axios
         .post(
           `postmap/insertPostmap/`,
@@ -181,15 +179,57 @@ export const Postmap = props => {
     }
   };
 
+  // const onChatText = useCallback(
+  //   e => {
+  //     if (e.target.value.length < 30) {
+  //       setChatText(e.target.value);
+  //     }
+  //   },
+  //   [enterFlag],
+  // );
+
+  const onChatText = e => {
+    console.log(e.type);
+    if (e.target.value.length < 30) {
+      setChatText(e.target.value);
+    }
+  };
+
   const enterSaveChat = e => {
     if (e.key === 'Enter') {
       saveChat();
     }
   };
 
+  const likePost = pmId => {
+    getPosition();
+    axios
+      .put(
+        `postmap/likePostmap/`,
+        {
+          pmId: pmId,
+          pmLikeId: 0,
+          uid: userData.uid,
+        },
+        {
+          headers: { userToken: userData.userToken },
+        },
+      )
+      .catch(e => {
+        console.log(e);
+      });
+  };
+
   return (
-    <div>
-      <div id="googleMap">
+    <>
+      <div
+        id="googleMap"
+        style={{
+          width: 'inherit',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
         {pos.map((curpos, index) => {
           return (
             <Map
@@ -201,6 +241,9 @@ export const Postmap = props => {
               onClick={() => {
                 console.log('mapClick');
               }}
+              mapTypeControl={false}
+              streetViewControl={false}
+              fullscreenControl={false}
             >
               {displayMarkers()}
               {infoWindow && (
@@ -216,7 +259,7 @@ export const Postmap = props => {
                   visible={infoWindowCheck}
                 >
                   <div>
-                    <h2>{infoWindow.registerId}</h2>
+                    {/* <h2>{infoWindow.registerId}</h2> */}
                     <p>{infoWindow.contents}</p>
                   </div>
                 </InfoWindow>
@@ -224,49 +267,43 @@ export const Postmap = props => {
             </Map>
           );
         })}
+        <Grid item xs={2} />
       </div>
-
-      <div id="chat" style={{ margin: '0 auto' }}>
-        <Grid
-          container
-          style={{ width: '400px' }}
-          justify="center"
-          alignItems="center"
-        >
-          <Grid item xs={2} />
-          <Grid item xs={7}>
-            <TextField
-              placeholder="포스트맵을 작성하세요."
-              onChange={onChatText}
-              value={chatText}
-              onKeyPress={enterSaveChat}
-              fullWidth
-              style={{ marginTop: '5px' }}
-            />
-          </Grid>
-          <Grid item xs={1}>
-            <IconButton aria-label="delete" className={classes.margin}>
-              <NearMeIcon color="primary" onClick={saveChat} />
-            </IconButton>
-          </Grid>
-          <Grid
-            item
-            xs={2}
-            style={{ textAlign: 'center', color: timer < 4 ? 'red' : 'black' }}
-          >
-            <span>{timer > 0 ? timer + '초' : null}</span>
-          </Grid>
-        </Grid>
-      </div>
-
-      <div
-        id="chatList"
-        style={{ overflow: 'auto', width: '400px', height: '400px' }}
+      <Grid
+        container
+        style={{ width: '400px' }}
+        justify="center"
+        alignItems="center"
       >
-        {postList.map((chat, index) => {
+        <Grid item xs={2} />
+        <Grid item xs={7}>
+          <TextField
+            placeholder="포스트맵을 작성하세요."
+            onChange={onChatText}
+            value={chatText}
+            onKeyPress={enterSaveChat}
+            fullWidth
+            style={{ marginTop: '5px' }}
+          />
+        </Grid>
+        <Grid item xs={1}>
+          <IconButton aria-label="delete" className={classes.margin}>
+            <NearMeIcon color="primary" onClick={saveChat} />
+          </IconButton>
+        </Grid>
+        <Grid
+          item
+          xs={2}
+          style={{ textAlign: 'center', color: timer < 4 ? 'red' : 'black' }}
+        >
+          <span>{timer > 0 ? timer + '초' : null}</span>
+        </Grid>
+      </Grid>
+      <div id="chatList" style={{ overflow: 'auto' }}>
+        {postList.map(chat => {
           return (
             <>
-              <List className={classes.root} key={index}>
+              <List className={classes.root} key={chat.pmId}>
                 <ListItem alignItems="flex-start">
                   <ListItemText
                     primary={chat.contents}
@@ -278,10 +315,12 @@ export const Postmap = props => {
                           className={classes.inline}
                           color="textPrimary"
                         >
-                          {chat.registerDate}
+                          {moment(chat.registerDate).format(
+                            'YYYY-MM-DD HH:SS:DD',
+                          )}
                           <span style={{ float: 'right' }}>x{chat.likes}</span>
                         </Typography>
-                        {chat.like ? (
+                        {chat.pmLikeId !== 0 ? (
                           <FavoriteIcon
                             style={{
                               float: 'right',
@@ -289,22 +328,29 @@ export const Postmap = props => {
                               color: 'red',
                             }}
                             onClick={() => {
-                              chat.like = chat.like ? false : true;
                               onSetInish();
+                              likePost(chat.pmId);
                             }}
                           />
                         ) : (
                           <FavoriteBorderIcon
                             style={{ float: 'right', cursor: 'pointer' }}
                             onClick={() => {
-                              chat.like = chat.like ? false : true;
                               onSetInish();
+                              likePost(chat.pmId);
                             }}
                           />
                         )}
-                        {/* {" — I'll be in your neighborhood doing errands this…"} */}
                       </React.Fragment>
                     }
+                    onClick={() => {
+                      console.log('didi');
+                      console.log(chat);
+                      setInfoWindow(chat);
+                      setInfoWindowCheck(true);
+                      // onSetInish();
+                      getPosition();
+                    }}
                   />
                 </ListItem>
                 <Divider variant="inset" component="li" />
@@ -313,8 +359,7 @@ export const Postmap = props => {
           );
         })}
       </div>
-      <div style={{ marginBottom: '200px' }}></div>
-    </div>
+    </>
   );
 };
 
