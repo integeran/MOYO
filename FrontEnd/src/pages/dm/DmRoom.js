@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import axios from '../../api/axios';
 import * as firebase from 'firebase';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 
 import Message from '../../components/dm/Message';
 import UploadModal from '../../components/dm/UploadModal';
@@ -10,8 +11,7 @@ import UploadModal from '../../components/dm/UploadModal';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import AccountCircle from '@material-ui/icons/AccountCircle';
+import PetsIcon from '@material-ui/icons/Pets';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import TelegramIcon from '@material-ui/icons/Telegram';
@@ -20,8 +20,7 @@ import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import moment from 'moment';
+import InputBase from '@material-ui/core/InputBase';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -44,7 +43,7 @@ const DmRoom = ({ match }) => {
 
   const [hookSender, setHookSender] = useState({});
   const [hookReceiver, setHookReceiver] = useState({});
-  const [title, setTitle] = useState('Hong Gildong');
+  const [title, setTitle] = useState('');
   const [messageList, setMessageList] = useState([]);
   const [hookRoomId, setHookRoomId] = useState('');
   const [ivalue, setIvalue] = useState('');
@@ -313,135 +312,154 @@ const DmRoom = ({ match }) => {
 
   return (
     <>
-      <div className={classes.root}>
-        <AppBar position="static">
-          <Toolbar>
-            <IconButton
-              edge="start"
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="menu"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" className={classes.title}>
-              {title}
-            </Typography>
-            <div>
-              <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={open}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
-              </Menu>
-            </div>
-          </Toolbar>
-        </AppBar>
-      </div>
-
-      <Link to="/DmRoomList">
-        <KeyboardBackspaceIcon />
-      </Link>
-      <UploadModal isOpen={uploadModal} close={closeModal} />
-
       <div
-        id="messageList"
         style={{
-          width: '100%',
-          height: '100%',
-          overflow: 'auto',
-          backgroundColor: '#e6dbdb',
+          display: 'flex',
+          flexDirection: 'column',
+          width: 'inherit',
+          height: 'inherit',
         }}
       >
-        {messageList.map((message, index) => {
-          var tempLastMessageUserId = lastMessageUserId;
-          var tempLastTimeStamp = lastTimeStamp;
-          lastMessageUserId = message.senderId;
-          lastTimeStamp = message.timeStamp;
+        <div>
+          <AppBar position="static" style={{ backgroundColor: '#45bfa9' }}>
+            <Toolbar>
+              <Link to="/DmRoomList" style={{ marginRight: '5%' }}>
+                <KeyboardBackspaceIcon style={{ color: 'white' }} />
+              </Link>
+              <Typography variant="h6" className={classes.title}>
+                {title}
+              </Typography>
+              <div>
+                <IconButton onClick={handleMenu} color="inherit">
+                  <PetsIcon />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={open}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={handleClose}>Profile</MenuItem>
+                  <MenuItem onClick={handleClose}>My account</MenuItem>
+                </Menu>
+              </div>
+            </Toolbar>
+          </AppBar>
+        </div>
+        <UploadModal isOpen={uploadModal} close={closeModal} />
 
-          return (
-            <Message
-              key={index}
-              senderId={message.senderId}
-              curUser={message.curUser}
-              message={message.message}
-              timeStamp={message.timeStamp}
-              fileName={message.fileName}
-              url={message.url}
-              lastMessageUserId={tempLastMessageUserId}
-              lastTimeStamp={tempLastTimeStamp}
-            />
-          );
-        })}
-      </div>
-
-      <div id="chatdiv" style={{ marginBottom: '40px' }}>
-        <Grid
-          container
-          style={{ width: '100%', backgroundColor: 'white' }}
-          justify="flex-start"
-          alignItems="center"
+        <div
+          id="messageList"
+          style={{
+            width: '100%',
+            height: '100%',
+            overflow: 'auto',
+            backgroundColor: 'white',
+          }}
         >
-          <Grid item xs={1}>
-            <IconButton className={classes.margin}>
-              <AttachFileIcon
-                color="primary"
-                style={{ cursor: 'pointer' }}
-                onClick={onAttachButton}
+          {messageList.map((message, index) => {
+            var tempLastMessageUserId = lastMessageUserId;
+            var tempLastTimeStamp = lastTimeStamp;
+            lastMessageUserId = message.senderId;
+            lastTimeStamp = message.timeStamp;
+
+            return (
+              <Message
+                key={index}
+                senderId={message.senderId}
+                curUser={message.curUser}
+                message={message.message}
+                timeStamp={message.timeStamp}
+                fileName={message.fileName}
+                url={message.url}
+                lastMessageUserId={tempLastMessageUserId}
+                lastTimeStamp={tempLastTimeStamp}
               />
-            </IconButton>
-          </Grid>
+            );
+          })}
+        </div>
 
-          <Grid item xs={1} />
+        <div
+          id="chatdiv"
+          style={{
+            marginBottom: '5%',
+            border: '1px solid #bdbdbd',
+            borderRadius: '20px',
+          }}
+        >
+          <Grid
+            container
+            style={{ width: '100%' }}
+            justify="center"
+            alignItems="center"
+          >
+            <Grid item xs={1} style={{ marginLeft: '1%' }}>
+              <div
+                style={{
+                  borderRadius: '75px',
+                  backgroundColor: '#4fc3f7',
+                }}
+              >
+                <AttachFileIcon
+                  style={{
+                    cursor: 'pointer',
+                    marginLeft: '10%',
+                    color: 'white',
+                  }}
+                  onClick={onAttachButton}
+                />
+              </div>
+            </Grid>
 
-          <Grid item xs={8}>
-            <TextField
-              placeholder="텍스트를 입력하세요"
-              onChange={onChangeIvalue}
-              value={ivalue}
-              onKeyPress={onEnterKey}
-              fullWidth
-              style={{ marginTop: '5px' }}
-            />
-          </Grid>
-          <Grid item xs={1}>
-            <IconButton className={classes.margin}>
-              <TelegramIcon
-                color="primary"
-                style={{ cursor: 'pointer' }}
-                onClick={loadMessage}
+            <Grid item xs={1}></Grid>
+
+            <Grid item xs={7}>
+              <InputBase
+                onChange={onChangeIvalue}
+                value={ivalue}
+                onKeyPress={onEnterKey}
+                fullWidth
+                style={{ marginTop: '5px' }}
               />
-            </IconButton>
-          </Grid>
-        </Grid>
+            </Grid>
 
-        <input
-          type="file"
-          id="attachfile"
-          style={{ display: 'none' }}
-          onChange={onAttachFile}
-        ></input>
+            <Grid item xs={1}></Grid>
+
+            <Grid item xs={1}>
+              <div
+                style={{
+                  borderRadius: '75px',
+                  backgroundColor: '#4fc3f7',
+                }}
+              >
+                <TelegramIcon
+                  style={{
+                    cursor: 'pointer',
+                    marginLeft: '10%',
+                    color: 'white',
+                  }}
+                  onClick={loadMessage}
+                />
+              </div>
+            </Grid>
+          </Grid>
+
+          <input
+            type="file"
+            id="attachfile"
+            style={{ display: 'none' }}
+            onChange={onAttachFile}
+          ></input>
+        </div>
       </div>
     </>
   );

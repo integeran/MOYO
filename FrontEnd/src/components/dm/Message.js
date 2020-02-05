@@ -67,15 +67,19 @@ const Message = ({
             <Typography
               variant="subtitle1"
               style={{
-                backgroundColor: 'white',
+                backgroundColor: '#e0e0e0',
                 borderRadius: '8px',
                 textAlign: 'left',
                 paddingLeft: message.length >= 13 ? '3%' : '',
               }}
             >
-              {message.length < 13 && <span style={{ color: 'white' }}>1</span>}
+              {message.length < 13 && (
+                <span style={{ color: '#e6dbdb' }}>1</span>
+              )}
               {message}
-              {message.length < 13 && <span style={{ color: 'white' }}>1</span>}
+              {message.length < 13 && (
+                <span style={{ color: '#e6dbdb' }}>1</span>
+              )}
             </Typography>
             // 가라를 쓰고 싶지않지만.. 이것이 최선이다 !
           )}

@@ -34,12 +34,18 @@ const FileMessage = ({ fileName, url }) => {
   return (
     <div>
       {extensionCheck() ? (
-        <img alt="미리보기" src={url}></img>
+        <img
+          alt="미리보기"
+          src={url}
+          onClick={fileDownload}
+          width="100%"
+          height="100%"
+        ></img>
       ) : (
         <button onClick={fileDownload}>다운로드</button>
       )}
       {extensionCheck() === false && <br></br>}
-      {extensionCheck() === false && <span>파일명: {fileName}</span>}
+      {extensionCheck() === false && <span>fileName: {fileName}</span>}
     </div>
   );
 };

@@ -1,31 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import { Link } from 'react-router-dom';
-import axios from '../../api/axios';
 import { useSelector } from 'react-redux';
+import { Link, useHistory } from 'react-router-dom';
+import axios from '../../api/axios';
+import moment from 'moment';
 
-const useStyles = makeStyles({
-  card: {
-    minWidth: 275,
-    width: 150,
-  },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
-  },
-  title: {
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
-  },
-});
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Avatar from '@material-ui/core/Avatar';
+import ListItem from '@material-ui/core/ListItem';
 
 const Room = ({ roomId, receiverId, lastMessage, timeStamp }) => {
+  const history = useHistory();
+
   const userData = useSelector(state => state.auth.userData);
 
   const [receiver, setReceiver] = useState('');
@@ -44,35 +30,69 @@ const Room = ({ roomId, receiverId, lastMessage, timeStamp }) => {
     getData();
   }, []);
 
-  const classes = useStyles();
+  const goDmRoom = () => {
+    history.push({
+      pathname: '/dmroom/' + receiverId,
+    });
+  };
 
   return (
     receiver && (
-      <Card className={classes.card}>
-        <CardContent>
-          <Typography
-            className={classes.title}
-            color="textSecondary"
-            gutterBottom
-          >
-            {receiver.nickname}
-          </Typography>
-          <Typography variant="h5" component="h2">
-            <img
+      <ListItem button onClick={goDmRoom} style={{ padding: '2%' }}>
+        <Grid container alignItems="center">
+          <Grid item xs={2}>
+            <Avatar
               alt="리시버의 이미지"
               src={receiver.image}
               style={{ width: '40px', height: '40px' }}
-            ></img>
-          </Typography>
-          <Typography className={classes.pos} color="textSecondary">
-            {lastMessage}
-          </Typography>
-          <Typography variant="body2" component="p">
-            {timeStamp}
-          </Typography>
-        </CardContent>
-        <Link to={`/DmRoom/${receiver.uId}`}>방 들어가기</Link>
-      </Card>
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Grid container direction="column">
+              <Grid
+                item
+                xs={6}
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                }}
+              >
+                <Typography
+                  variant="subtitle1"
+                  style={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  {receiver.nickname}
+                </Typography>
+              </Grid>
+              <Grid item xs={6} style={{ maxWidth: '100%' }}>
+                <Typography
+                  variant="subtitle1"
+                  style={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  {lastMessage}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={1}></Grid>
+          <Grid item xs={3}>
+            <Typography variant="caption">
+              {timeStamp.substr(0, timeStamp.indexOf(' ')) ===
+              moment().format('YYYY/MM/DD')
+                ? timeStamp.substr(timeStamp.indexOf(' ') + 1)
+                : timeStamp.substr(0, timeStamp.indexOf(' '))}
+            </Typography>
+          </Grid>
+        </Grid>
+      </ListItem>
     )
   );
 };
