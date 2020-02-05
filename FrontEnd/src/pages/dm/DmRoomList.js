@@ -35,8 +35,6 @@ const DmRoomList = () => {
    * 채팅방 목록리스트 호출
    */
   const loadRoomList = sender => {
-    var roomRef = firebase.database().ref('UserRooms/' + sender.uId);
-
     /**
      * loadRoomList에서 데이터를 받아왔을 때
      */
@@ -46,7 +44,7 @@ const DmRoomList = () => {
 
         var RoomInfo = {
           roomId: val.roomId,
-          receiver: val.receiver,
+          receiverId: val.receiverId,
           lastMessage: val.lastMessage,
           timeStamp: val.timeStamp,
         };
@@ -57,7 +55,11 @@ const DmRoomList = () => {
       snapshot.forEach(callback);
     };
 
-    roomRef.orderByChild('timestamp').on('value', getRoomList); // 메세지를 받을 때 마다 목록을 갱신시키기 위해 once메소드가 아닌 on메소드 사용
+    firebase
+      .database()
+      .ref('UserRooms/' + sender.uId)
+      .orderByChild('timeStamp')
+      .on('value', getRoomList); // 메세지를 받을 때 마다 목록을 갱신시키기 위해 once메소드가 아닌 on메소드 사용
   };
 
   return (
@@ -68,7 +70,7 @@ const DmRoomList = () => {
             <Room
               key={index}
               roomId={room.roomId}
-              receiver={room.receiver}
+              receiverId={room.receiverId}
               lastMessage={room.lastMessage}
               timeStamp={room.timeStamp}
             ></Room>
