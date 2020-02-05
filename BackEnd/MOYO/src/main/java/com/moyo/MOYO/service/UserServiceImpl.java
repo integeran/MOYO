@@ -1,6 +1,7 @@
 package com.moyo.MOYO.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,5 +58,11 @@ public class UserServiceImpl implements UserService {
 	public int update(User user) {
 		log.trace("UserService - update");
 		return uRepo.update(user);
+	}
+	
+	@Override
+	public int updateImage(Map<String, Object> responseImage) {
+		log.trace("UserService - updateImage");
+		return uRepo.updateImage(responseImage);
 	}
 }

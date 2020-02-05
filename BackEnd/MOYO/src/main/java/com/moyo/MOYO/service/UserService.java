@@ -1,6 +1,7 @@
 package com.moyo.MOYO.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.moyo.MOYO.dto.User;
 
@@ -18,4 +19,6 @@ public interface UserService {
 	public int delete(int uId);
 	
 	public int update(User user);
+	
+	public int updateImage(Map<String, Object> responseImage);
 }

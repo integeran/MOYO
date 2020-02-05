@@ -1,5 +1,7 @@
 package com.moyo.MOYO.controller;
 
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,6 +50,16 @@ public class ScheduleListRestController {
 		try {
 			log.trace("ScheduleListRestController - selectAllByUser");
 			return response(sListService.selectAllByUser(uId), HttpStatus.OK, true);
+		} catch (RuntimeException e) {
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
+	@GetMapping("scheduleList/selectAllByUser/{uId}/{day}")
+	public ResponseEntity<Map<String, Object>> selectAllByOneDay(@PathVariable int uId, @PathVariable String day) {
+		try {
+			log.trace("ScheduleListRestController - selectAllByOneDay");			
+			return response(sListService.selectAllByOneDay(uId, day), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}

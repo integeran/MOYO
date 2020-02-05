@@ -33,6 +33,12 @@ public class DailyAccompanyRepositoryImpl implements DailyAccompanyRepository {
 	}
 	
 	@Override
+	public List<DailyAccompany> selectAllByOneDay(Map<String, Object> param) {
+		log.trace("DailyAccompanyRepository - selectAllByOneDay");
+		return session.selectList(ns + "selectAllByOneDay", param);
+	}
+	
+	@Override
 	public DailyAccompany selectOne(int dAcId) {
 		log.trace("DailyAccompanyRepository - selectOne");
 		return session.selectOne(ns + "selectOne", dAcId);
