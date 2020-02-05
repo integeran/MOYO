@@ -1,6 +1,8 @@
 package com.moyo.MOYO.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,15 @@ public class DailyAccompanyServiceImpl implements DailyAccompanyService {
 	public List<DailyAccompany> selectAllByUser(int uId) {
 		log.trace("DailyAccompanyService - selectAllByUser");
 		return dAccompanyRepo.selectAllByUser(uId);
+	}
+	
+	@Override
+	public List<DailyAccompany> selectAllByOneDay(int uId, String day) {
+		log.trace("DailyAccompanyService - selectAllByOneDay");
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("uId", uId);
+		param.put("day", day);
+		return dAccompanyRepo.selectAllByOneDay(param);
 	}
 	
 	@Override

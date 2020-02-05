@@ -64,4 +64,10 @@ public class UserRepositoryImpl implements UserRepository {
     	log.trace("UserRepository - update");
     	return session.update(ns + "updateUser", user);
     }
+    
+    @Override
+    public int updateImage(Map<String, Object> responseImage) {
+    	log.trace("UserRepository - updateImage");
+    	return session.update(ns + "updateUserImage", responseImage);
+    }
 }

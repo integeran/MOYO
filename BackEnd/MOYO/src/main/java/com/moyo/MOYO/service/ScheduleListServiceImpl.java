@@ -1,6 +1,9 @@
 package com.moyo.MOYO.service;
 
+import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,15 @@ public class ScheduleListServiceImpl implements ScheduleListService {
 	public List<ScheduleList> selectAllByUser(int uId) {
 		log.trace("ScheduleListService - selectAllByUser");
 		return sListRepo.selectAllByUser(uId);
+	}
+	
+	@Override
+	public List<ScheduleList> selectAllByOneDay(int uId, String day) {
+		log.trace("ScheduleListService - selectAllByOneDay");
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("uId", uId);
+		param.put("day", day);
+		return sListRepo.selectAllByOneDay(param);
 	}
 	
 	@Override
