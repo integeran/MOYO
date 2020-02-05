@@ -7,7 +7,7 @@ import Planner from '../../components/more/Planner';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import './styles.css';
+import './styles.scss';
 import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
 import { changeField } from '../../modules/planDate';
@@ -19,6 +19,17 @@ import Typography from '@material-ui/core/Typography';
 import axios from '../../api/axios';
 import BaseAppBar from '../../components/common/BaseAppBar';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ChatIcon from '@material-ui/icons/Chat';
+import styled from 'styled-components';
+
+// const Container = styled.div`
+//   & > .fc {
+//     color: red;
+//     & > .fc-toolbar > .fc-left > button {
+//       padding: 0;
+//     }
+//   }
+// `;
 
 const MorePlan = () => {
   const history = useHistory();
@@ -130,21 +141,23 @@ const MorePlan = () => {
       <BaseAppBar
         title={'일정 관리'}
         Icon1={<ArrowBackIosIcon onClick={handleBackIcon} />}
-        // Icon2={<ChatIcon />}
+        Icon2={''}
         // handleClick1={handleMoveBack}
       />
       <FullCalendar
+        // header={false}
         defaultView="dayGridMonth"
         plugins={[dayGridPlugin, interactionPlugin]}
         header={{
           left: 'prev',
           center: 'title',
-          right: 'next, today',
+          right: 'next',
         }}
         titleFormat={{
           month: 'short',
           year: 'numeric',
         }}
+        fixedWeekCount={false}
         // customButtons={{
         //   ForwardButton: {
         //     icon: 'right-single-arrow',
