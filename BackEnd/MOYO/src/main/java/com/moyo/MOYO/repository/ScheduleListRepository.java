@@ -1,6 +1,7 @@
 package com.moyo.MOYO.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import com.moyo.MOYO.dto.ScheduleList;
 
@@ -13,7 +14,7 @@ public interface ScheduleListRepository {
 	
 	public int create(ScheduleList scheduleList);
 	
-	public int delete(int sListId, int uId);
+	public int delete(Map<String, Integer> param);
 	
 	public int update(ScheduleList scheduleList);
 
