@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
-import KakaoLogin from 'react-kakao-login';
 import { useHistory } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { changeField, changeBool } from '../modules/auth';
 import axios from '../api/axios';
 
@@ -9,7 +8,6 @@ const Login = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const jwtDecode = require('jwt-decode');
-  // const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
 
   const pushUserData = (k, v) => {
     dispatch(changeField({ form: 'userData', key: k, value: v }));
@@ -79,7 +77,7 @@ const Login = () => {
       localStorage.setItem('token', resData.data.data);
       dispatch(changeBool({ key: 'isLoggedIn', value: true }));
       history.push({
-        pathname: '/acc',
+        pathname: '/accompany',
       });
     } else {
       history.push({
@@ -96,19 +94,6 @@ const Login = () => {
       dispatch(changeBool({ key: 'isLoggedIn', value: true }));
     }
   };
-
-  // useEffect(() => {
-  //   window.Kakao.init(process.env.REACT_APP_KAKAO_KEY);
-  //   window.Kakao.Auth.createLoginButton({
-  //     container: '#kakao-login-btn',
-  //     success: function(authObj) {
-  //       alert(JSON.stringify(authObj));
-  //     },
-  //     fail: function(err) {
-  //       alert(JSON.stringify(err));
-  //     },
-  //   });
-  // }, []);
 
   useEffect(() => {
     window.Kakao.init(process.env.REACT_APP_KAKAO_KEY);
@@ -127,6 +112,7 @@ const Login = () => {
             // console.log(res.properties.profile_image);
             // console.log(res.kakao_account.age_range);
             // console.log(res.kakao_account.gender);
+            window.Kakao.Auth.logout();
           },
           fail: function(error) {
             console.log(JSON.stringify(error));

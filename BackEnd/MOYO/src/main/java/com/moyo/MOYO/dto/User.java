@@ -14,6 +14,7 @@ public class User {
 	private int age;
 	private String gender;
 	private String image;
+	private String imageName;
 	private int beforePsId;
 	private int AfterPsId;
 	private String socialId;

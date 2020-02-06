@@ -32,6 +32,13 @@ public class ScheduleListRepositoryImpl implements ScheduleListRepository {
 		return session.selectList(ns + "selectAllByUser", uId);
 	}
 	
+	@Override
+	public List<ScheduleList> selectAllByOneDay(Map<String, Object> param) {
+		log.trace("ScheduleListRepository - selectAllByOneDay");
+		return session.selectList(ns + "selectAllByOneDay", param);
+	}
+	
+	@Override
 	public ScheduleList selectOne(int sListId) {
 		log.trace("ScheduleListRepository - selectOne");
 		return session.selectOne(ns + "selectOne", sListId);
@@ -44,11 +51,8 @@ public class ScheduleListRepositoryImpl implements ScheduleListRepository {
 	}
 	
 	@Override
-	public int delete(int sListId, int uId) {
+	public int delete(Map<String, Integer> param) {
 		log.trace("ScheduleListRepository - delete");
-		Map<String, Object> param = new HashMap<String, Object>();
-    	param.put("sListId", sListId);
-    	param.put("uId", uId);
 		return session.insert(ns + "deleteScheduleList", param);
 	}
 	

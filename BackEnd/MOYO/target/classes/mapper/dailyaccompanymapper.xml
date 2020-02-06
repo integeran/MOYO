@@ -4,17 +4,24 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="moyo.dailyaccompanymapper">
 	<select id="selectAll" resultType="dailyAccompany">
-		select u.nickname nickname, uu.nickname accompanyNickname, da.* 
+		select u.nickname nickname, uu.nickname accompanyNickname, uu.image accompanyImage, da.* 
 		from daily_accompany da
 		left outer join user u on da.u_id = u.u_id
 		left outer join user uu on da.accompany_id = uu.u_id
 	</select>
 	<select id="selectAllByUser" parameterType="int" resultType="dailyAccompany">
-		select u.nickname nickname, uu.nickname accompanyNickname, da.* 
+		select u.nickname nickname, uu.nickname accompanyNickname, uu.image accompanyImage, da.* 
 		from daily_accompany da
 		left outer join user u on da.u_id = u.u_id
 		left outer join user uu on da.accompany_id = uu.u_id
 		where da.u_id = #{uId}
+	</select>
+	<select id="selectAllByOneDay" parameterType="map" resultType="dailyAccompany">
+		select uu.nickname accompanyNickname, uu.image accompanyImage, da.*
+		from daily_accompany da
+		left outer join user uu on da.accompany_id = uu.u_id
+    	where da.u_id = #{uId} and date_format(da.day, '%Y-%m-%d') = #{day}
+    	order by da.register_date
 	</select>
 	<select id="selectOne" parameterType="int" resultType="dailyAccompany">
 		select u.nickname nickname, uu.nickname accompanyNickname, da.* 

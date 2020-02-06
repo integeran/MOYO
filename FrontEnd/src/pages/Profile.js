@@ -148,7 +148,7 @@ const Profile = props => {
       localStorage.setItem('token', resData.data.data);
       dispatch(changeBool({ key: 'isLoggedIn', value: true }));
       history.push({
-        pathname: '/acc',
+        pathname: '/accompany',
       });
     } else {
       setUserNicknameOut('');
@@ -275,10 +275,9 @@ const Profile = props => {
     <div>
       {prevPath === '/more' && (
         <BaseAppBar
-          title={'내 정보 관리'}
-          Icon1={<ArrowBackIosIcon onClick={handleBackIcon} />}
-          // Icon2={<ChatIcon />}
-          // handleClick1={handleMoveBack}
+          text="내 정보 관리"
+          leftType="icon"
+          leftIcon={<ArrowBackIosIcon onClick={handleBackIcon} />}
         />
       )}
       <div className={classes.root}>
