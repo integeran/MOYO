@@ -1,23 +1,23 @@
 import React from 'react';
+import { Route, Switch } from 'react-router-dom';
+import { useLocation } from 'react-router';
+import styled from 'styled-components';
 
-import AccompanyMain from './pages/acc/AccompanyMain';
-import AccompanyLocationSelect from './pages/acc/AccompanyLocationSelect';
-import AccompanyDateSelect from './pages/acc/AccompanyDateSelect';
-import AccompanyList from './pages/acc/AccompanyList';
-import AccompanyDetail from './pages/acc/AccompanyDetail';
+import AccompanyMain from './pages/accompany/AccompanyMain';
+import AccompanyLocationSelect from './pages/accompany/AccompanyLocationSelect';
+import AccompanyDateSelect from './pages/accompany/AccompanyDateSelect';
+import AccompanyList from './pages/accompany/AccompanyList';
+import AccompanyDetail from './pages/accompany/AccompanyDetail';
+import AccompanyWrite from './pages/accompany/AccompanyWrite';
 import MoreMain from './pages/more/MoreMain';
 import MorePlan from './pages/more/MorePlan';
 import CategoryNav from './components/common/CategoryNav';
-import styled from 'styled-components';
-import { Route, Switch } from 'react-router-dom';
-import { useLocation } from 'react-router';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import Container from '@material-ui/core/Container';
-import AccompanyWrite from './pages/acc/AccompanyWrite';
 import DmRoom from './pages/dm/DmRoom';
 import DmRoomList from './pages/dm/DmRoomList';
 import PostMap from './pages/postmap/Postmap';
+import Container from '@material-ui/core/Container';
 
 const StyledContainer = styled(Container)`
   position: relative;
@@ -44,11 +44,14 @@ const App = () => {
         <Route exact path="/" component={Login} />
         <Route path="/signup" component={Signup} />
         <Route exact path="/acc" component={AccompanyMain} />
-        <Route path="/acc/accSetLoc" component={AccompanyLocationSelect} />
-        <Route path="/acc/accSetDate" component={AccompanyDateSelect} />
-        <Route exact path="/acc/accList" component={AccompanyList} />
-        <Route path="/acc/accList/:id" component={AccompanyDetail} />
-        <Route path="/acc/write" component={AccompanyWrite} />
+        <Route
+          path="/accompany/accSetLoc"
+          component={AccompanyLocationSelect}
+        />
+        <Route path="/accompany/accSetDate" component={AccompanyDateSelect} />
+        <Route exact path="/accompany/accList" component={AccompanyList} />
+        <Route path="/accompany/accList/:id" component={AccompanyDetail} />
+        <Route path="/accompany/write" component={AccompanyWrite} />
         <Route exact path="/more" component={MoreMain} />
         <Route path="/more/morePlan" component={MorePlan} />
         <Switch>

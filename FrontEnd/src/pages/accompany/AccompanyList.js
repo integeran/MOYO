@@ -172,13 +172,13 @@ const AccompanyList = () => {
 
   const handleLocationSelect = () => {
     history.push({
-      pathname: '/acc/accSetLoc',
+      pathname: '/accompany/accSetLoc',
       state: { prevpath: history.location.pathnmae },
     });
   };
   const handleDateSelect = () => {
     history.push({
-      pathname: '/acc/accSetDate',
+      pathname: '/accompany/accSetDate',
       state: { prevpath: history.location.pathnmae },
     });
   };

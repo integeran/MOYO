@@ -1,5 +1,5 @@
 import React from 'react';
-import moment from 'moment';
+import moment from '../../../api/moment';
 import styled from 'styled-components';
 import { Typography, Grid } from '@material-ui/core';
 import TripSchedulePaper from '../../more/schedule/TripSchedulePaper';
@@ -16,7 +16,7 @@ const ScheduleContents = ({ tripSchedule, tripCompanion }) => {
   return (
     <>
       <Typography variant="h5" align="center">
-        {moment(new Date()).format('YYYY MM. DD(ddd)')}
+        {moment.momentDateDay()}
       </Typography>
       <SubtitleTypo variant="h6">오늘의 여행</SubtitleTypo>
       <Grid container direction="column" spacing={1} wrap="nowrap">

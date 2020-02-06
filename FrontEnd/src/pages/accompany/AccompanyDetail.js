@@ -61,10 +61,12 @@ const AccompanyListDetail = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <BaseAppBar
-        title={boardData.title}
-        Icon1={<ArrowBackIosIcon />}
-        Icon2={<ChatIcon />}
-        handleClick1={handleMoveBack}
+        text={boardData.title}
+        leftType="icon"
+        leftIcon={<ArrowBackIosIcon />}
+        rightType="icon"
+        rightIcon={<ChatIcon />}
+        leftClick={handleMoveBack}
       />
       <Grid
         container
