@@ -1,48 +1,75 @@
 import React from 'react';
 import styled from 'styled-components';
-import Typography from '@material-ui/core/Typography';
-
-import { AppBar, Toolbar, IconButton } from '@material-ui/core';
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Button,
+  Typography,
+  Grid,
+} from '@material-ui/core';
 
 const StyledAppBar = styled(({ ...other }) => <AppBar {...other} />)`
+  flex-grow: 1;
   & .MuiTypography-h6 {
     flex-grow: 1;
     text-align: center;
   }
 `;
 
-const IconButtonContainer = ({ pos, label, handleClick, IconDesign }) => {
+const ItemContainer = ({ type, icon, text, onClick }) => {
   return (
-    <IconButton
-      edge={pos}
-      aria-label={label}
-      color="inherit"
-      onClick={handleClick}
-    >
-      {IconDesign}
-    </IconButton>
+    <>
+      {icon && type === 'icon' && (
+        <IconButton color="inherit" onClick={onClick}>
+          {icon}
+        </IconButton>
+      )}
+      {!icon && (text || type === 'text') && (
+        <Button color="inherit">
+          <Typography variant="subtitle1">{text}</Typography>
+        </Button>
+      )}
+    </>
   );
 };
 
-const BaseAppBar = ({ title, Icon1, handleClick1, Icon2, handleClick2 }) => {
+const BaseAppBar = ({
+  text,
+  align = 'center',
+  leftIcon,
+  leftText,
+  leftType = 'text',
+  leftClick,
+  rightIcon,
+  rightText,
+  rightType = 'text',
+  rightClick,
+}) => {
   return (
     <StyledAppBar color="inherit" elevation={0} position="sticky">
-      <Toolbar>
-        {Icon1 && (
-          <IconButtonContainer
-            pos="start"
-            IconDesign={Icon1}
-            handleClick={handleClick1}
+      <Toolbar disableGutters={true}>
+        <Grid item xs={2}>
+          <ItemContainer
+            type={leftType}
+            icon={leftIcon}
+            text={leftText}
+            onClick={leftClick}
           />
-        )}
-        <Typography variant="h6">{title}</Typography>
-        {Icon2 && (
-          <IconButtonContainer
-            pos="end"
-            IconDesign={Icon2}
-            handleClick={handleClick2}
+        </Grid>
+        <Grid item xs={8}>
+          <Typography variant="h6" align={align}>
+            {text}
+          </Typography>
+        </Grid>
+        <Grid item xs={2}>
+          <ItemContainer
+            type={rightType}
+            icon={rightIcon}
+            text={rightText}
+            onClick={rightClick}
           />
-        )}
+        </Grid>
       </Toolbar>
     </StyledAppBar>
   );

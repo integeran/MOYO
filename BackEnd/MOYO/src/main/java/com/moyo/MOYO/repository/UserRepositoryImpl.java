@@ -33,11 +33,8 @@ public class UserRepositoryImpl implements UserRepository {
     }
     
     @Override
-    public User selectOneBySocialId(String socialId, int provider) {
+    public User selectOneBySocialId(Map<String, Object> param) {
     	log.trace("UserRepository - selectOneBySocialId");
-    	Map<String, Object> param = new HashMap<String, Object>();
-    	param.put("socialId", socialId);
-    	param.put("provider", provider);
     	return session.selectOne(ns + "selectOneBySocialId", param);
     }
     
@@ -63,5 +60,11 @@ public class UserRepositoryImpl implements UserRepository {
     public int update(User user) {
     	log.trace("UserRepository - update");
     	return session.update(ns + "updateUser", user);
+    }
+    
+    @Override
+    public int updateImage(Map<String, Object> responseImage) {
+    	log.trace("UserRepository - updateImage");
+    	return session.update(ns + "updateUserImage", responseImage);
     }
 }

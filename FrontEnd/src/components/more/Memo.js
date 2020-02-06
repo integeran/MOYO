@@ -95,7 +95,8 @@ const Memo = () => {
         onChange={handleChangeMemo}
         variant="outlined"
       ></TextField>
-      <Button onClick={handleMemo}>저장하기</Button>
+      {/* <Button onClick={handleMemo}>저장하기</Button> */}
+      <Button></Button>
     </div>
   );
 };

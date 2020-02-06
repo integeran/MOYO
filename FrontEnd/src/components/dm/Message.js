@@ -1,81 +1,121 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import axios from '../../api/axios';
+
 import FileMessage from './FileMessage';
 
+import Typography from '@material-ui/core/Typography';
+import Avatar from '@material-ui/core/Avatar';
+import Grid from '@material-ui/core/Grid';
+
 const Message = ({
-  userImage,
-  userName,
+  senderId,
+  curUser,
   message,
   timeStamp,
-  direct,
   fileName,
-  path,
+  url,
+  lastMessageUserId,
+  lastTimeStamp,
 }) => {
-  const useStyles = makeStyles({
-    card: {
-      minWidth: 275,
-      width: 150,
-      float: direct === 'right' ? 'right' : '',
-    },
-    bullet: {
-      display: 'inline-block',
-      margin: '0 2px',
-      transform: 'scale(0.8)',
-    },
-    title: {
-      fontSize: 14,
-    },
-    pos: {
-      marginBottom: 12,
-    },
-  });
+  const userData = useSelector(state => state.auth.userData);
 
-  const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
+  const [sender, Setsender] = useState('');
 
-  var gab = <span></span>;
-  if (direct === 'right') {
-    gab = <p style={{ clear: 'both' }}></p>;
-  }
+  useEffect(() => {
+    const getData = async () => {
+      const res = await onAxiosGetUser(senderId);
+      Setsender(res.data.data.user);
+    };
+    getData();
+  }, []);
+
+  const onAxiosGetUser = async id => {
+    return await axios.get('DM/getUser?uId=' + id, {
+      headers: { userToken: userData.userToken },
+    });
+  };
+
+  const showRightMessage = () => {
+    return (
+      <Grid container justify="flex-end" style={{ padding: '1%' }}>
+        {showMessage(true)}
+      </Grid>
+    );
+  };
+
+  const showLeftMessage = () => {
+    return (
+      <Grid container style={{ padding: '1%' }}>
+        {showProfile()}
+        {showMessage()}
+      </Grid>
+    );
+  };
+
+  const showMessage = check => {
+    return (
+      <Grid item xs={7} style={{ padding: '1%' }}>
+        <div
+          style={{
+            float: check ? 'right' : 'left',
+          }}
+        >
+          {url ? (
+            <FileMessage url={url} fileName={fileName} timeStamp={timeStamp} />
+          ) : (
+            <Typography
+              variant="subtitle1"
+              style={{
+                backgroundColor: '#e0e0e0',
+                borderRadius: '8px',
+                textAlign: 'left',
+                paddingLeft: message.length >= 13 ? '3%' : '',
+              }}
+            >
+              {message.length < 13 && (
+                <span style={{ color: '#e6dbdb' }}>1</span>
+              )}
+              {message}
+              {message.length < 13 && (
+                <span style={{ color: '#e6dbdb' }}>1</span>
+              )}
+            </Typography>
+            // 가라를 쓰고 싶지않지만.. 이것이 최선이다 !
+          )}
+        </div>
+      </Grid>
+    );
+  };
+
+  const showProfile = () => {
+    if (senderId !== lastMessageUserId || timeStamp !== lastTimeStamp) {
+      return (
+        <Grid item xs={1} style={{ paddingRight: '1%' }}>
+          <Avatar
+            alt="메세지 보낸 사람의 프로필"
+            src={sender.image}
+            style={{ width: '30px', height: '30px' }}
+          />
+        </Grid>
+      );
+    } else {
+      return <Grid item xs={1} style={{ paddingRight: '1%' }}></Grid>;
+    }
+  };
 
   return (
-    <>
-      <div>
-        <Card className={classes.card}>
-          <CardContent>
-            <Typography
-              className={classes.title}
-              color="textSecondary"
-              gutterBottom
-            >
-              <img
-                src={userImage}
-                style={{ width: '40px', height: '40px' }}
-              ></img>
-            </Typography>
-            <Typography variant="h5" component="h2">
-              {userName}
-            </Typography>
-            {path ? (
-              <FileMessage path={path} fileName={fileName} />
-            ) : (
-              <Typography className={classes.pos} color="textSecondary">
-                {message}
-              </Typography>
-            )}
-            <Typography variant="body2" component="p">
-              {timeStamp}
-            </Typography>
-          </CardContent>
-        </Card>
-        {gab}
-      </div>
-    </>
+    sender && (
+      <>
+        {timeStamp !== lastTimeStamp && (
+          <div style={{ textAlign: 'center' }}>
+            <Typography variant="caption">{timeStamp}</Typography>
+          </div>
+        )}
+
+        {curUser.uId === sender.uId ? showRightMessage() : showLeftMessage()}
+      </>
+    )
   );
 };
 
