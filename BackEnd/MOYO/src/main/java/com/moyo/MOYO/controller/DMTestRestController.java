@@ -28,41 +28,41 @@ public class DMTestRestController {
 		try {
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 
-			// resultMap.put("receiver", tempObject(6, "SUNGCHAN", 25, "m", null, 2, 5, "tjdcksdl00@kakao.com", 0, 2, "2020-01-22 16:28:47", "2020-01-23 19:21:43"));
-			resultMap.put("receiver", tempObject(5, "INDONG", 28, "m", null, 1, 2, "kunder@kakao.com", 0, 1, "2020-01-20 06:28:47", "2020-01-20 06:28:47"));
-			resultMap.put("sender", tempObject(7, "SOOAN", 20, "w", null, 3, 7, "jmiha@kakao.com", 0, 1, "2020-01-22 03:18:54", "2020-01-23 09:30:11"));
-			// resultMap.put("sender", tempObject(8, "HAAJEESOO", 39, "m", null, 2, 4, "jeesoohaa@kakao.com", 0, 1, "2020-01-24 02:01:02", "2020-01-28 05:30:12"));
-			// resultMap.put("receiver", tempObject(9, "YOUNG", 35, "m", null, 1, 6, "young@kakao.com", 0, 1, "2020-01-19 03:05:04", "2020-01-20 07:01:35"));
+			// resultMap.put("receiver", tempObject(6, "SUNGCHAN", 25, "m", "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png", 2, 5, "tjdcksdl00@kakao.com", 0, 2, "2020-01-22 16:28:47", "2020-01-23 19:21:43"));
+			resultMap.put("receiver", tempObject(5, "INDONG", 28, "m", "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png", 1, 2, "kunder@kakao.com", 0, 1, "2020-01-20 06:28:47", "2020-01-20 06:28:47"));
+			resultMap.put("sender", tempObject(7, "SOOAN", 20, "w", "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png", 3, 7, "jmiha@kakao.com", 0, 1, "2020-01-22 03:18:54", "2020-01-23 09:30:11"));
+			// resultMap.put("sender", tempObject(8, "HAAJEESOO", 39, "m", "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png", 2, 4, "jeesoohaa@kakao.com", 0, 1, "2020-01-24 02:01:02", "2020-01-28 05:30:12"));
+			// resultMap.put("receiver", tempObject(9, "YOUNG", 35, "m", "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png", 1, 6, "young@kakao.com", 0, 1, "2020-01-19 03:05:04", "2020-01-20 07:01:35"));
 			return response(resultMap, HttpStatus.OK, true);
 		} catch(RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
 	
-	@GetMapping("/DM/getReceiver")
-	public ResponseEntity<Map<String, Object>> getReceiver(@RequestParam int uId) {
+	@GetMapping("/DM/getUser")
+	public ResponseEntity<Map<String, Object>> getUser(@RequestParam int uId) {
 		try {
 			log.trace("UserRestController - selectOne");
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 			switch(uId) {
 			case 5:
-				resultMap.put("receiver", tempObject(5, "INDONG", 28, "m", null, 1, 2, "kunder@kakao.com", 0, 1, "2020-01-20 06:28:47", "2020-01-20 06:28:47"));
+				resultMap.put("user", tempObject(5, "INDONG", 28, "m", "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png", 1, 2, "kunder@kakao.com", 0, 1, "2020-01-20 06:28:47", "2020-01-20 06:28:47"));
 				break;
 				
 			case 6:
-				resultMap.put("receiver", tempObject(6, "SUNGCHAN", 25, "m", null, 2, 5, "tjdcksdl00@kakao.com", 0, 2, "2020-01-22 16:28:47", "2020-01-23 19:21:43"));
+				resultMap.put("user", tempObject(6, "SUNGCHAN", 25, "m", "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png", 2, 5, "tjdcksdl00@kakao.com", 0, 2, "2020-01-22 16:28:47", "2020-01-23 19:21:43"));
 				break;
 				
 			case 7:
-				resultMap.put("receiver", tempObject(7, "SOOAN", 20, "w", null, 3, 7, "jmiha@kakao.com", 0, 1, "2020-01-22 03:18:54", "2020-01-23 09:30:11"));
+				resultMap.put("user", tempObject(7, "SOOAN", 20, "w", "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png", 3, 7, "jmiha@kakao.com", 0, 1, "2020-01-22 03:18:54", "2020-01-23 09:30:11"));
 				break;
 				
 			case 8:
-				resultMap.put("receiver", tempObject(8, "HAAJEESOO", 39, "m", null, 2, 4, "jeesoohaa@kakao.com", 0, 1, "2020-01-24 02:01:02", "2020-01-28 05:30:12"));
+				resultMap.put("user", tempObject(8, "HAAJEESOO", 39, "m", "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png", 2, 4, "jeesoohaa@kakao.com", 0, 1, "2020-01-24 02:01:02", "2020-01-28 05:30:12"));
 				break;
 				
 			case 9:
-				resultMap.put("receiver", tempObject(9, "YOUNG", 35, "m", null, 1, 6, "young@kakao.com", 0, 1, "2020-01-19 03:05:04", "2020-01-20 07:01:35"));
+				resultMap.put("user", tempObject(9, "YOUNG", 35, "m", "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png", 1, 6, "young@kakao.com", 0, 1, "2020-01-19 03:05:04", "2020-01-20 07:01:35"));
 				break;
 			}
 			
