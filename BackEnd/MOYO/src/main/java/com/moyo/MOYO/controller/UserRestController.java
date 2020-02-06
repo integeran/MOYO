@@ -3,6 +3,8 @@ package com.moyo.MOYO.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.moyo.MOYO.dto.User;
+import com.moyo.MOYO.service.FileService;
 import com.moyo.MOYO.service.JwtService;
 import com.moyo.MOYO.service.UserService;
 
@@ -33,6 +37,9 @@ public class UserRestController {
 	
 	@Autowired
 	JwtService jwtService;
+	
+	@Autowired
+	FileService fileService;
 	
 	@GetMapping("user/selectAll")
 	public ResponseEntity<Map<String, Object>> selectAll() {
@@ -110,7 +117,7 @@ public class UserRestController {
 	}
 	
 	@PutMapping("user/update")
-	public ResponseEntity<Map<String, Object>> update(@RequestBody User user, @RequestHeader(value="userToken") String userToken) {
+	public ResponseEntity<Map<String, Object>> update(@RequestBody User user, @RequestHeader(value="userToken") String userToken) throws ServletException {
 		try {
 			log.trace("UserRestController - update");
 			User originUser = jwtService.getUser(userToken);
@@ -122,14 +129,37 @@ public class UserRestController {
 				}
 			}
 			String token = null;
-			user.setUId(originUser.getUId());
+			int uId = originUser.getUId();
+			String originImageName = originUser.getImageName();
+			String newImageName = user.getImageName();
+			if (originImageName != null && !originImageName.equals(newImageName)) {
+				fileService.deleteImage(originImageName);
+			}
+			user.setUId(uId);
 			uService.update(user);
-			User loginUser = uService.selectOne(originUser.getUId());
+			User loginUser = uService.selectOne(uId);
 			if (loginUser != null) {
 				token = jwtService.createLoginToken(loginUser);
 			}
 			return response(token, HttpStatus.OK, true);
-		} catch (RuntimeException e) {
+		} catch (Exception e) {
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
+	@PostMapping(value="user/postImage")
+	public ResponseEntity<Map<String, Object>> postImage(@RequestParam(value="imageName", required=false) String imageName, @RequestParam("file") MultipartFile[] file, @RequestHeader("userToken") String userToken) {
+		try {
+			log.trace("UserRestController - postImage");
+			Map<String, Object> responseImage = fileService.uploadImage(file[0], "profile");
+			User originUser = jwtService.getUser(userToken);
+			responseImage.put("uId", originUser.getUId());
+			String originImageName = originUser.getImageName();
+			if (imageName != null && originImageName != imageName) {
+				fileService.deleteImage(imageName);
+			}
+			return response(responseImage, HttpStatus.OK, true);
+		} catch (Exception e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}

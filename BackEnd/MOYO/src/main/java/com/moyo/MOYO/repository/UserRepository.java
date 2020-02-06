@@ -19,4 +19,6 @@ public interface UserRepository {
 	public int delete(int uId);
 	
 	public int update(User user);
+	
+	public int updateImage(Map<String, Object> responseImage);
 }
