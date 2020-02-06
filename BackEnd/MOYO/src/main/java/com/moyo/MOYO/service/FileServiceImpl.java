@@ -38,7 +38,7 @@ public class FileServiceImpl implements FileService {
 		log.trace("FileService - uploadImage");
 		
 		//	static Storage storage = StorageOptions.getDefaultInstance().getService();
-		Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("C:\\Users\\multicampus\\project\\MOYO_imageUpload\\BackEnd\\MOYO\\src\\main\\resources\\moyo-credential.json"));
+		Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("../MOYO/src/main/resources/moyo-credential.json"));
 		Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
 		String bucketName = "moyo-cloud-storage";
 		
