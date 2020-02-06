@@ -12,6 +12,10 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import MenuItem from '@material-ui/core/MenuItem';
 import { storeSchedule } from '../../modules/morePlanTravel';
 import axios from '../../api/axios';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
+import AddIcon from '@material-ui/icons/Add';
 
 const nationData = [
   { nid: 2, name: '프랑스' },
@@ -33,6 +37,16 @@ const cityData = [
 ];
 
 const PlanTravel = () => {
+  const useStyles = makeStyles(theme => ({
+    center: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  }));
+
+  const classes = useStyles();
+
   const dispatch = useDispatch();
   const userData = useSelector(state => state.auth.userData);
   const [nation, setNation] = useState('');
@@ -199,17 +213,26 @@ const PlanTravel = () => {
 
   return (
     <div>
-      <h2>여행일정</h2>
-
-      <Button
-        variant="outlined"
-        color="primary"
-        onClick={handleClickOpenCreate}
+      <Grid
+        container
+        direction="column"
+        justify="center"
+        style={{ width: 'inherit', height: 'inherit', margin: '0px' }}
       >
-        여행 계획 추가
-      </Button>
-
-      <ul>{travelList}</ul>
+        <Grid item container justify="space-between">
+          <Grid item className={classes.center} xs={6}>
+            <Typography variant="h6">{selectedDate.split('T')[0]}</Typography>
+          </Grid>
+          <Grid item xs={3}></Grid>
+          <Grid item className={classes.center} xs={3}>
+            {/* <Typography variant="button">여행 추가</Typography> */}
+            <AddIcon onClick={handleClickOpenCreate} />
+          </Grid>
+        </Grid>
+        <Grid item>
+          <ul>{travelList}</ul>
+        </Grid>
+      </Grid>
 
       <Dialog
         open={openCreate}

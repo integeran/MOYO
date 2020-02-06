@@ -25,7 +25,7 @@
 }
 
 .fc-header-toolbar {
-  margin-bottom: 1em !important;
+  margin-bottom: 0.75em !important;
 }
 
 .fc-button-primary {
@@ -36,4 +36,51 @@
 
 .fc-toolbar {
   justify-content: space-evenly !important;
+}
+
+.fc-button {
+  box-shadow: none !important;
+  // border: 1px solid white !important;
+  // outline: none;
+}
+
+body {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fc-sun {
+  color: red;
+}
+
+.fc-day-number {
+  padding: 0 !important;
+  padding-right: 0.3em !important;
+  font-size: 0.9em;
+}
+
+.fc-day-grid-event {
+  pointer-events: none;
+}
+
+.fc-content {
+  text-align: center;
+  font-size: 0.7rem;
+}
+
+.fc-week {
+  border-style: none !important;
+  border-top: 1px solid lightgrey !important;
+}
+
+.fc td,
+.fc th {
+  border-style: none !important;
+}
+
+.fc-widget-header {
+  margin-bottom: 0.75em !important;
+}
+
+.fc-state-highlight {
+  background: red !important;
 }
