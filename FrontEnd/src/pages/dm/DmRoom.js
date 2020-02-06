@@ -41,7 +41,6 @@ const DmRoom = ({ match }) => {
   const DATETIME_CHAR = useSelector(state => state.Dm.DATETIME_CHAR);
   const userData = useSelector(state => state.auth.userData);
 
-  const [hookSender, setHookSender] = useState({});
   const [hookReceiver, setHookReceiver] = useState({});
   const [title, setTitle] = useState('');
   const [messageList, setMessageList] = useState([]);
@@ -70,14 +69,8 @@ const DmRoom = ({ match }) => {
     onInit();
   }, []);
 
-  const onAxiosInit = async () => {
-    return await axios.get('DM/testID', {
-      headers: { userToken: userData.userToken },
-    });
-  };
-
   const onAxiosGetUser = async id => {
-    return await axios.get('DM/getUser?uId=' + id, {
+    return await axios.get('DM/getUser?uid=' + id, {
       headers: { userToken: userData.userToken },
     });
   };
@@ -87,7 +80,6 @@ const DmRoom = ({ match }) => {
    */
   const onInit = async () => {
     console.log('onInit');
-    const axiosInitData = await onAxiosInit();
 
     firebase.database().goOnline();
 
@@ -99,18 +91,10 @@ const DmRoom = ({ match }) => {
         alert('익명사용자 에러 발생', error);
       });
 
-    setHookSender(axiosInitData.data.data.sender);
-    setHookReceiver(axiosInitData.data.data.receiver);
-
     if (match.params.receiverId) {
       const axiosUserData = await onAxiosGetUser(match.params.receiverId);
-      setHookReceiver(axiosUserData.data.data.user);
-      loadRoom(axiosInitData.data.data.sender, axiosUserData.data.data.user);
-    } else {
-      loadRoom(
-        axiosInitData.data.data.sender,
-        axiosInitData.data.data.receiver,
-      );
+      setHookReceiver(axiosUserData.data.data);
+      loadRoom(userData, axiosUserData.data.data);
     }
   };
 
@@ -124,7 +108,7 @@ const DmRoom = ({ match }) => {
     var roomInfo = {};
     firebase
       .database()
-      .ref('UserRooms/' + sender.uId + '/' + receiver.uId)
+      .ref('UserRooms/' + sender.uid + '/' + receiver.uid)
       .on('value', snapshot => {
         if (snapshot.val()) {
           roomInfo.roomId = snapshot.val().roomId;
@@ -137,7 +121,7 @@ const DmRoom = ({ match }) => {
           );
         } else {
           roomInfo.roomId =
-            MAKEID_CHAR + receiver.uId + MAKEID_CHAR + receiver.uId;
+            MAKEID_CHAR + sender.uid + MAKEID_CHAR + receiver.uid;
           roomInfo.roomTitle = sender.nickname;
           loadMessageList(
             roomInfo.roomId,
@@ -155,6 +139,7 @@ const DmRoom = ({ match }) => {
   const loadMessageList = (roomId, roomTitle, sender, receiver) => {
     console.log('loadMessageList');
     if (roomId) {
+      console.log('loadMessageListAfter');
       setHookRoomId(roomId);
       setMessageList([]);
 
@@ -163,7 +148,6 @@ const DmRoom = ({ match }) => {
 
         const MessageInfo = {
           senderId: val.senderId,
-          curUser: sender,
           message: val.message,
           timeStamp: val.timeStamp,
           fileName: val.fileName,
@@ -196,7 +180,7 @@ const DmRoom = ({ match }) => {
 
       // 메세지 저장
       multiUpdates['Messages/' + hookRoomId + '/' + messageId] = {
-        senderId: hookSender.uId,
+        senderId: userData.uid,
         message: msg,
         timeStamp: curTimeStamp,
         fileName: fileName ? fileName : null,
@@ -204,16 +188,16 @@ const DmRoom = ({ match }) => {
       };
 
       // 유저별 룸 리스트 저장
-      multiUpdates['UserRooms/' + hookSender.uId + '/' + hookReceiver.uId] = {
+      multiUpdates['UserRooms/' + userData.uid + '/' + hookReceiver.uid] = {
         roomId: hookRoomId,
-        receiverId: hookReceiver.uId,
+        receiverId: hookReceiver.uid,
         lastMessage: url ? '다운로드' : msg,
         timeStamp: curTimeStamp,
       };
 
-      multiUpdates['UserRooms/' + hookReceiver.uId + '/' + hookSender.uId] = {
+      multiUpdates['UserRooms/' + hookReceiver.uid + '/' + userData.uid] = {
         roomId: hookRoomId,
-        receiverId: hookSender.uId,
+        receiverId: userData.uid,
         lastMessage: url ? '다운로드' : msg,
         timeStamp: curTimeStamp,
       };
@@ -226,8 +210,6 @@ const DmRoom = ({ match }) => {
           var list = document.getElementById('messageList');
           list.scrollTop = list.scrollHeight;
         });
-
-      console.log('3: multiUpdate');
     }
   };
 
@@ -265,7 +247,7 @@ const DmRoom = ({ match }) => {
         '/' +
         hookRoomId +
         '/' +
-        hookSender.uId +
+        userData.uid +
         '/' +
         fileName;
 
@@ -376,7 +358,6 @@ const DmRoom = ({ match }) => {
               <Message
                 key={index}
                 senderId={message.senderId}
-                curUser={message.curUser}
                 message={message.message}
                 timeStamp={message.timeStamp}
                 fileName={message.fileName}
