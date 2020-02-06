@@ -56,6 +56,7 @@ const Profile = props => {
   const prevPath = props.location.state.prevPath;
   const userSocialId = props.location.state.userSocialId;
   let userImage = props.location.state.userProfileImage;
+  const [tempUserImage, setTempUserImage] = useState(userImage);
   let userNickname = props.location.state.userNickname;
   const [userNicknameOut, setUserNicknameOut] = useState(userNickname);
   let userAge = props.location.state.userAgeRange;
@@ -78,6 +79,9 @@ const Profile = props => {
   );
   const [ageError, setAgeError] = useState(false);
   const [genderError, setGenderError] = useState(false);
+
+  const [imageFile, setImageFile] = useState('');
+  const [tempImageName, setTempImageName] = useState('');
 
   const handleChangeNickname = event => {
     setUserNicknameOut(event.target.value);
@@ -104,7 +108,8 @@ const Profile = props => {
         nickname: userNicknameOut,
         age: age,
         gender: gender,
-        image: userImage,
+        image: tempUserImage,
+        imageName: tempImageName,
       });
     } catch (error) {
       console.error(error);
@@ -115,7 +120,13 @@ const Profile = props => {
     try {
       return await axios.put(
         'user/update',
-        { nickname: userNicknameOut, age: age, gender: gender },
+        {
+          nickname: userNicknameOut,
+          age: age,
+          gender: gender,
+          image: tempUserImage,
+          imageName: tempImageName,
+        },
         { headers: { userToken: userData.userToken } },
       );
     } catch (error) {
@@ -125,6 +136,7 @@ const Profile = props => {
 
   const postData = async () => {
     const resData = await postRequest();
+    console.log(resData);
     if (resData.data.status) {
       const jwtData = jwtDecode(resData.data.data);
       pushUserData('userToken', resData.data.data);
@@ -232,8 +244,6 @@ const Profile = props => {
     setOpenDialog(false);
   };
 
-  const [imageFile, setImageFile] = useState('');
-
   const changeImageFile = file => {
     setImageFile(file);
   };
@@ -243,6 +253,7 @@ const Profile = props => {
       const formData = new FormData();
       formData.append('file', imageFile);
       return await axios.post('user/postImage', formData, {
+        params: { imageName: tempImageName },
         headers: {
           userToken: userData.userToken,
           // 'Content-Type': 'multipart/form-data',
@@ -254,8 +265,10 @@ const Profile = props => {
   };
 
   const postImage = async () => {
-    const resData = await postImageRequest();
-    console.log(resData);
+    const imgData = await postImageRequest();
+    setTempImageName(imgData.data.data.imageName);
+    setTempUserImage(imgData.data.data.image);
+    setOpenDialog(false);
   };
 
   return (
@@ -279,7 +292,7 @@ const Profile = props => {
           >
             <Avatar
               alt="Jeesoo Haa"
-              src={userImage}
+              src={tempUserImage}
               className={classes.large}
               onClick={handleProfileImage}
             />
