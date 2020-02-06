@@ -18,4 +18,5 @@ public class Postmap {
 	private Date registerDate;
 	
 	private int likes;
+	private int pmLikeId;
 }
