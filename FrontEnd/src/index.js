@@ -14,14 +14,14 @@ import * as firebase from 'firebase';
 const jwtDecode = require('jwt-decode');
 
 const config = {
-  apiKey: 'AIzaSyA0CkmtA7OKgn_qX56-LzpaIwGr1A_eV-0',
-  authDomain: 'fir-tutorial-6c3c4.firebaseapp.com',
-  databaseURL: 'https://fir-tutorial-6c3c4.firebaseio.com',
-  projectId: 'fir-tutorial-6c3c4',
-  storageBucket: 'fir-tutorial-6c3c4.appspot.com',
-  messagingSenderId: '524593509527',
-  appId: '1:524593509527:web:450b2af17a4580885fe5d2',
-  measurementId: 'G-E7Q95PNHVB',
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_DATABASE_URL,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_APP_ID,
+  measurementId: process.env.REACT_APP_MEASUREMENT_ID,
 };
 
 firebase.initializeApp(config);
