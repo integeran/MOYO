@@ -1,9 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
 
@@ -25,15 +23,7 @@ const useStyles = makeStyles({
   },
 });
 
-const Room = ({
-  roomId,
-  roomTitle,
-  userId,
-  userName,
-  userImage,
-  lastMessage,
-  timeStamp,
-}) => {
+const Room = ({ roomId, receiver, lastMessage, timeStamp }) => {
   const classes = useStyles();
   const bull = <span className={classes.bullet}>•</span>;
 
@@ -45,10 +35,14 @@ const Room = ({
           color="textSecondary"
           gutterBottom
         >
-          {roomTitle}
+          {receiver.nickname}
         </Typography>
         <Typography variant="h5" component="h2">
-          <img src={userImage} style={{ width: '40px', height: '40px' }}></img>
+          <img
+            alt="리시버의 이미지"
+            src={receiver.image}
+            style={{ width: '40px', height: '40px' }}
+          ></img>
         </Typography>
         <Typography className={classes.pos} color="textSecondary">
           {lastMessage}
@@ -57,7 +51,7 @@ const Room = ({
           {timeStamp}
         </Typography>
       </CardContent>
-      <Link to={`/DmRoom/${userId}/${userName}/${userImage}`}>방 들어가기</Link>
+      <Link to={`/DmRoom/${receiver.uId}`}>방 들어가기</Link>
     </Card>
   );
 };
