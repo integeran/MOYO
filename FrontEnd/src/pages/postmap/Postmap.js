@@ -71,25 +71,9 @@ const Postmap = props => {
 
   const classes = useStyles();
 
-  const fetchMarker = pos => {
-    axios
-      .get(
-        `postmap/selectAll?latitude=${pos.latitude}&longitude=${pos.longitude}&uId=${userData.uid}`,
-        {
-          headers: { userToken: userData.userToken },
-        },
-      )
-      .then(res => {
-        setPostList(res.data.data);
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  };
-
-  const getPosition = () => {
+  const getPosition = async () => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
+      navigator.geolocation.getCurrentPosition(async function(position) {
         // console.log('getCurrentPosition');
         setPos([]);
 
@@ -103,11 +87,21 @@ const Postmap = props => {
 
         setPos(savepos);
 
-        fetchMarker(curpos);
+        const res = await getFetchMarker(curpos);
+        setPostList(res.data.data);
       });
     } else {
       console.log('navigator error');
     }
+  };
+
+  const getFetchMarker = async pos => {
+    return await axios.get(
+      `postmap/selectAll?latitude=${pos.latitude}&longitude=${pos.longitude}&uId=${userData.uid}`,
+      {
+        headers: { userToken: userData.userToken },
+      },
+    );
   };
 
   const displayMarkers = () => {
@@ -163,11 +157,7 @@ const Postmap = props => {
           },
         )
         .then(res => {
-          var curpos = {
-            latitude: pos[0].latitude,
-            longitude: pos[0].longitude,
-          };
-          fetchMarker(curpos);
+          getPosition();
         })
         .catch(e => {
           console.log(e);
@@ -179,14 +169,7 @@ const Postmap = props => {
     }
   };
 
-  // const onChatText = useCallback(
-  //   e => {
-  //     if (e.target.value.length < 30) {
-  //       setChatText(e.target.value);
-  //     }
-  //   },
-  //   [enterFlag],
-  // );
+  // const test = useMemo(() => countActiveUsers(users), [users]);
 
   const onChatText = e => {
     console.log(e.type);
@@ -221,145 +204,149 @@ const Postmap = props => {
   };
 
   return (
-    <>
-      <div
-        id="googleMap"
-        style={{
-          width: 'inherit',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        {pos.map((curpos, index) => {
-          return (
-            <Map
-              key={index}
-              google={props.google}
-              zoom={13}
-              style={mapStyles}
-              initialCenter={{ lat: curpos.latitude, lng: curpos.longitude }}
-              onClick={() => {
-                console.log('mapClick');
-              }}
-              mapTypeControl={false}
-              streetViewControl={false}
-              fullscreenControl={false}
-            >
-              {displayMarkers()}
-              {infoWindow && (
-                <InfoWindow
-                  onCloseClick={() => {
-                    setInfoWindow(null);
-                    setInfoWindowCheck(false);
-                  }}
-                  position={{
-                    lat: infoWindow.latitude,
-                    lng: infoWindow.longitude,
-                  }}
-                  visible={infoWindowCheck}
-                >
-                  <div>
-                    {/* <h2>{infoWindow.registerId}</h2> */}
-                    <p>{infoWindow.contents}</p>
-                  </div>
-                </InfoWindow>
-              )}
-            </Map>
-          );
-        })}
-        <Grid item xs={2} />
-      </div>
-      <Grid
-        container
-        style={{ width: '400px' }}
-        justify="center"
-        alignItems="center"
-      >
-        <Grid item xs={2} />
-        <Grid item xs={7}>
-          <TextField
-            placeholder="포스트맵을 작성하세요."
-            onChange={onChatText}
-            value={chatText}
-            onKeyPress={enterSaveChat}
-            fullWidth
-            style={{ marginTop: '5px' }}
-          />
-        </Grid>
-        <Grid item xs={1}>
-          <IconButton aria-label="delete" className={classes.margin}>
-            <NearMeIcon color="primary" onClick={saveChat} />
-          </IconButton>
-        </Grid>
-        <Grid
-          item
-          xs={2}
-          style={{ textAlign: 'center', color: timer < 4 ? 'red' : 'black' }}
+    postList && (
+      <>
+        <div
+          id="googleMap"
+          style={{
+            width: 'inherit',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
         >
-          <span>{timer > 0 ? timer + '초' : null}</span>
-        </Grid>
-      </Grid>
-      <div id="chatList" style={{ overflow: 'auto' }}>
-        {postList.map(chat => {
-          return (
-            <>
-              <List className={classes.root} key={chat.pmId}>
-                <ListItem alignItems="flex-start">
-                  <ListItemText
-                    primary={chat.contents}
-                    secondary={
-                      <React.Fragment>
-                        <Typography
-                          component="span"
-                          variant="body2"
-                          className={classes.inline}
-                          color="textPrimary"
-                        >
-                          {moment(chat.registerDate).format(
-                            'YYYY-MM-DD HH:SS:DD',
-                          )}
-                          <span style={{ float: 'right' }}>x{chat.likes}</span>
-                        </Typography>
-                        {chat.pmLikeId !== 0 ? (
-                          <FavoriteIcon
-                            style={{
-                              float: 'right',
-                              cursor: 'pointer',
-                              color: 'red',
-                            }}
-                            onClick={() => {
-                              onSetInish();
-                              likePost(chat.pmId);
-                            }}
-                          />
-                        ) : (
-                          <FavoriteBorderIcon
-                            style={{ float: 'right', cursor: 'pointer' }}
-                            onClick={() => {
-                              onSetInish();
-                              likePost(chat.pmId);
-                            }}
-                          />
-                        )}
-                      </React.Fragment>
-                    }
-                    onClick={() => {
-                      console.log('didi');
-                      console.log(chat);
-                      setInfoWindow(chat);
-                      setInfoWindowCheck(true);
-                      // onSetInish();
-                      getPosition();
+          {pos.map((curpos, index) => {
+            return (
+              <Map
+                key={index}
+                google={props.google}
+                zoom={13}
+                style={mapStyles}
+                initialCenter={{ lat: curpos.latitude, lng: curpos.longitude }}
+                onClick={() => {
+                  console.log('mapClick');
+                }}
+                mapTypeControl={false}
+                streetViewControl={false}
+                fullscreenControl={false}
+              >
+                {displayMarkers()}
+                {infoWindow && (
+                  <InfoWindow
+                    onCloseClick={() => {
+                      setInfoWindow(null);
+                      setInfoWindowCheck(false);
                     }}
-                  />
-                </ListItem>
-                <Divider variant="inset" component="li" />
-              </List>
-            </>
-          );
-        })}
-      </div>
-    </>
+                    position={{
+                      lat: infoWindow.latitude,
+                      lng: infoWindow.longitude,
+                    }}
+                    visible={infoWindowCheck}
+                  >
+                    <div>
+                      {/* <h2>{infoWindow.registerId}</h2> */}
+                      <p>{infoWindow.contents}</p>
+                    </div>
+                  </InfoWindow>
+                )}
+              </Map>
+            );
+          })}
+        </div>
+
+        <Grid
+          container
+          style={{ width: '400px' }}
+          justify="center"
+          alignItems="center"
+        >
+          <Grid item xs={2} />
+          <Grid item xs={7}>
+            <TextField
+              placeholder="포스트맵을 작성하세요."
+              onChange={onChatText}
+              value={chatText}
+              onKeyPress={enterSaveChat}
+              fullWidth
+              style={{ marginTop: '5px' }}
+            />
+          </Grid>
+          <Grid item xs={1}>
+            <IconButton aria-label="delete" className={classes.margin}>
+              <NearMeIcon color="primary" onClick={saveChat} />
+            </IconButton>
+          </Grid>
+          <Grid
+            item
+            xs={2}
+            style={{ textAlign: 'center', color: timer < 4 ? 'red' : 'black' }}
+          >
+            <span>{timer > 0 ? timer + '초' : null}</span>
+          </Grid>
+        </Grid>
+        <div id="chatList" style={{ overflow: 'auto' }}>
+          {postList.map(chat => {
+            return (
+              <>
+                <List className={classes.root} key={chat.pmId}>
+                  <ListItem alignItems="flex-start">
+                    <ListItemText
+                      primary={chat.contents}
+                      secondary={
+                        <React.Fragment>
+                          <Typography
+                            component="span"
+                            variant="body2"
+                            className={classes.inline}
+                            color="textPrimary"
+                          >
+                            {moment(chat.registerDate).format(
+                              'YYYY-MM-DD HH:SS:DD',
+                            )}
+                            <span style={{ float: 'right' }}>
+                              x{chat.likes}
+                            </span>
+                          </Typography>
+                          {chat.pmLikeId !== 0 ? (
+                            <FavoriteIcon
+                              style={{
+                                float: 'right',
+                                cursor: 'pointer',
+                                color: 'red',
+                              }}
+                              onClick={() => {
+                                onSetInish();
+                                likePost(chat.pmId);
+                              }}
+                            />
+                          ) : (
+                            <FavoriteBorderIcon
+                              style={{ float: 'right', cursor: 'pointer' }}
+                              onClick={() => {
+                                onSetInish();
+                                likePost(chat.pmId);
+                              }}
+                            />
+                          )}
+                        </React.Fragment>
+                      }
+                      onClick={() => {
+                        console.log('didi');
+                        console.log(chat);
+                        setInfoWindow(chat);
+                        setInfoWindowCheck(true);
+                        // onSetInish();
+                        getPosition();
+                      }}
+                    />
+                  </ListItem>
+                  <Divider variant="inset" component="li" />
+                </List>
+              </>
+            );
+          })}
+        </div>
+      </>
+    )
   );
 };
 
