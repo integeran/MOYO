@@ -69,8 +69,8 @@ const AccompanyLocationSelect = () => {
     dispatch(accompanyCity({ code: cityItem.cid, name: cityItem.name }));
     const path =
       history.location.state.prevpath === '/acc'
-        ? '/acc/accSetDate'
-        : '/acc/accList';
+        ? '/accompany/accSetDate'
+        : '/accompany/accList';
     history.push({
       pathname: path,
       state: { prevpath: history.location.pathname },

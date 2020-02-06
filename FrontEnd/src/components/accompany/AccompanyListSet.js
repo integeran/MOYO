@@ -15,7 +15,7 @@ const AccompanyListSet = ({ boardData }) => {
   const history = useHistory();
   const handleBoardClick = board => {
     history.push({
-      pathname: '/acc/accList/' + board.acBoardId,
+      pathname: '/accompany/accList/' + board.acBoardId,
       state: {
         prevpath: history.location.pathname,
         board: board,
