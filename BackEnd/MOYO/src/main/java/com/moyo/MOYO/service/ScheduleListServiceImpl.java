@@ -33,6 +33,15 @@ public class ScheduleListServiceImpl implements ScheduleListService {
 	}
 	
 	@Override
+	public List<ScheduleList> selectAllByOneDay(int uId, String day) {
+		log.trace("ScheduleListService - selectAllByOneDay");
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("uId", uId);
+		param.put("day", day);
+		return sListRepo.selectAllByOneDay(param);
+	}
+	
+	@Override
 	public ScheduleList selectOne(int sListId) {
 		log.trace("ScheduleListService - selectOne");
 		return sListRepo.selectOne(sListId);

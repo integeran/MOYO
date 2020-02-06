@@ -67,4 +67,10 @@ public class UserServiceImpl implements UserService {
 		log.trace("UserService - update");
 		return uRepo.update(user);
 	}
+	
+	@Override
+	public int updateImage(Map<String, Object> responseImage) {
+		log.trace("UserService - updateImage");
+		return uRepo.updateImage(responseImage);
+	}
 }

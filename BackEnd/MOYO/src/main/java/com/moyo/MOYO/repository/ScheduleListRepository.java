@@ -10,6 +10,8 @@ public interface ScheduleListRepository {
 	
 	public List<ScheduleList> selectAllByUser(int uId);
 	
+	public List<ScheduleList> selectAllByOneDay(Map<String, Object> param);
+	
 	public ScheduleList selectOne(int sListId);
 	
 	public int create(ScheduleList scheduleList);
@@ -17,5 +19,5 @@ public interface ScheduleListRepository {
 	public int delete(Map<String, Integer> param);
 	
 	public int update(ScheduleList scheduleList);
-
+	
 }

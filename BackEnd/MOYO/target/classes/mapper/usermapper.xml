@@ -28,7 +28,13 @@
 	</delete>
 	<update id="updateUser" parameterType="user">
 	    update user
-	    set nickname = #{nickname}, image = #{image}, update_date = current_timestamp()
+	    set nickname = #{nickname}, age = #{age}, gender = #{gender}, image = #{image}, image_name = #{imageName}, update_date = current_timestamp()
 	    where u_id = #{uId}
+	</update>
+	<update id="updateUserImage" parameterType="map">
+		update user
+		set image = #{image}, image_name = #{imageName}, update_date = current_timestamp()
+		where u_id = #{uId}
+		
 	</update>
 </mapper>

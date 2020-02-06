@@ -10,6 +10,8 @@ public interface DailyAccompanyRepository {
 	
 	public List<DailyAccompany> selectAllByUser(int uId);
 	
+	public List<DailyAccompany> selectAllByOneDay(Map<String, Object> param);
+	
 	public DailyAccompany selectOne(int dAcId);
 	
 	public int create(DailyAccompany dailyAccompany);

@@ -33,6 +33,15 @@ public class DailyAccompanyServiceImpl implements DailyAccompanyService {
 	}
 	
 	@Override
+	public List<DailyAccompany> selectAllByOneDay(int uId, String day) {
+		log.trace("DailyAccompanyService - selectAllByOneDay");
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("uId", uId);
+		param.put("day", day);
+		return dAccompanyRepo.selectAllByOneDay(param);
+	}
+	
+	@Override
 	public DailyAccompany selectOne(int dAcId) {
 		log.trace("DailyAccompanyService - selectOne");
 		return dAccompanyRepo.selectOne(dAcId);
