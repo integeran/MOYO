@@ -213,8 +213,14 @@ const AccompanyList = () => {
   };
   const handlePreDayClick = () => {
     let preDate = new Date(accDate);
+    const nowDate = new Date();
     preDate.setDate(preDate.getDate() - 1);
-    dispatch(accompanyDate(preDate));
+    if (
+      moment(nowDate).format('YYYY-MM-DD') <=
+      moment(preDate).format('YYYY-MM-DD')
+    ) {
+      dispatch(accompanyDate(preDate));
+    }
   };
   const handleNextDayClick = () => {
     let nextDate = new Date(accDate);
@@ -245,6 +251,7 @@ const AccompanyList = () => {
           </CenterGrid>
           <Grid item xs={2}></Grid>
         </Grid>
+
         <Grid item container spacing={2} style={{ flex: '0 1 auto' }}>
           <Grid item xs={1}></Grid>
           <CenterGrid item xs={2}>
@@ -266,6 +273,7 @@ const AccompanyList = () => {
           </Grid>
           <Grid item xs={1}></Grid>
         </Grid>
+
         <Grid item style={{ flex: '0 1 auto', marginBottom: '1rem' }}>
           <AccompanySearchBar onClick={handleSearchClick} />
         </Grid>
