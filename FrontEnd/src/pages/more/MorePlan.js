@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 import Divider from '@material-ui/core/Divider';
 import Planner from '../../components/more/Planner';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import './styles.css';
+import './styles.scss';
 import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
 import { changeField } from '../../modules/planDate';
@@ -14,9 +15,24 @@ import { storeSchedule } from '../../modules/morePlanTravel';
 import { storeCompanion } from '../../modules/morePlanCompanion';
 import { storeMemo } from '../../modules/morePlanMemo';
 import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
+import Typography from '@material-ui/core/Typography';
 import axios from '../../api/axios';
+import BaseAppBar from '../../components/common/BaseAppBar';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ChatIcon from '@material-ui/icons/Chat';
+import styled from 'styled-components';
+
+// const Container = styled.div`
+//   & > .fc {
+//     color: red;
+//     & > .fc-toolbar > .fc-left > button {
+//       padding: 0;
+//     }
+//   }
+// `;
 
 const MorePlan = () => {
+  const history = useHistory();
   const dispatch = useDispatch();
   const pushSelectedDate = d => {
     dispatch(changeField({ key: 'selectedDate', value: d }));
@@ -116,17 +132,48 @@ const MorePlan = () => {
     });
   };
 
+  const handleBackIcon = () => {
+    history.push('/more');
+  };
+
   return (
     <div>
-      <h1>일정 관리</h1>
-      <Divider />
+      <BaseAppBar
+        title={'일정 관리'}
+        Icon1={<ArrowBackIosIcon onClick={handleBackIcon} />}
+        Icon2={''}
+        // handleClick1={handleMoveBack}
+      />
       <FullCalendar
+        // header={false}
         defaultView="dayGridMonth"
         plugins={[dayGridPlugin, interactionPlugin]}
+        header={{
+          left: 'prev',
+          center: 'title',
+          right: 'next',
+        }}
+        titleFormat={{
+          month: 'short',
+          year: 'numeric',
+        }}
+        fixedWeekCount={false}
+        // customButtons={{
+        //   ForwardButton: {
+        //     icon: 'right-single-arrow',
+        //     click: function() {},
+        //   },
+        //   BackwardButton: {
+        //     icon: 'left-single-arrow',
+        //     click: function() {},
+        //   },
+        // }}
+        contentHeight={'auto'}
         dateClick={date => handleChangeSelectedDate(date)}
         events={events}
+        // selectOverlap={false}
         displayEventTime={false}
-        eventClick={onEventClick}
+        // eventClick={onEventClick}
         dayRender={data => dayRenderFunction(data)}
       />
       {selectedDate && <Planner />}

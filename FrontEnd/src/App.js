@@ -14,7 +14,7 @@ import { Route, Switch, useHistory, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import Login from './pages/Login';
-import Signup from './pages/Signup';
+import Profile from './pages/Profile';
 import Container from '@material-ui/core/Container';
 import AccompanyWrite from './pages/acc/AccompanyWrite';
 import DmRoom from './pages/dm/DmRoom';
@@ -65,7 +65,7 @@ const App = () => {
         </Route>
         {isLoggedIn && (
           <>
-            <Route path="/signup" component={Signup} />
+            <Route path="/profile" component={Profile} />
             <Route exact path="/acc" component={AccompanyMain} />
             <Route path="/acc/accSetLoc" component={AccompanyLocationSelect} />
             <Route path="/acc/accSetDate" component={AccompanyDateSelect} />
@@ -87,7 +87,7 @@ const App = () => {
           </>
         )}
       </StyledContainer>
-      {!(location.pathname === '/' || location.pathname === '/signup') && (
+      {!(location.pathname === '/' || location.pathname === '/profile') && (
         <CategoryNav />
       )}
     </StyledDiv>
