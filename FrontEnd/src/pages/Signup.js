@@ -3,9 +3,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Avatar from '@material-ui/core/Avatar';
 import MenuItem from '@material-ui/core/MenuItem';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { changeField } from '../modules/auth';
+import { changeField, changeBool } from '../modules/auth';
 import axios from '../api/axios';
 
 const ageRange = [
@@ -103,6 +103,7 @@ const Signup = props => {
       pushUserData('gender', jwtData.user.gender);
       pushUserData('image', jwtData.user.image);
       localStorage.setItem('token', resData.data.data);
+      dispatch(changeBool({ key: 'isLoggedIn', value: true }));
       history.push({
         pathname: '/acc',
       });

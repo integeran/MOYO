@@ -6,7 +6,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { createStore } from 'redux';
-import { changeField } from './modules/auth';
+import { changeField, changeBool } from './modules/auth';
 import rootReducer from './modules';
 import App from './App';
 import * as firebase from 'firebase';
@@ -41,6 +41,9 @@ function loadUser() {
     pushUserData('age', jwtToken.user.age);
     pushUserData('gender', jwtToken.user.gender);
     pushUserData('image', jwtToken.user.image);
+    store.dispatch(changeBool({ key: 'isLoggedIn', value: true }));
+  } else {
+    store.dispatch(changeBool({ key: 'isLoggedIn', value: false }));
   }
 }
 
