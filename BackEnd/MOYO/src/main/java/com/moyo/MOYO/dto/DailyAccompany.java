@@ -16,4 +16,5 @@ public class DailyAccompany {
 	private String updateDate;
 	private String nickname;
 	private String accompanyNickname;
+	private String accompanyImage;
 }

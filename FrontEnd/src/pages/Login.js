@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import KakaoLogin from 'react-kakao-login';
 import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { changeField } from '../modules/auth';
+import { useDispatch, useSelector } from 'react-redux';
+import { changeField, changeBool } from '../modules/auth';
 import axios from '../api/axios';
 
 const Login = () => {
@@ -14,11 +14,51 @@ const Login = () => {
     dispatch(changeField({ form: 'userData', key: k, value: v }));
   };
 
+  // const getResponse = async res => {
+  //   try {
+  //     return await axios.post('user/issueToken', {
+  //       provider: 0,
+  //       socialId: res.profile.id,
+  //     });
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
+  // const getToken = async res => {
+  //   const resData = await getResponse(res);
+  //   dispatch(changeBool({ key: 'isLoggedIn', value: true }));
+  //   if (resData.data.status) {
+  //     const jwtData = jwtDecode(resData.data.data);
+  //     pushUserData('userToken', resData.data.data);
+  //     pushUserData('uid', jwtData.user.uid);
+  //     pushUserData('nickname', jwtData.user.nickname);
+  //     pushUserData('age', jwtData.user.age);
+  //     pushUserData('gender', jwtData.user.gender);
+  //     pushUserData('image', jwtData.user.image);
+  //     localStorage.setItem('token', resData.data.data);
+  //     history.push({
+  //       pathname: '/acc',
+  //     });
+  //   } else {
+  //     history.push({
+  //       pathname: '/profile',
+  //       state: {
+  //         userSocialId: res.profile.id,
+  //         userProfileImage: res.profile.properties.profile_image,
+  //         userNickname: res.profile.properties.nickname,
+  //         userAgeRange: res.profile.kakao_account.age_range,
+  //         userGender: res.profile.kakao_account.gender,
+  //       },
+  //     });
+  //   }
+  // };
+
   const getResponse = async res => {
     try {
       return await axios.post('user/issueToken', {
         provider: 0,
-        socialId: res.profile.id,
+        socialId: res.id,
       });
     } catch (error) {
       console.error(error);
@@ -36,22 +76,56 @@ const Login = () => {
       pushUserData('gender', jwtData.user.gender);
       pushUserData('image', jwtData.user.image);
       localStorage.setItem('token', resData.data.data);
+      dispatch(changeBool({ key: 'isLoggedIn', value: true }));
       history.push({
         pathname: '/acc',
       });
     } else {
       history.push({
-        pathname: '/signup',
+        pathname: '/profile',
         state: {
-          userSocialId: res.profile.id,
-          userProfileImage: res.profile.properties.profile_image,
-          userNickname: res.profile.properties.nickname,
-          userAgeRange: res.profile.kakao_account.age_range,
-          userGender: res.profile.kakao_account.gender,
+          userSocialId: res.id,
+          userProfileImage: res.properties.profile_image,
+          userNickname: res.properties.nickname,
+          userAgeRange: res.kakao_account.age_range,
+          userGender: res.kakao_account.gender,
+          prevPath: history.location.pathname,
         },
       });
+      dispatch(changeBool({ key: 'isLoggedIn', value: true }));
     }
   };
+
+  useEffect(() => {
+    window.Kakao.init(process.env.REACT_APP_KAKAO_KEY);
+  }, []);
+
+  function loginWithKakao() {
+    window.Kakao.Auth.loginForm({
+      success: function(authObj) {
+        window.Kakao.API.request({
+          url: '/v2/user/me',
+          success: res => {
+            getToken(res);
+            // console.log(res);
+            // console.log(res.id);
+            // console.log(res.properties.nickname);
+            // console.log(res.properties.profile_image);
+            // console.log(res.kakao_account.age_range);
+            // console.log(res.kakao_account.gender);
+            window.Kakao.Auth.logout();
+          },
+          fail: function(error) {
+            console.log(JSON.stringify(error));
+          },
+        });
+      },
+      fail: function(err) {
+        console.log(JSON.stringify(err));
+      },
+    });
+    // window.Kakao.cleanup();
+  }
 
   return (
     <div
@@ -62,14 +136,22 @@ const Login = () => {
         justifyContent: 'center',
       }}
     >
-      <KakaoLogin
+      {/* <KakaoLogin
         jsKey={process.env.REACT_APP_KAKAO_KEY}
         buttonText="kakao로 로그인"
         onSuccess={result => getToken(result)}
         onFailure={result => console.log(result)}
         useDefaultStyle={true}
         getProfile={true}
-      ></KakaoLogin>
+      ></KakaoLogin> */}
+
+      <a id="custom-login-btn" onClick={loginWithKakao}>
+        <img
+          src="//mud-kage.kakao.com/14/dn/btqbjxsO6vP/KPiGpdnsubSq3a0PHEGUK1/o.jpg"
+          width="300"
+          alt="Kakao"
+        />
+      </a>
     </div>
   );
 };
