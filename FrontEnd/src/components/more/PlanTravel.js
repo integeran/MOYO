@@ -34,44 +34,53 @@ const cityData = [
 
 const PlanTravel = () => {
   const dispatch = useDispatch();
+  const userData = useSelector(state => state.auth.userData);
   const [nation, setNation] = useState('');
   const [cityList, setCityList] = useState([]);
+  const [city, setCity] = useState('');
+  const selectedDate = useSelector(state => state.planDate.selectedDate);
+  const [selectedStartDate, setSelectedStartDate] = useState(selectedDate);
+  const [selectedEndDate, setSelectedEndDate] = useState(selectedStartDate);
+  const [openCreate, setOpenCreate] = React.useState(false);
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const planTravelList = useSelector(
+    state => state.morePlanTravel.planTravelList,
+  );
+  const [nationUpdate, setNationUpdate] = useState('');
+  const [cityListUpdate, setCityListUpdate] = useState([]);
+  const [cityUpdate, setCityUpdate] = useState('');
+  const [selectedStartDateUpdate, setSelectedStartDateUpdate] = useState('');
+  const [selectedEndDateUpdate, setSelectedEndDateUpdate] = useState('');
+  const [selectedListId, setSelectedListId] = useState('');
+
   const handleChangeNation = event => {
     setNation(event.target.value);
     setCityList(cityData.filter(item => item.nid === event.target.value));
   };
 
-  const [city, setCity] = useState('');
   const handleChangeCity = event => {
     setCity(event.target.value);
   };
-
-  const selectedDate = useSelector(state => state.planDate.selectedDate);
-  const [selectedStartDate, setSelectedStartDate] = useState(selectedDate);
-
-  const userData = useSelector(state => state.auth.userData);
 
   useEffect(() => {
     setSelectedStartDate(selectedDate);
   }, [selectedDate]);
 
-  const [selectedEndDate, setSelectedEndDate] = useState(selectedStartDate);
-
   useEffect(() => {
     setSelectedEndDate(selectedStartDate);
   }, [selectedStartDate]);
-
-  const [openCreate, setOpenCreate] = React.useState(false);
 
   const handleClickOpenCreate = () => {
     setOpenCreate(true);
   };
 
   const handleCloseCreate = () => {
+    setSelectedStartDate(selectedDate);
+    setSelectedEndDate(selectedDate);
+    setNation('');
+    setCityList([]);
     setOpenCreate(false);
   };
-
-  const [openUpdate, setOpenUpdate] = React.useState(false);
 
   const handleClickOpenUpdate = item => {
     setNationUpdate(item.nid);
@@ -122,10 +131,6 @@ const PlanTravel = () => {
     setOpenCreate(false);
   };
 
-  const planTravelList = useSelector(
-    state => state.morePlanTravel.planTravelList,
-  );
-
   const deleteSchedule = async sId => {
     try {
       return await axios.delete(`scheduleList/delete/${sId}`, {
@@ -157,24 +162,14 @@ const PlanTravel = () => {
     </li>
   ));
 
-  const [nationUpdate, setNationUpdate] = useState('');
-
   const handleChangeNationUpdate = event => {
     setNationUpdate(event.target.value);
     setCityListUpdate(cityData.filter(item => item.nid === event.target.value));
   };
 
-  const [cityListUpdate, setCityListUpdate] = useState([]);
-  const [cityUpdate, setCityUpdate] = useState('');
-
   const handleChangeCityUpdate = event => {
     setCityUpdate(event.target.value);
   };
-
-  const [selectedStartDateUpdate, setSelectedStartDateUpdate] = useState('');
-
-  const [selectedEndDateUpdate, setSelectedEndDateUpdate] = useState('');
-  const [selectedListId, setSelectedListId] = useState('');
 
   const putPlanTravelServer = async () => {
     try {

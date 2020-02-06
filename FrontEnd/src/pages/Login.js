@@ -42,7 +42,7 @@ const Login = () => {
   //     });
   //   } else {
   //     history.push({
-  //       pathname: '/signup',
+  //       pathname: '/profile',
   //       state: {
   //         userSocialId: res.profile.id,
   //         userProfileImage: res.profile.properties.profile_image,
@@ -67,7 +67,6 @@ const Login = () => {
 
   const getToken = async res => {
     const resData = await getResponse(res);
-    dispatch(changeBool({ key: 'isLoggedIn', value: true }));
     if (resData.data.status) {
       const jwtData = jwtDecode(resData.data.data);
       pushUserData('userToken', resData.data.data);
@@ -77,20 +76,23 @@ const Login = () => {
       pushUserData('gender', jwtData.user.gender);
       pushUserData('image', jwtData.user.image);
       localStorage.setItem('token', resData.data.data);
+      dispatch(changeBool({ key: 'isLoggedIn', value: true }));
       history.push({
         pathname: '/acc',
       });
     } else {
       history.push({
-        pathname: '/signup',
+        pathname: '/profile',
         state: {
           userSocialId: res.id,
           userProfileImage: res.properties.profile_image,
           userNickname: res.properties.nickname,
           userAgeRange: res.kakao_account.age_range,
           userGender: res.kakao_account.gender,
+          prevPath: history.location.pathname,
         },
       });
+      dispatch(changeBool({ key: 'isLoggedIn', value: true }));
     }
   };
 
