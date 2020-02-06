@@ -62,7 +62,7 @@ const Message = ({
           }}
         >
           {url ? (
-            <FileMessage url={url} fileName={fileName} />
+            <FileMessage url={url} fileName={fileName} timeStamp={timeStamp} />
           ) : (
             <Typography
               variant="subtitle1"
