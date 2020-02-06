@@ -1,5 +1,6 @@
 package com.moyo.MOYO.repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -23,9 +24,25 @@ public class PostmapRepositoryImpl implements PostmapRepository{
 	SqlSession session;
 
 	@Override
-	public List<Postmap> selectAll(HashMap<String, Double> map) {
+	public List<Postmap> selectAll(HashMap<String, Object> map) {
 		log.trace("PostmapRepository - selectAll : ",map);
-		return session.selectList(ns+ "selectAll",map);
+		List<Postmap> list = session.selectList(ns+ "selectAll",map);
+		List<Postmap> postmapList = new ArrayList<>();
+		
+		double latitude = Math.toRadians((double) map.get("latitude"));
+		double longitude = Math.toRadians((double) map.get("longitude"));
+		for(Postmap post : list) {
+			double pLat = Math.toRadians(post.getLatitude());
+			double pLng = Math.toRadians(post.getLongitude());
+			double distance = ( 6371 * Math.acos( Math.cos( latitude ) * Math.cos( pLat )
+			          * Math.cos( pLng - longitude )
+			          + Math.sin( latitude ) * Math.sin( pLat ) ) );
+			if(distance < 5) {
+				postmapList.add(post);
+			}
+		}
+		
+		return postmapList;
 	}
 
 	@Override
@@ -88,6 +105,4 @@ public class PostmapRepositoryImpl implements PostmapRepository{
 	public Postmaplike selectLikeOne(Postmaplike postmaplike) {
 		return session.selectOne(ns + "selectLikeOne",postmaplike);
 	}
-	
-	
 }
