@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
+import axios from '../../api/axios';
 import * as firebase from 'firebase';
 import { Link } from 'react-router-dom';
 

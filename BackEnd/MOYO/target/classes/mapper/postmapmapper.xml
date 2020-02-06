@@ -3,21 +3,12 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="moyo.postmapmapper">
-
-	<sql id="distance">
-		( 6371 * acos( cos( radians( #{latitude} ) ) * cos( radians(latitude) )
-          * cos( radians( longitude ) - radians( #{longitude}) )
-          + sin( radians( #{latitude} ) ) * sin( radians( latitude ) ) ) ) AS distance
-	</sql>
 	
 	<select id="selectAll" resultType="postmap" parameterType="map">
-		  select p.*, count(pm_like_id) as likes , <include refid="distance" />
+		 select p.*, pml.pm_like_id, count(pl.pm_like_id) likes
 		  from postmap p
-		  left outer join postmap_like pl
-		  				on p.pm_id = pl.pm_id
-		  group by p.pm_id
-<![CDATA[ having distance <= 5	]]>
-		  order by distance;
+          left outer join postmap_like pml on p.pm_id = pml.pm_id and #{uId} = pml.u_id
+          left outer join postmap_like pl on p.pm_id = pl.pm_id group by p.pm_id;
 	</select>
 	
 	<select id="selectOne" resultType="postmap" parameterType="int">
