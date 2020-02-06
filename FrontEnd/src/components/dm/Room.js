@@ -17,7 +17,7 @@ const Room = ({ roomId, receiverId, lastMessage, timeStamp }) => {
   const [receiver, setReceiver] = useState('');
 
   const onAxiosGetUser = async id => {
-    return await axios.get('DM/getUser?uId=' + id, {
+    return await axios.get('DM/getUser?uid=' + id, {
       headers: { userToken: userData.userToken },
     });
   };
@@ -25,7 +25,7 @@ const Room = ({ roomId, receiverId, lastMessage, timeStamp }) => {
   useEffect(() => {
     const getData = async () => {
       const res = await onAxiosGetUser(receiverId);
-      setReceiver(res.data.data.user);
+      setReceiver(res.data.data);
     };
     getData();
   }, []);
