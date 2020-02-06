@@ -66,7 +66,7 @@ const AccompanyDateSelect = () => {
   const HandleClick = () => {
     dispatch(accompanyDate(date));
     history.push({
-      pathname: '/acc/accList',
+      pathname: '/accompany/accList',
       state: { prevpath: history.location.pathname },
     });
   };

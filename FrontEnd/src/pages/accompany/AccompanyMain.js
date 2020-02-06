@@ -61,14 +61,14 @@ const AccompanyMain = () => {
 
   const handleAccompanyFindClick = () => {
     history.push({
-      pathname: '/acc/accSetLoc',
+      pathname: '/accompany/accSetLoc',
       state: { prevpath: history.location.pathname },
     });
   };
 
   const handleAccompanyWriteClick = () => {
     history.push({
-      pathname: '/acc/write',
+      pathname: '/accompany/write',
       state: { prevpath: history.location.pathname },
     });
   };
