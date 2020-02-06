@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 import Divider from '@material-ui/core/Divider';
 import Planner from '../../components/more/Planner';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import './styles.css';
+import './styles.scss';
 import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
 import { changeField } from '../../modules/planDate';
@@ -14,9 +15,26 @@ import { storeSchedule } from '../../modules/morePlanTravel';
 import { storeCompanion } from '../../modules/morePlanCompanion';
 import { storeMemo } from '../../modules/morePlanMemo';
 import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
+import Typography from '@material-ui/core/Typography';
 import axios from '../../api/axios';
+import BaseAppBar from '../../components/common/BaseAppBar';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ChatIcon from '@material-ui/icons/Chat';
+import styled from 'styled-components';
+import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
+import Grid from '@material-ui/core/Grid';
+
+// const Container = styled.div`
+//   & > .fc {
+//     color: red;
+//     & > .fc-toolbar > .fc-left > button {
+//       padding: 0;
+//     }
+//   }
+// `;
 
 const MorePlan = () => {
+  const history = useHistory();
   const dispatch = useDispatch();
   const pushSelectedDate = d => {
     dispatch(changeField({ key: 'selectedDate', value: d }));
@@ -25,8 +43,21 @@ const MorePlan = () => {
   const [selectedDate, setSelectedDate] = useState('');
 
   const handleChangeSelectedDate = value => {
+    // console.log(props);
     setSelectedDate(value);
     pushSelectedDate(moment(value.date).format());
+    // console.log(props.eventBackgroundColor);
+
+    // document.getElementsByClassName()
+    // console.log(value.jsEvent.target);
+    // console.log(value.dayEl.style.backgroundColor);
+    // // value.dayEl.style = { color: 'red' };
+    // value.jsEvent.target.className = 'fc-state-highlight';
+    // // t.addClass);
+    // // (jsEvent.target).addClass("fc-state-highlight")
+    // console.log(value);
+    // value.dayEl.classList.push('fc-state-highlight');
+    // value.dayEl.className += ' fc-state-highlight';
   };
 
   const userData = useSelector(state => state.auth.userData);
@@ -69,10 +100,6 @@ const MorePlan = () => {
     }
   };
 
-  const onEventClick = props => {
-    console.log(props);
-  };
-
   useEffect(() => {
     async function getData() {
       const schData = await getSchedule();
@@ -92,7 +119,7 @@ const MorePlan = () => {
     setEvents(
       p.map(item => {
         return {
-          title: item.city,
+          title: `${item.nation} / ${item.city}`,
           start: item.startDate.split(' ')[0],
           end: item.endDate,
         };
@@ -107,29 +134,61 @@ const MorePlan = () => {
   }, [planTravelList]);
 
   const dayRenderFunction = data => {
+    // console.log(data.el.classList.value);
     const renderDate = moment(data.date).format('YYYY-MM-DD');
+    // if (renderDate === selectedDate) {
+    //   // data.el.classList.push('fc-state-highlight');
+    //   data.el.classList.value += ' fc-state-highlight';
+    // }
     planCompanionList.forEach(element => {
       if (renderDate === moment(element.day).format('YYYY-MM-DD')) {
         data.el.innerHTML =
-          '<svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation"><path d="M20.5 6c-2.61.7-5.67 1-8.5 1s-5.89-.3-8.5-1L3 8c1.86.5 4 .83 6 1v13h2v-6h2v6h2V9c2-.17 4.14-.5 6-1l-.5-2zM12 6c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"></path></svg>';
+          '<svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 32 32" aria-hidden="true" role="presentation"><circle cx="12" cy="4" r="2"></circle><path d="M15.89 8.11C15.5 7.72 14.83 7 13.53 7h-2.54C8.24 6.99 6 4.75 6 2H4c0 3.16 2.11 5.84 5 6.71V22h2v-6h2v6h2V10.05L18.95 14l1.41-1.41-4.47-4.48z"></path></svg>';
       }
     });
   };
 
+  const handleBackIcon = () => {
+    history.push('/more');
+  };
+
   return (
     <div>
-      <h1>일정 관리</h1>
-      <Divider />
-      <FullCalendar
-        defaultView="dayGridMonth"
-        plugins={[dayGridPlugin, interactionPlugin]}
-        dateClick={date => handleChangeSelectedDate(date)}
-        events={events}
-        displayEventTime={false}
-        eventClick={onEventClick}
-        dayRender={data => dayRenderFunction(data)}
+      <BaseAppBar
+        title={'일정 관리'}
+        Icon1={<ArrowBackIosIcon onClick={handleBackIcon} />}
+        Icon2={''}
+        // handleClick1={handleMoveBack}
       />
-      {selectedDate && <Planner />}
+      <Grid
+        container
+        direction="column"
+        justify="center"
+        style={{ width: 'inherit', height: 'inherit', margin: '0px' }}
+      >
+        <Grid item>
+          <FullCalendar
+            defaultView="dayGridMonth"
+            plugins={[dayGridPlugin, interactionPlugin]}
+            header={{
+              left: 'prev, customPrevButton',
+              center: 'title',
+              right: 'next',
+            }}
+            titleFormat={{
+              month: 'short',
+              year: 'numeric',
+            }}
+            fixedWeekCount={false}
+            contentHeight={'auto'}
+            dateClick={date => handleChangeSelectedDate(date)}
+            events={events}
+            displayEventTime={false}
+            dayRender={data => dayRenderFunction(data)}
+          />
+        </Grid>
+        <Grid item>{selectedDate && <Planner />}</Grid>
+      </Grid>
     </div>
   );
 };
