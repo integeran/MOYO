@@ -45,11 +45,8 @@ public class DailyAccompanyRepositoryImpl implements DailyAccompanyRepository {
 	}
 	
 	@Override
-	public int delete(int dAcId, int uId) {
+	public int delete(Map<String, Integer> param) {
 		log.trace("DailyAccompanyRepository - delete");
-		Map<String, Object> param = new HashMap<String, Object>();
-    	param.put("dAcId", dAcId);
-    	param.put("uId", uId);
 		return session.delete(ns + "deleteDailyAccompany", param);
 	}
 	

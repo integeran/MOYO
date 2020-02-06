@@ -46,11 +46,8 @@ public class DailyMemoRepositoryImpl implements DailyMemoRepository {
 	}
 	
 	@Override
-	public int delete(int dMemoId, int uId) {
+	public int delete(Map<String, Integer> param) {
 		log.trace("DailyMemoRepository - delete");
-		Map<String, Object> param = new HashMap<String, Object>();
-    	param.put("dMemoId", dMemoId);
-    	param.put("uId", uId);
 		return session.delete(ns + "deleteDailyMemo", param);
 	}
 	

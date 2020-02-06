@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -109,16 +110,21 @@ public class UserRestController {
 	}
 	
 	@PutMapping("user/update")
-	public ResponseEntity<Map<String, Object>> update(@RequestBody User user) {
+	public ResponseEntity<Map<String, Object>> update(@RequestBody User user, @RequestHeader(value="userToken") String userToken) {
 		try {
 			log.trace("UserRestController - update");
-			String token = null;
-			User nicknameUser = uService.selectOneByNickname(user.getNickname());
-			if (nicknameUser != null) {
-				return response("이미 존재하는 닉네임입니다.", HttpStatus.OK, false);
+			User originUser = jwtService.getUser(userToken);
+			System.out.println();
+			if (!originUser.getNickname().equals(user.getNickname())) {
+				User nicknameUser = uService.selectOneByNickname(user.getNickname());
+				if (nicknameUser != null) {
+					return response("이미 존재하는 닉네임입니다.", HttpStatus.OK, false);
+				}
 			}
+			String token = null;
+			user.setUId(originUser.getUId());
 			uService.update(user);
-			User loginUser = uService.selectOneBySocialId(user.getSocialId(), user.getProvider());
+			User loginUser = uService.selectOne(originUser.getUId());
 			if (loginUser != null) {
 				token = jwtService.createLoginToken(loginUser);
 			}
