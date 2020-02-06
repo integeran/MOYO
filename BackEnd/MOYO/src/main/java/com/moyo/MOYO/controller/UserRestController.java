@@ -132,7 +132,7 @@ public class UserRestController {
 			int uId = originUser.getUId();
 			String originImageName = originUser.getImageName();
 			String newImageName = user.getImageName();
-			if (!originImageName.equals(newImageName)) {
+			if (originImageName != null && !originImageName.equals(newImageName)) {
 				fileService.deleteImage(originImageName);
 			}
 			user.setUId(uId);
