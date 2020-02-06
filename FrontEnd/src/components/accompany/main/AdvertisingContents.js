@@ -1,35 +1,34 @@
 import React from 'react';
+import styled from 'styled-components';
+import Carousel from 'nuka-carousel';
 import { Typography, Grid } from '@material-ui/core';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-import Slider from 'react-slick';
+import adTrip1 from '../../../assets/img/ad_trip_1.jpg';
+import adTrip2 from '../../../assets/img/ad_trip_2.jpg';
+import adTrip3 from '../../../assets/img/ad_trip_3.jpg';
 
 const AdvertisingContents = () => {
-  const sliderSetting = {
-    dots: true,
-    autoplay: true,
-    autoplaySpeed: 5000,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-  };
   return (
     <Grid container direction="column" spacing={2}>
       <Grid item>
-        <Typography variant="h6">당신을 위한 광고</Typography>
+        <Typography variant="h5">오늘의 광고</Typography>
       </Grid>
       <Grid item>
-        <Slider {...sliderSetting} style={{ width: 'inherit' }}>
-          <div style={{ width: '100%' }}>
-            <h3>1</h3>
-          </div>
-          <div style={{ width: '100%' }}>
-            <h3>2</h3>
-          </div>
-          <div style={{ width: '100%' }}>
-            <h3>3</h3>
-          </div>
-        </Slider>
+        <Carousel
+          autoplay
+          autoplayInterval={3000}
+          wrapAround
+          defaultControlsConfig={{
+            pagingDotsStyle: {
+              fill: 'white',
+            },
+          }}
+          renderCenterLeftControls={() => null}
+          renderCenterRightControls={() => null}
+        >
+          <img alt="ad1" src={adTrip1} />
+          <img alt="ad2" src={adTrip2} />
+          <img alt="ad3" src={adTrip3} />
+        </Carousel>
       </Grid>
     </Grid>
   );

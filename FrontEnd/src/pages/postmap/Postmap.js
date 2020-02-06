@@ -351,5 +351,5 @@ const Postmap = props => {
 };
 
 export default GoogleApiWrapper({
-  apiKey: 'AIzaSyB80YxWaSrVECbYuvospx4M9fQ7_CFB3Kk',
+  apiKey: process.env.REACT_APP_GOOGLE_KEY,
 })(Postmap);
