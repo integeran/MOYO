@@ -60,14 +60,6 @@ const PlanDaily = () => {
         {/* <Grid item>
           <Divider variant="fullWidth" />
         </Grid> */}
-        <Grid itme container justify="space-between">
-          <Grid item>
-            <Typography variant="overline">MEMO</Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="overline">저장</Typography>
-          </Grid>
-        </Grid>
         <Grid item>
           <Memo />
         </Grid>

@@ -14,7 +14,6 @@ import { changeField } from '../../modules/planDate';
 import { storeSchedule } from '../../modules/morePlanTravel';
 import { storeCompanion } from '../../modules/morePlanCompanion';
 import { storeMemo } from '../../modules/morePlanMemo';
-import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
 import Typography from '@material-ui/core/Typography';
 import axios from '../../api/axios';
 import BaseAppBar from '../../components/common/BaseAppBar';
