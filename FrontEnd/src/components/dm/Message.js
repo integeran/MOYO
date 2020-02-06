@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
-import axios from '../../api/axios';
 
 import FileMessage from './FileMessage';
 
@@ -10,7 +9,6 @@ import Grid from '@material-ui/core/Grid';
 
 const Message = ({
   senderId,
-  curUser,
   message,
   timeStamp,
   fileName,
@@ -19,22 +17,6 @@ const Message = ({
   lastTimeStamp,
 }) => {
   const userData = useSelector(state => state.auth.userData);
-
-  const [sender, Setsender] = useState('');
-
-  useEffect(() => {
-    const getData = async () => {
-      const res = await onAxiosGetUser(senderId);
-      Setsender(res.data.data.user);
-    };
-    getData();
-  }, []);
-
-  const onAxiosGetUser = async id => {
-    return await axios.get('DM/getUser?uId=' + id, {
-      headers: { userToken: userData.userToken },
-    });
-  };
 
   const showRightMessage = () => {
     return (
@@ -94,7 +76,7 @@ const Message = ({
         <Grid item xs={1} style={{ paddingRight: '1%' }}>
           <Avatar
             alt="메세지 보낸 사람의 프로필"
-            src={sender.image}
+            src={userData.image}
             style={{ width: '30px', height: '30px' }}
           />
         </Grid>
@@ -105,17 +87,15 @@ const Message = ({
   };
 
   return (
-    sender && (
-      <>
-        {timeStamp !== lastTimeStamp && (
-          <div style={{ textAlign: 'center' }}>
-            <Typography variant="caption">{timeStamp}</Typography>
-          </div>
-        )}
+    <>
+      {timeStamp !== lastTimeStamp && (
+        <div style={{ textAlign: 'center' }}>
+          <Typography variant="caption">{timeStamp}</Typography>
+        </div>
+      )}
 
-        {curUser.uId === sender.uId ? showRightMessage() : showLeftMessage()}
-      </>
-    )
+      {senderId === userData.uid ? showRightMessage() : showLeftMessage()}
+    </>
   );
 };
 
