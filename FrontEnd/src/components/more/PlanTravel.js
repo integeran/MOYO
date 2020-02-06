@@ -16,6 +16,9 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
+import TripPaper from './schedule/TripSchedulePaper';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const nationData = [
   { nid: 2, name: '프랑스' },
@@ -161,19 +164,31 @@ const PlanTravel = () => {
     dispatch(storeSchedule(schData.data.data));
   };
 
-  const travelList = planTravelList.map(item => (
-    <li key={item.slistId}>
-      {item.city} / {item.startDate.split(' ')[0]} /{' '}
-      {item.endDate.split(' ')[0]}{' '}
-      <a onClick={() => handleClickOpenUpdate(item)}>수정</a>{' '}
-      <a
-        onClick={() => {
-          handleDeleteSchedule(item.slistId);
-        }}
+  const newTravelList = planTravelList.map(item => (
+    <Grid container item>
+      <Grid item xs={11}>
+        <TripPaper scheduleInfo={item} />
+      </Grid>
+      <Grid
+        item
+        container
+        xs={1}
+        direction="column"
+        justify="space-evenly"
+        alignItems="center"
       >
-        삭제
-      </a>
-    </li>
+        <Grid item>
+          <EditIcon onClick={() => handleClickOpenUpdate(item)} />
+        </Grid>
+        <Grid item>
+          <DeleteIcon
+            onClick={() => {
+              handleDeleteSchedule(item.slistId);
+            }}
+          />
+        </Grid>
+      </Grid>
+    </Grid>
   ));
 
   const handleChangeNationUpdate = event => {
@@ -229,9 +244,7 @@ const PlanTravel = () => {
             <AddIcon onClick={handleClickOpenCreate} />
           </Grid>
         </Grid>
-        <Grid item>
-          <ul>{travelList}</ul>
-        </Grid>
+        {newTravelList}
       </Grid>
 
       <Dialog
