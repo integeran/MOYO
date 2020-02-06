@@ -1,6 +1,11 @@
 import React from 'react';
+import moment from 'moment';
 
-const FileMessage = ({ fileName, url }) => {
+import VerticalAlignBottomIcon from '@material-ui/icons/VerticalAlignBottom';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+
+const FileMessage = ({ fileName, url, timeStamp }) => {
   const fileDownload = () => {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'blob';
@@ -42,10 +47,46 @@ const FileMessage = ({ fileName, url }) => {
           height="100%"
         ></img>
       ) : (
-        <button onClick={fileDownload}>다운로드</button>
+        <Grid container justify="center" alignItems="center">
+          <Grid
+            item
+            xs={3}
+            style={{ backgroundColor: '#e0e0e0', borderRadius: '8px' }}
+          >
+            <VerticalAlignBottomIcon
+              onClick={fileDownload}
+              color="primary"
+              style={{ width: '100%', height: '50%' }}
+            />
+          </Grid>
+
+          <Grid item xs={1}></Grid>
+
+          <Grid item xs={8}>
+            <Grid container direction="column">
+              <Grid item xs={6} style={{ maxWidth: '95%' }}>
+                <Typography
+                  style={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  <b>{fileName}</b>
+                </Typography>
+              </Grid>
+              <Grid item xs={6} style={{ maxWidth: '95%' }}>
+                <Typography variant="caption">
+                  유효기간: ~
+                  {moment(timeStamp)
+                    .add(1, 'months')
+                    .format('YYYY/MM/DD')}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
       )}
-      {extensionCheck() === false && <br></br>}
-      {extensionCheck() === false && <span>fileName: {fileName}</span>}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect, memo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from '../../api/axios';
 import * as firebase from 'firebase';
@@ -66,6 +66,7 @@ const DmRoom = ({ match }) => {
   const open = Boolean(anchorEl);
 
   useEffect(() => {
+    console.log('onInit');
     onInit();
   }, []);
 
@@ -170,8 +171,6 @@ const DmRoom = ({ match }) => {
         };
 
         setMessageList(prevState => [...prevState, MessageInfo]);
-        var list = document.getElementById('messageList');
-        list.scrollTop = list.scrollHeight;
       };
 
       firebase
@@ -223,10 +222,11 @@ const DmRoom = ({ match }) => {
         .database()
         .ref()
         .update(multiUpdates)
-        .then(() => {
+        .then(e => {
           var list = document.getElementById('messageList');
           list.scrollTop = list.scrollHeight;
         });
+
       console.log('3: multiUpdate');
     }
   };
