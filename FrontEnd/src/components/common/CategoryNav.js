@@ -1,5 +1,11 @@
-import React, { useState, createRef, useRef, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import React, {
+  useState,
+  createRef,
+  useRef,
+  useEffect,
+  useCallback,
+} from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import CardTravelIcon from '@material-ui/icons/CardTravel';
 import ChatIcon from '@material-ui/icons/Chat';
@@ -7,47 +13,37 @@ import RoomIcon from '@material-ui/icons/Room';
 import ForumIcon from '@material-ui/icons/Forum';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { useHistory } from 'react-router-dom';
+import { navigationSelect } from '../../modules/baseNavigation';
 
 const CategoryNav = () => {
   const history = useHistory();
+  const dispatch = useDispatch();
 
+  const select = useSelector(state => state.baseNavigation.select);
   const [refAccompany, setRefAccompany] = useState(() => createRef());
   const [refDM, setRefDM] = useState(() => createRef());
 
-  const [value, setValue] = useState('accompany');
-  const select = useSelector(state => state.navigation.select);
-
-  const triggerNavigationClick = condition => {
-    console.log('nav Select event', select);
-    refDM.current.click();
-  };
-
-  useEffect(() => {
-    triggerNavigationClick(false);
-  }, [select]);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  const handleNavChange = (event, newValue) => {
+    console.log(newValue);
+    dispatch(navigationSelect(newValue));
   };
 
   const handleMoreClick = condition => {
-    if (!condition) {
-      history.push('/more');
-    }
+    history.push('/more');
   };
-  const handlePostMapClick = () => {
+  const handlePostMapClick = condition => {
     history.push('/postmap');
   };
-  const handleDMClick = () => {
+  const handleDMClick = condition => {
     history.push('/dmroomlist');
   };
 
-  const handleAccompanyClick = () => {
+  const handleAccompanyClick = condition => {
     history.push('/accompany');
   };
 
   return (
-    <BottomNavigation value={value} onChange={handleChange}>
+    <BottomNavigation value={select} onChange={handleNavChange}>
       <BottomNavigationAction
         ref={refAccompany}
         label="동행"
@@ -64,7 +60,7 @@ const CategoryNav = () => {
       <BottomNavigationAction
         ref={refDM}
         label="채팅"
-        value="dm"
+        value="DM"
         icon={<ChatIcon />}
         onClick={handleDMClick}
       />

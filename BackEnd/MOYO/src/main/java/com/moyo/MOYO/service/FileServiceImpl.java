@@ -82,7 +82,7 @@ public class FileServiceImpl implements FileService {
 	
 	@Override
 	public int deleteImage(String imageName) throws IOException, ServletException {
-		Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("C:\\Users\\multicampus\\project\\MOYO_imageUpload\\BackEnd\\MOYO\\src\\main\\resources\\moyo-credential.json"));
+		Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("../MOYO/src/main/resources/moyo-credential.json"));
 		Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
 		String bucketName = "moyo-cloud-storage";
 		

@@ -35,6 +35,7 @@ const DmRoomList = () => {
     /**
      * loadRoomList에서 데이터를 받아왔을 때
      */
+    var loadRoomFirebase = firebase.database().ref('UserRooms/' + sender.uid);
     const callback = snapshot => {
       var val = snapshot.val();
 
@@ -48,17 +49,13 @@ const DmRoomList = () => {
       setRoomList(prevState => [...prevState, RoomInfo]);
     };
 
-    firebase
-      .database()
-      .ref('UserRooms/' + sender.uid)
-      .orderByChild('timeStamp')
-      .on('child_added', callback); // 메세지를 받을 때 마다 목록을 갱신시키기 위해 once메소드가 아닌 on메소드 사용
+    loadRoomFirebase.orderByChild('timeStamp').on('child_added', callback); // 메세지를 받을 때 마다 목록을 갱신시키기 위해 once메소드가 아닌 on메소드 사용
   };
 
   return (
     <>
       <div>
-        {roomList.length !== 0 ? (
+        {roomList.reverse().length !== 0 ? (
           roomList.map((room, index) => {
             return (
               <Room

@@ -9,7 +9,7 @@ import Dm from './Dm';
 import morePlanCompanion from './morePlanCompanion';
 import morePlanMemo from './morePlanMemo';
 import postmap from './postmap';
-import navigation from './navigation';
+import baseNavigation from './baseNavigation';
 
 const rootReducer = combineReducers({
   auth,
@@ -22,7 +22,7 @@ const rootReducer = combineReducers({
   morePlanCompanion,
   morePlanMemo,
   postmap,
-  navigation,
+  baseNavigation,
 });
 
 export default rootReducer;
