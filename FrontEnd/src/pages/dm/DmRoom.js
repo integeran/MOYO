@@ -1,5 +1,5 @@
-import React, { useCallback, useState, useEffect, memo } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useCallback, useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import axios from '../../api/axios';
 import * as firebase from 'firebase';
 import { Link } from 'react-router-dom';
@@ -35,8 +35,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const DmRoom = ({ match }) => {
-  const dispatch = useDispatch();
-
   const MAKEID_CHAR = useSelector(state => state.Dm.MAKEID_CHAR);
   const DATETIME_CHAR = useSelector(state => state.Dm.DATETIME_CHAR);
   const userData = useSelector(state => state.auth.userData);
@@ -113,22 +111,12 @@ const DmRoom = ({ match }) => {
         if (snapshot.val()) {
           roomInfo.roomId = snapshot.val().roomId;
           roomInfo.roomTitle = snapshot.val().roomTitle;
-          loadMessageList(
-            roomInfo.roomId,
-            roomInfo.roomTitle,
-            sender,
-            receiver,
-          );
+          loadMessageList(roomInfo.roomId);
         } else {
           roomInfo.roomId =
             MAKEID_CHAR + sender.uid + MAKEID_CHAR + receiver.uid;
           roomInfo.roomTitle = sender.nickname;
-          loadMessageList(
-            roomInfo.roomId,
-            roomInfo.roomTitle,
-            sender,
-            receiver,
-          );
+          loadMessageList(roomInfo.roomId);
         }
       });
   };
@@ -136,14 +124,16 @@ const DmRoom = ({ match }) => {
   /**
    * 메세지 로드
    */
-  const loadMessageList = (roomId, roomTitle, sender, receiver) => {
+  const loadMessageList = async roomId => {
     console.log('loadMessageList');
+
+    var loadMessageFirebase = firebase.database().ref('Messages/' + roomId);
     if (roomId) {
       console.log('loadMessageListAfter');
       setHookRoomId(roomId);
       setMessageList([]);
 
-      const callback = snapshot => {
+      const callback = async snapshot => {
         var val = snapshot.val();
 
         const MessageInfo = {
@@ -155,61 +145,71 @@ const DmRoom = ({ match }) => {
         };
 
         setMessageList(prevState => [...prevState, MessageInfo]);
+        var list = document.getElementById('messageList');
+        list.scrollTop = list.scrollHeight;
       };
 
-      firebase
-        .database()
-        .ref('Messages/' + roomId)
+      loadMessageFirebase
         .orderByChild('timeStamp')
         .limitToLast(50)
         .on('child_added', callback);
     }
   };
 
+  const onAxiosGetTime = async () => {
+    return await axios.get('DM/getTime', {
+      headers: { userToken: userData.userToken },
+    });
+  };
+
   /**
    * 메세지 전송
    */
-  const saveMessages = (msg, fileName, url) => {
+  const saveMessages = async (msg, fileName, url) => {
     if (msg && msg !== '') {
-      var multiUpdates = {};
-      var messageId = firebase.database().ref('Messages/' + hookRoomId).key; // 메세지 키 값 구하기 => push는 자동으로 키값을 생성하면서 데이터를 저장
-      //                        즉, 여기서는 자동으로 키를 생성해서 받을 수 있음
-      messageId = messageId + DATETIME_CHAR + moment().format('YYYYMMDDhhmmss');
-      var curTimeStamp =
-        moment().format('YYYY/MM/DD') + ' ' + moment().format('LT');
+      const res = await onAxiosGetTime();
+      if (res) {
+        var multiUpdates = {};
+        var messageId = firebase.database().ref('Messages/' + hookRoomId).key; // 메세지 키 값 구하기 => push는 자동으로 키값을 생성하면서 데이터를 저장
+        //                        즉, 여기서는 자동으로 키를 생성해서 받을 수 있음
+        var curTime = res.data.data;
+        messageId =
+          messageId +
+          DATETIME_CHAR +
+          moment(curTime).format('YYYYMMDDhhmmssSSS');
 
-      // 메세지 저장
-      multiUpdates['Messages/' + hookRoomId + '/' + messageId] = {
-        senderId: userData.uid,
-        message: msg,
-        timeStamp: curTimeStamp,
-        fileName: fileName ? fileName : null,
-        url: url ? url : null,
-      };
+        var curTimeStamp = moment(curTime).format('YYYY/MM/DD LT');
+        var saveFirebase = firebase.database().ref();
 
-      // 유저별 룸 리스트 저장
-      multiUpdates['UserRooms/' + userData.uid + '/' + hookReceiver.uid] = {
-        roomId: hookRoomId,
-        receiverId: hookReceiver.uid,
-        lastMessage: url ? '다운로드' : msg,
-        timeStamp: curTimeStamp,
-      };
+        // 메세지 저장
+        multiUpdates['Messages/' + hookRoomId + '/' + messageId] = {
+          senderId: userData.uid,
+          message: msg,
+          timeStamp: curTimeStamp,
+          fileName: fileName ? fileName : null,
+          url: url ? url : null,
+        };
 
-      multiUpdates['UserRooms/' + hookReceiver.uid + '/' + userData.uid] = {
-        roomId: hookRoomId,
-        receiverId: userData.uid,
-        lastMessage: url ? '다운로드' : msg,
-        timeStamp: curTimeStamp,
-      };
+        // 유저별 룸 리스트 저장
+        multiUpdates['UserRooms/' + userData.uid + '/' + hookReceiver.uid] = {
+          roomId: hookRoomId,
+          receiverId: hookReceiver.uid,
+          lastMessage: url ? '다운로드' : msg,
+          timeStamp: curTimeStamp,
+        };
 
-      firebase
-        .database()
-        .ref()
-        .update(multiUpdates)
-        .then(e => {
+        multiUpdates['UserRooms/' + hookReceiver.uid + '/' + userData.uid] = {
+          roomId: hookRoomId,
+          receiverId: userData.uid,
+          lastMessage: url ? '다운로드' : msg,
+          timeStamp: curTimeStamp,
+        };
+
+        saveFirebase.update(multiUpdates).then(() => {
           var list = document.getElementById('messageList');
           list.scrollTop = list.scrollHeight;
         });
+      }
     }
   };
 
@@ -243,13 +243,21 @@ const DmRoom = ({ match }) => {
       openModal();
       var fileName = files[0].name;
       var path =
-        moment().format('YYYYMMDDhhmmss') +
+        moment(firebase.database.ServerValue.TIMESTAMP).format(
+          'YYYYMMDDhhmmssSSS',
+        ) +
         '/' +
         hookRoomId +
         '/' +
         userData.uid +
         '/' +
         fileName;
+
+      var attachFirebase = firebase
+        .storage()
+        .ref()
+        .child(path)
+        .put(files[0]);
 
       const callbackProgress = snapshot => {
         // 진행과정
@@ -280,17 +288,23 @@ const DmRoom = ({ match }) => {
       };
 
       // 프로그레스바
-      firebase
-        .storage()
-        .ref()
-        .child(path)
-        .put(files[0])
-        .on('state_changed', callbackProgress, callbackError, callbackComplete);
+
+      attachFirebase.on(
+        'state_changed',
+        callbackProgress,
+        callbackError,
+        callbackComplete,
+      );
     }
   };
 
   var lastMessageUserId = '';
   var lastTimeStamp = '';
+
+  const testChange = () => {
+    var list = document.getElementById('messageList');
+    list.scrollTop = list.scrollHeight;
+  };
 
   return (
     <>
@@ -347,6 +361,10 @@ const DmRoom = ({ match }) => {
             overflow: 'auto',
             backgroundColor: 'white',
           }}
+          onChange={testChange}
+          onRateChange={testChange}
+          onVolumeChangeCapture={testChange}
+          onDurationChange={testChange}
         >
           {messageList.map((message, index) => {
             var tempLastMessageUserId = lastMessageUserId;
@@ -358,6 +376,7 @@ const DmRoom = ({ match }) => {
               <Message
                 key={index}
                 senderId={message.senderId}
+                image={hookReceiver.image}
                 message={message.message}
                 timeStamp={message.timeStamp}
                 fileName={message.fileName}

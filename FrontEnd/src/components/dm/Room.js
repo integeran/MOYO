@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import axios from '../../api/axios';
 import moment from 'moment';
 
@@ -15,6 +15,13 @@ const Room = ({ roomId, receiverId, lastMessage, timeStamp }) => {
   const userData = useSelector(state => state.auth.userData);
 
   const [receiver, setReceiver] = useState('');
+  const [curTime, setCurTime] = useState('');
+
+  const onAxiosGetTime = async () => {
+    return await axios.get('DM/getTime', {
+      headers: { userToken: userData.userToken },
+    });
+  };
 
   const onAxiosGetUser = async id => {
     return await axios.get('DM/getUser?uid=' + id, {
@@ -24,8 +31,10 @@ const Room = ({ roomId, receiverId, lastMessage, timeStamp }) => {
 
   useEffect(() => {
     const getData = async () => {
-      const res = await onAxiosGetUser(receiverId);
-      setReceiver(res.data.data);
+      const res1 = await onAxiosGetTime();
+      setCurTime(res1.data.data);
+      const res2 = await onAxiosGetUser(receiverId);
+      setReceiver(res2.data.data);
     };
     getData();
   }, []);
@@ -86,7 +95,7 @@ const Room = ({ roomId, receiverId, lastMessage, timeStamp }) => {
           <Grid item xs={3}>
             <Typography variant="caption">
               {timeStamp.substr(0, timeStamp.indexOf(' ')) ===
-              moment().format('YYYY/MM/DD')
+              moment(curTime).format('YYYY/MM/DD')
                 ? timeStamp.substr(timeStamp.indexOf(' ') + 1)
                 : timeStamp.substr(0, timeStamp.indexOf(' '))}
             </Typography>

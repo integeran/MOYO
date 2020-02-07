@@ -1,5 +1,6 @@
 package com.moyo.MOYO.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,9 +27,18 @@ public class DMRestController {
 	@GetMapping("/DM/getUser")
 	public ResponseEntity<Map<String, Object>> getUser(@RequestParam int uid) {
 		try {
-			log.trace("UserRestController - selectOne");
-			System.out.println(uService.selectOne(uid));
+			log.trace("DMRestController - getUser");
 			return response(uService.selectOne(uid), HttpStatus.OK, true);
+		} catch(RuntimeException e) {
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
+	@GetMapping("/DM/getTime")
+	public ResponseEntity<Map<String, Object>> getTime() {
+		try {
+			log.trace("DMRestController - getTime");
+			return response(new Date(), HttpStatus.OK, true);
 		} catch(RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
