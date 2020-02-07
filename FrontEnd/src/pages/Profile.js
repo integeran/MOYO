@@ -1,62 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import axios from '../api/axios';
+import { getAgeList, getGenderList } from '../api/commonData';
 import { changeField, changeBool } from '../modules/auth';
 import BaseAppBar from '../components/common/BaseAppBar';
 import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
-import Avatar from '@material-ui/core/Avatar';
-import Badge from '@material-ui/core/Badge';
+import {
+  TextField,
+  MenuItem,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+  Avatar,
+  Badge,
+  Grid,
+} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-
-const ageRange = [
-  {
-    value: '1',
-    label: '10대',
-  },
-  {
-    value: '2',
-    label: '20대',
-  },
-  {
-    value: '3',
-    label: '30대',
-  },
-  {
-    value: '4',
-    label: '40대',
-  },
-];
-
-const genders = [
-  {
-    value: 'm',
-    label: '남자',
-  },
-  {
-    value: 'f',
-    label: '여자',
-  },
-];
+import styled from 'styled-components';
 
 const Profile = props => {
   const jwtDecode = require('jwt-decode');
   const dispatch = useDispatch();
   const history = useHistory();
-
+  const [ageList, setAgeList] = useState([]);
+  const [genderList, setGenderList] = useState([]);
   const userData = useSelector(state => state.auth.userData);
   const prevPath = props.location.state.prevPath;
   const userSocialId = props.location.state.userSocialId;
   let userImage = props.location.state.userProfileImage;
   const [tempUserImage, setTempUserImage] = useState(userImage);
+  const [imageFile, setImageFile] = useState('');
+  const [tempImageName, setTempImageName] = useState('');
   let userNickname = props.location.state.userNickname;
   const [userNicknameOut, setUserNicknameOut] = useState(userNickname);
   let userAge = props.location.state.userAgeRange;
@@ -70,7 +48,7 @@ const Profile = props => {
   let userGender = props.location.state.userGender;
   let userGenderFirst = '';
   if (userGender !== undefined) {
-    userGenderFirst = userGender.charAt(0);
+    userGenderFirst = userGender.charAt(0).toUpperCase();
   }
   const [gender, setGender] = useState('' || userGenderFirst);
   const [nickNameError, setNickNameError] = useState(false);
@@ -79,9 +57,52 @@ const Profile = props => {
   );
   const [ageError, setAgeError] = useState(false);
   const [genderError, setGenderError] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
-  const [imageFile, setImageFile] = useState('');
-  const [tempImageName, setTempImageName] = useState('');
+  const QueryBox = styled.div`
+    width: inherit;
+    height: inherit;
+    display: flex;
+    flex-direction: column;
+  `;
+
+  const useStyles = makeStyles(theme => ({
+    root: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      height: '100vh',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'column',
+    },
+    rootTextfield: {
+      marginTop: '2rem',
+    },
+    rootAvatar: {
+      marginBottom: '2rem',
+    },
+    multilineColor: {
+      color: 'black',
+    },
+    large: {
+      width: theme.spacing(18),
+      height: theme.spacing(18),
+    },
+  }));
+
+  const classes = useStyles();
+
+  const handleBackIcon = () => {
+    history.push('/more');
+  };
+
+  const handleProfileImage = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
 
   const handleChangeNickname = event => {
     setUserNicknameOut(event.target.value);
@@ -95,6 +116,15 @@ const Profile = props => {
   const handleChangeGender = event => {
     setGender(event.target.value);
   };
+
+  const changeImageFile = file => {
+    setImageFile(file);
+  };
+
+  useEffect(() => {
+    setAgeList(getAgeList());
+    setGenderList(getGenderList());
+  }, []);
 
   const pushUserData = (k, v) => {
     dispatch(changeField({ form: 'userData', key: k, value: v }));
@@ -110,6 +140,21 @@ const Profile = props => {
         gender: gender,
         image: tempUserImage,
         imageName: tempImageName,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const postImageRequest = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('file', imageFile);
+      return await axios.post('user/postImage', formData, {
+        params: { imageName: tempImageName },
+        headers: {
+          userToken: userData.userToken,
+        },
       });
     } catch (error) {
       console.error(error);
@@ -204,66 +249,6 @@ const Profile = props => {
     }
   };
 
-  const useStyles = makeStyles(theme => ({
-    root: {
-      display: 'flex',
-      flexWrap: 'wrap',
-      height: '100vh',
-      alignItems: 'center',
-      justifyContent: 'center',
-      flexDirection: 'column',
-    },
-    rootTextfield: {
-      marginTop: '2rem',
-    },
-    rootAvatar: {
-      marginBottom: '2rem',
-    },
-    multilineColor: {
-      color: 'black',
-    },
-    large: {
-      width: theme.spacing(18),
-      height: theme.spacing(18),
-    },
-  }));
-
-  const classes = useStyles();
-
-  const handleBackIcon = () => {
-    history.push('/more');
-  };
-
-  const handleProfileImage = () => {
-    setOpenDialog(true);
-  };
-
-  const [openDialog, setOpenDialog] = useState(false);
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
-
-  const changeImageFile = file => {
-    setImageFile(file);
-  };
-
-  const postImageRequest = async () => {
-    try {
-      const formData = new FormData();
-      formData.append('file', imageFile);
-      return await axios.post('user/postImage', formData, {
-        params: { imageName: tempImageName },
-        headers: {
-          userToken: userData.userToken,
-          // 'Content-Type': 'multipart/form-data',
-        },
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const postImage = async () => {
     const imgData = await postImageRequest();
     setTempImageName(imgData.data.data.imageName);
@@ -272,89 +257,132 @@ const Profile = props => {
   };
 
   return (
-    <div>
-      {prevPath === '/more' && (
-        <BaseAppBar
-          text="내 정보 관리"
-          leftType="icon"
-          leftIcon={<ArrowBackIosIcon onClick={handleBackIcon} />}
-        />
-      )}
-      <div className={classes.root}>
-        <div className={classes.rootAvatar}>
-          <Badge
-            color="primary"
-            badgeContent={<AddIcon />}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            overlap="circle"
-            variant="standard"
-          >
-            <Avatar
-              alt="Jeesoo Haa"
-              src={tempUserImage}
-              className={classes.large}
-              onClick={handleProfileImage}
-            />
-          </Badge>
-        </div>
-        <div className={classes.rootTextfield}>
-          <TextField
-            error={nickNameError}
-            placeholder={nickNamePlaceHolder}
-            id="standard-full-width"
-            label="Nickname"
-            defaultValue={userNicknameOut}
-            value={userNicknameOut}
-            onChange={handleChangeNickname}
-            fullWidth
-            InputLabelProps={{
-              shrink: true,
-            }}
-            InputProps={{
-              className: classes.multilineColor,
-            }}
+    <>
+      <div
+        style={{
+          width: 'inherit',
+          height: 'inherit',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        {prevPath === '/more' && (
+          <BaseAppBar
+            style={{ flexGrow: '0' }}
+            text="프로필 편집"
+            leftType="icon"
+            leftIcon={<ArrowBackIosIcon onClick={handleBackIcon} />}
           />
-          <div className={classes.rootTextfield}>
-            <TextField
-              error={ageError}
-              id="standard-select-currency"
-              select
-              fullWidth
-              label="AgeRange"
-              value={age}
-              onChange={handleChangeAge}
-            >
-              {ageRange.map(option => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
-          </div>
-          <div className={classes.rootTextfield}>
-            <TextField
-              error={genderError}
-              id="standard-select-currency"
-              select
-              fullWidth
-              label="Gender"
-              value={gender}
-              onChange={handleChangeGender}
-            >
-              {genders.map(option => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
-          </div>
-        </div>
-        {prevPath === '/' ? (
-          <button onClick={requestRegister}>가입하기</button>
-        ) : (
-          <button onClick={requestUpdate}>수정하기</button>
         )}
+        <Grid
+          container
+          direction="column"
+          justify="center"
+          spacing={4}
+          style={{
+            width: 'inherit',
+            margin: '0px',
+            flexGrow: '1',
+            margin: '0px',
+          }}
+        >
+          <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
+            <Badge
+              color="primary"
+              badgeContent={<AddIcon />}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              overlap="circle"
+              variant="standard"
+            >
+              <Avatar
+                alt="Jeesoo Haa"
+                src={tempUserImage}
+                className={classes.large}
+                onClick={handleProfileImage}
+              />
+            </Badge>
+          </Grid>
+          <Grid item container>
+            <Grid item xs={2} />
+            <Grid
+              item
+              container
+              direction="column"
+              justify="space-between"
+              spacing={3}
+              xs={8}
+              style={{ margin: '0px' }}
+            >
+              <Grid item>
+                <TextField
+                  error={nickNameError}
+                  placeholder={nickNamePlaceHolder}
+                  id="standard-full-width"
+                  label="Nickname"
+                  defaultValue={userNicknameOut}
+                  value={userNicknameOut}
+                  onChange={handleChangeNickname}
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  InputProps={{
+                    className: classes.multilineColor,
+                  }}
+                />
+              </Grid>
+              <Grid item>
+                <TextField
+                  error={ageError}
+                  id="standard-select-currency"
+                  select
+                  fullWidth
+                  label="AgeRange"
+                  value={age}
+                  onChange={handleChangeAge}
+                >
+                  {ageList.map(option => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid item>
+                <TextField
+                  error={genderError}
+                  id="standard-select-currency"
+                  select
+                  fullWidth
+                  label="Gender"
+                  value={gender}
+                  onChange={handleChangeGender}
+                  InputProps={{ readOnly: false }}
+                >
+                  {genderList.map(option => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
+                {prevPath === '/' ? (
+                  <Button variant="outlined" onClick={requestRegister}>
+                    가입하기
+                  </Button>
+                ) : (
+                  <Button variant="outlined" onClick={requestUpdate}>
+                    수정하기
+                  </Button>
+                )}
+              </Grid>
+            </Grid>
+            <Grid item xs={2} />
+          </Grid>
+        </Grid>
       </div>
+
       <Dialog
         open={openDialog}
         onClose={handleCloseDialog}
@@ -377,7 +405,7 @@ const Profile = props => {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 };
 

@@ -9,8 +9,13 @@ import {
   Grid,
 } from '@material-ui/core';
 
+const CenterGrid = styled(Grid)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const StyledAppBar = styled(({ ...other }) => <AppBar {...other} />)`
-  flex-grow: 1;
   & .MuiTypography-h6 {
     flex-grow: 1;
     text-align: center;
@@ -49,27 +54,27 @@ const BaseAppBar = ({
   return (
     <StyledAppBar color="inherit" elevation={0} position="sticky">
       <Toolbar disableGutters={true}>
-        <Grid item xs={2}>
+        <CenterGrid item xs={2}>
           <ItemContainer
             type={leftType}
             icon={leftIcon}
             text={leftText}
             onClick={leftClick}
           />
-        </Grid>
+        </CenterGrid>
         <Grid item xs={8}>
           <Typography variant="h6" align={align}>
             {text}
           </Typography>
         </Grid>
-        <Grid item xs={2}>
+        <CenterGrid item xs={2}>
           <ItemContainer
             type={rightType}
             icon={rightIcon}
             text={rightText}
             onClick={rightClick}
           />
-        </Grid>
+        </CenterGrid>
       </Toolbar>
     </StyledAppBar>
   );

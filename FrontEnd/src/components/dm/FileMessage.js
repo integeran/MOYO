@@ -50,7 +50,7 @@ const FileMessage = ({ fileName, url, timeStamp }) => {
         <Grid container justify="center" alignItems="center">
           <Grid
             item
-            xs={3}
+            xs={2}
             style={{ backgroundColor: '#e0e0e0', borderRadius: '8px' }}
           >
             <VerticalAlignBottomIcon
@@ -62,7 +62,7 @@ const FileMessage = ({ fileName, url, timeStamp }) => {
 
           <Grid item xs={1}></Grid>
 
-          <Grid item xs={8}>
+          <Grid item xs={9}>
             <Grid container direction="column">
               <Grid item xs={6} style={{ maxWidth: '95%' }}>
                 <Typography
