@@ -12,7 +12,7 @@ import Divider from '@material-ui/core/Divider';
 import IU from '../../assets/img/iu.jpg';
 import styled from 'styled-components';
 import BaseAppBar from '../../components/common/BaseAppBar';
-import { navigationState } from '../../modules/navigation';
+import { navigationSelect } from '../../modules/baseNavigation';
 
 const CenterGrid = styled(Grid)`
   display: flex;
@@ -60,7 +60,7 @@ const AccompanyListDetail = () => {
     history.goBack();
   };
   const handleMoveChat = () => {
-    dispatch(navigationState('DM'));
+    dispatch(navigationSelect('DM'));
     history.push(`/dmroom/${boardData.uid}`);
   };
 
