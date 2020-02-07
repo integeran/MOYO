@@ -26,7 +26,7 @@ const ItemContainer = ({ type, icon, text, onClick }) => {
         </IconButton>
       )}
       {!icon && (text || type === 'text') && (
-        <Button color="inherit">
+        <Button color="inherit" onClick={onClick}>
           <Typography variant="subtitle1">{text}</Typography>
         </Button>
       )}
