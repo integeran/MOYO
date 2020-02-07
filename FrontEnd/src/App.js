@@ -23,6 +23,7 @@ import PostMap from './pages/postmap/Postmap';
 import { changeBool } from './modules/auth';
 
 const StyledContainer = styled(Container)`
+  padding: 0 !important;
   position: relative;
   height: inherit;
   overflow-y: scroll;
