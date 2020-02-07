@@ -45,6 +45,36 @@ public class PostmapRestController {
 		}
 	}
 	
+	@GetMapping("postmap/selectTop")
+	private ResponseEntity<Map<String, Object>> selectTop(@RequestParam double latitude, @RequestParam double longitude, @RequestParam int uId) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("latitude", latitude);
+		map.put("longitude", longitude);
+		map.put("uId", uId);
+		try {
+			log.trace("PostmapRestController - selectTop : ", latitude,longitude,uId);
+			return response(pService.selectTop(map), HttpStatus.OK, true);
+		} catch (RuntimeException e) {
+			log.error("PostmapRestController - selectTOp : ", latitude,longitude);
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
+	@GetMapping("postmap/selectExceptTop")
+	private ResponseEntity<Map<String, Object>> selectExceptTop(@RequestParam double latitude, @RequestParam double longitude, @RequestParam int uId) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("latitude", latitude);
+		map.put("longitude", longitude);
+		map.put("uId", uId);
+		try {
+			log.trace("PostmapRestController - selectExceptTop : ", latitude,longitude,uId);
+			return response(pService.selectExceptTop(map), HttpStatus.OK, true);
+		} catch (RuntimeException e) {
+			log.error("PostmapRestController - selectExceptTop : ", latitude,longitude);
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
 	@GetMapping("postmap/selectOne/{pmId}")
 	private ResponseEntity<Map<String, Object>> selectOne(@PathVariable int pmId) {
 		try {
