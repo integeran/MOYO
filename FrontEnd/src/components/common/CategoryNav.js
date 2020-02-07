@@ -37,7 +37,7 @@ const CategoryNav = () => {
   };
 
   const handleAccompanyClick = () => {
-    history.push('/acc');
+    history.push('/accompany');
   };
 
   return (

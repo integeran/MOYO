@@ -10,6 +10,7 @@ import Dm from './Dm';
 import morePlanCompanion from './morePlanCompanion';
 import morePlanMemo from './morePlanMemo';
 import community from './community';
+import postmap from './postmap';
 
 const rootReducer = combineReducers({
   auth,
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   morePlanCompanion,
   morePlanMemo,
   community,
+  postmap,
 });
 
 export default rootReducer;

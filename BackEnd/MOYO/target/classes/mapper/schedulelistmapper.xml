@@ -19,6 +19,17 @@
 		where sl.u_id = #{uId}
 		order by sl.start_date
 	</select>
+    <select id="selectAllByOneDay" parameterType="map" resultType="scheduleList">
+    	select u.nickname nickname, c.name city, na.name nation, sl.*
+    	from schedule_list sl
+    	left outer join user u on sl.u_id = u.u_id
+    	left outer join nation na on sl.n_id = na.n_id
+    	left outer join city c on sl.c_id = c.c_id
+    	<![CDATA[
+    	where sl.u_id = #{uId} and date_format(sl.start_date, '%Y-%m-%d') <= #{day} and #{day} <= date_format(sl.end_date, '%Y-%m-%d')
+    	]]>
+    	order by sl.register_date
+    </select>
 	<select id="selectOne" parameterType="int" resultType="scheduleList">
 		select u.nickname nickname, c.name city, na.name nation, sl.*
 		from schedule_list sl

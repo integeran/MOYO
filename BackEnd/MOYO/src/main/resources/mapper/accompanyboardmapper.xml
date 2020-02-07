@@ -48,10 +48,10 @@
 		   </choose>
 			and ab.deadline_toggle = 'n'
 			<choose>
-				<when test="searchSort=='startDate'">
+				<when test="searchSort=='start'">
 					order by ab.start_date
 				</when>
-				<when test="searchSort=='endDate'">
+				<when test="searchSort=='end'">
 					order by ab.end_date
 				</when>
 				<otherwise>
@@ -88,14 +88,14 @@
 	</update>
 	
 	<select id="selectNation" resultType="nation">
-		select * from nation;
+		select * from nation
 	</select>
 	
 	<select id="selectCity" resultType="city" parameterType="int">
-		select c.* from city c join nation n on c.n_id = n.n_id where n.n_id = #{nId};
+		select c.* from city c join nation n on c.n_id = n.n_id where n.n_id = #{nId}
 	</select>
 	
 	<select id="selectTravelType" resultType="travelType">
-		select * from travel_type;
+		select * from travel_type
 	</select>
 </mapper>
