@@ -2,13 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import AccompanySearchBar from '../../components/accompany/AccompanySearchBar';
-import AccompanyListSet from '../../components/accompany/AccompanyListSet';
+import AccompanySearchBar from '../../components/accompany/List/AccompanySearchBar';
+import AccompanyListSet from '../../components/accompany/List/AccompanyListSet';
 import { Grid, IconButton, Fab } from '@material-ui/core';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import AccompanyFilterDialog from '../../components/accompany/AccompanyFilterDialog';
+import AccompanyFilterDialog from '../../components/accompany/List/AccompanyFilterDialog';
 import {
   accompanyFilterGender,
   accompanyFilterAge,
@@ -208,7 +208,7 @@ const AccompanyList = () => {
   };
   const handleBackClick = () => {
     history.push({
-      pathname: '/acc',
+      pathname: '/accompany',
     });
   };
   const handlePreDayClick = () => {
