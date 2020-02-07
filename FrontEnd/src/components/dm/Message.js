@@ -9,6 +9,7 @@ import Grid from '@material-ui/core/Grid';
 
 const Message = ({
   senderId,
+  image,
   message,
   timeStamp,
   fileName,
@@ -76,7 +77,7 @@ const Message = ({
         <Grid item xs={1} style={{ paddingRight: '1%' }}>
           <Avatar
             alt="메세지 보낸 사람의 프로필"
-            src={userData.image}
+            src={image}
             style={{ width: '30px', height: '30px' }}
           />
         </Grid>
