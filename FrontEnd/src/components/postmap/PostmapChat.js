@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import axios from '../../api/axios';
 import moment from 'moment';
 
-import { getPostListAction } from '../../modules/postmap';
+import { getPostListAction, getPostListTopAction } from '../../modules/postmap';
 
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
@@ -67,6 +67,15 @@ const PostmapChat = memo(() => {
     );
   };
 
+  const getPostListTop = async pos => {
+    return await axios.get(
+      `postmap/selectTop?latitude=${pos.latitude}&longitude=${pos.longitude}&uId=${userData.uid}`,
+      {
+        headers: { userToken: userData.userToken },
+      },
+    );
+  };
+
   const saveChat = async () => {
     if (timer > 0) {
       alert(timer + '초 만큼 대기시간이 남아있습니다.');
@@ -75,6 +84,8 @@ const PostmapChat = memo(() => {
       if (res) {
         const res2 = await getFetchMarker(pos);
         dispatch(getPostListAction(res2.data.data));
+        const res3 = await getPostListTop(pos);
+        dispatch(getPostListTopAction(res3.data.data));
         setChatText('');
       }
       setTimer(5);

@@ -73,7 +73,11 @@ const Message = ({
   };
 
   const showProfile = () => {
-    if (senderId !== lastMessageUserId || timeStamp !== lastTimeStamp) {
+    if (
+      senderId !== lastMessageUserId ||
+      moment(timeStamp).format('YYYY/MM/DD LT') !==
+        moment(lastTimeStamp).format('YYYY/MM/DD LT')
+    ) {
       return (
         <Grid item xs={1} style={{ paddingRight: '1%' }}>
           <Avatar
