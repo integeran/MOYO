@@ -90,7 +90,8 @@ const Message = ({
 
   return (
     <>
-      {timeStamp !== lastTimeStamp && (
+      {moment(timeStamp).format('YYYY/MM/DD LT') !==
+        moment(lastTimeStamp).format('YYYY/MM/DD LT') && (
         <div style={{ textAlign: 'center' }}>
           <Typography variant="caption">
             {moment(timeStamp).format('YYYY/MM/DD LT')}
