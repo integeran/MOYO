@@ -14,24 +14,13 @@ import { changeField } from '../../modules/planDate';
 import { storeSchedule } from '../../modules/morePlanTravel';
 import { storeCompanion } from '../../modules/morePlanCompanion';
 import { storeMemo } from '../../modules/morePlanMemo';
-import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
 import Typography from '@material-ui/core/Typography';
 import axios from '../../api/axios';
 import BaseAppBar from '../../components/common/BaseAppBar';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ChatIcon from '@material-ui/icons/Chat';
-import styled from 'styled-components';
 import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
 import Grid from '@material-ui/core/Grid';
-
-// const Container = styled.div`
-//   & > .fc {
-//     color: red;
-//     & > .fc-toolbar > .fc-left > button {
-//       padding: 0;
-//     }
-//   }
-// `;
 
 const MorePlan = () => {
   const history = useHistory();
@@ -134,12 +123,7 @@ const MorePlan = () => {
   }, [planTravelList]);
 
   const dayRenderFunction = data => {
-    // console.log(data.el.classList.value);
     const renderDate = moment(data.date).format('YYYY-MM-DD');
-    // if (renderDate === selectedDate) {
-    //   // data.el.classList.push('fc-state-highlight');
-    //   data.el.classList.value += ' fc-state-highlight';
-    // }
     planCompanionList.forEach(element => {
       if (renderDate === moment(element.day).format('YYYY-MM-DD')) {
         data.el.innerHTML =
@@ -155,10 +139,9 @@ const MorePlan = () => {
   return (
     <div>
       <BaseAppBar
-        title={'일정 관리'}
-        Icon1={<ArrowBackIosIcon onClick={handleBackIcon} />}
-        Icon2={''}
-        // handleClick1={handleMoveBack}
+        text="일정 관리"
+        leftType="icon"
+        leftIcon={<ArrowBackIosIcon onClick={handleBackIcon} />}
       />
       <Grid
         container
