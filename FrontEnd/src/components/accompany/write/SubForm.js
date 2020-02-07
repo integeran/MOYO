@@ -11,7 +11,6 @@ import {
 } from '@material-ui/core';
 
 const SubForm = ({ ...props }) => {
-  console.log(props);
   return (
     <Grid container direction="column">
       <Grid item>
