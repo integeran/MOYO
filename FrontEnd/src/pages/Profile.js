@@ -59,7 +59,7 @@ const Profile = props => {
   const [genderError, setGenderError] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
 
-  const StyledDiv = styled.div`
+  const QueryBox = styled.div`
     width: inherit;
     height: inherit;
     display: flex;
@@ -91,6 +91,35 @@ const Profile = props => {
   }));
 
   const classes = useStyles();
+
+  const handleBackIcon = () => {
+    history.push('/more');
+  };
+
+  const handleProfileImage = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleChangeNickname = event => {
+    setUserNicknameOut(event.target.value);
+    setNickNameError(false);
+  };
+
+  const handleChangeAge = event => {
+    setAge(event.target.value);
+  };
+
+  const handleChangeGender = event => {
+    setGender(event.target.value);
+  };
+
+  const changeImageFile = file => {
+    setImageFile(file);
+  };
 
   useEffect(() => {
     setAgeList(getAgeList());
@@ -227,38 +256,16 @@ const Profile = props => {
     setOpenDialog(false);
   };
 
-  const handleBackIcon = () => {
-    history.push('/more');
-  };
-
-  const handleProfileImage = () => {
-    setOpenDialog(true);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
-
-  const handleChangeNickname = event => {
-    setUserNicknameOut(event.target.value);
-    setNickNameError(false);
-  };
-
-  const handleChangeAge = event => {
-    setAge(event.target.value);
-  };
-
-  const handleChangeGender = event => {
-    setGender(event.target.value);
-  };
-
-  const changeImageFile = file => {
-    setImageFile(file);
-  };
-
   return (
     <>
-      <StyledDiv>
+      <div
+        style={{
+          width: 'inherit',
+          height: 'inherit',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
         {prevPath === '/more' && (
           <BaseAppBar
             style={{ flexGrow: '0' }}
@@ -374,7 +381,7 @@ const Profile = props => {
             <Grid item xs={2} />
           </Grid>
         </Grid>
-      </StyledDiv>
+      </div>
 
       <Dialog
         open={openDialog}
