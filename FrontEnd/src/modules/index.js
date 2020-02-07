@@ -9,6 +9,7 @@ import morePlanTravel from './morePlanTravel';
 import Dm from './Dm';
 import morePlanCompanion from './morePlanCompanion';
 import morePlanMemo from './morePlanMemo';
+import community from './community';
 
 const rootReducer = combineReducers({
   auth,
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   Dm,
   morePlanCompanion,
   morePlanMemo,
+  community,
 });
 
 export default rootReducer;
