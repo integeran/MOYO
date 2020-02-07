@@ -178,14 +178,13 @@ const DmRoom = ({ match }) => {
           DATETIME_CHAR +
           moment(curTime).format('YYYYMMDDhhmmssSSS');
 
-        var curTimeStamp = moment(curTime).format('YYYY/MM/DD LT');
         var saveFirebase = firebase.database().ref();
 
         // 메세지 저장
         multiUpdates['Messages/' + hookRoomId + '/' + messageId] = {
           senderId: userData.uid,
           message: msg,
-          timeStamp: curTimeStamp,
+          timeStamp: curTime,
           fileName: fileName ? fileName : null,
           url: url ? url : null,
         };
@@ -195,14 +194,14 @@ const DmRoom = ({ match }) => {
           roomId: hookRoomId,
           receiverId: hookReceiver.uid,
           lastMessage: url ? '다운로드' : msg,
-          timeStamp: curTimeStamp,
+          timeStamp: curTime,
         };
 
         multiUpdates['UserRooms/' + hookReceiver.uid + '/' + userData.uid] = {
           roomId: hookRoomId,
           receiverId: userData.uid,
           lastMessage: url ? '다운로드' : msg,
-          timeStamp: curTimeStamp,
+          timeStamp: curTime,
         };
 
         saveFirebase.update(multiUpdates).then(() => {
