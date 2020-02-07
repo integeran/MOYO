@@ -18,6 +18,9 @@ import AccompanyWrite from './pages/acc/AccompanyWrite';
 import DmRoom from './pages/dm/DmRoom';
 import DmRoomList from './pages/dm/DmRoomList';
 import PostMap from './pages/postmap/Postmap';
+import CommunityList from './pages/community/CommunityList';
+import CommunityDetail from './pages/community/CommunityDetail';
+import CommunityWrite from './pages/community/CommunityWrite';
 
 const StyledContainer = styled(Container)`
   position: relative;
@@ -57,6 +60,12 @@ const App = () => {
         </Switch>
         <Route path="/dmroomlist" component={DmRoomList} />
         <Route path="/postmap" component={PostMap} />
+        <Route exact path="/community" component={CommunityList} />
+        <Route path="/community/write" component={CommunityWrite} />
+        <Route
+          path="/community/communityList/:id"
+          component={CommunityDetail}
+        />
       </StyledContainer>
       {!(location.pathname === '/' || location.pathname === '/signup') && (
         <CategoryNav />
