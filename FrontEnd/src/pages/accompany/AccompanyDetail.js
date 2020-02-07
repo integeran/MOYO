@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ChatIcon from '@material-ui/icons/Chat';
@@ -11,6 +12,7 @@ import Divider from '@material-ui/core/Divider';
 import IU from '../../assets/img/iu.jpg';
 import styled from 'styled-components';
 import BaseAppBar from '../../components/common/BaseAppBar';
+import { navigationState } from '../../modules/navigation';
 
 const CenterGrid = styled(Grid)`
   display: flex;
@@ -22,7 +24,7 @@ const StyledAvatar = styled(Avatar)`
   min-width: 5rem;
   min-height: 5rem;
 `;
-//({ ...other }) => <Divider {...other} />
+
 const StyledDivider = styled(Divider)`
   margin-top: 1rem !important;
   margin-bottom: 1rem !important;
@@ -30,6 +32,7 @@ const StyledDivider = styled(Divider)`
 
 const AccompanyListDetail = () => {
   const history = useHistory();
+  const dispatch = useDispatch();
   const boardData = history.location.state.board;
 
   const convertAgeToStr = age => {
@@ -57,6 +60,7 @@ const AccompanyListDetail = () => {
     history.goBack();
   };
   const handleMoveChat = () => {
+    dispatch(navigationState('DM'));
     history.push(`/dmroom/${boardData.uid}`);
   };
 
