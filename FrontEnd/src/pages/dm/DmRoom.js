@@ -300,11 +300,6 @@ const DmRoom = ({ match }) => {
   var lastMessageUserId = '';
   var lastTimeStamp = '';
 
-  const testChange = () => {
-    var list = document.getElementById('messageList');
-    list.scrollTop = list.scrollHeight;
-  };
-
   return (
     <>
       <div
@@ -360,10 +355,6 @@ const DmRoom = ({ match }) => {
             overflow: 'auto',
             backgroundColor: 'white',
           }}
-          onChange={testChange}
-          onRateChange={testChange}
-          onVolumeChangeCapture={testChange}
-          onDurationChange={testChange}
         >
           {messageList.map((message, index) => {
             var tempLastMessageUserId = lastMessageUserId;
