@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import moment from 'moment';
 
 import FileMessage from './FileMessage';
 
@@ -91,7 +92,9 @@ const Message = ({
     <>
       {timeStamp !== lastTimeStamp && (
         <div style={{ textAlign: 'center' }}>
-          <Typography variant="caption">{timeStamp}</Typography>
+          <Typography variant="caption">
+            {moment(timeStamp).format('YYYY/MM/DD LT')}
+          </Typography>
         </div>
       )}
 
