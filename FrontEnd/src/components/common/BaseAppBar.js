@@ -10,7 +10,6 @@ import {
 } from '@material-ui/core';
 
 const StyledAppBar = styled(({ ...other }) => <AppBar {...other} />)`
-  flex-grow: 1;
   & .MuiTypography-h6 {
     flex-grow: 1;
     text-align: center;

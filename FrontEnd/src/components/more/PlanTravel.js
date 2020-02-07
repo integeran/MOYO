@@ -3,41 +3,25 @@ import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import MenuItem from '@material-ui/core/MenuItem';
+import {
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  MenuItem,
+  Typography,
+  Grid,
+} from '@material-ui/core';
 import { storeSchedule } from '../../modules/morePlanTravel';
 import axios from '../../api/axios';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import TripPaper from './schedule/TripSchedulePaper';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-
-const nationData = [
-  { nid: 2, name: '프랑스' },
-  { nid: 3, name: '스페인' },
-  { nid: 4, name: '이탈리아' },
-  { nid: 5, name: '스위스' },
-  { nid: 6, name: '영국' },
-  { nid: 7, name: '독일' },
-  { nid: 8, name: '포르투갈' },
-  { nid: 9, name: '크로아티아' },
-];
-const cityData = [
-  { cid: 1, nid: 2, name: '파리' },
-  { cid: 2, nid: 2, name: '니스' },
-  { cid: 3, nid: 3, name: '바르셀로나' },
-  { cid: 4, nid: 3, name: '마드리드' },
-  { cid: 5, nid: 4, name: '피렌체' },
-  { cid: 6, nid: 4, name: '로마' },
-];
+import { getNationList, getCityList } from '../../api/commonData';
 
 const PlanTravel = () => {
   const useStyles = makeStyles(theme => ({
@@ -52,27 +36,36 @@ const PlanTravel = () => {
 
   const dispatch = useDispatch();
   const userData = useSelector(state => state.auth.userData);
+  const selectedDate = useSelector(state => state.planDate.selectedDate);
+  const planTravelList = useSelector(
+    state => state.morePlanTravel.planTravelList,
+  );
+  const [nationList, setNationList] = useState([]);
   const [nation, setNation] = useState('');
   const [cityList, setCityList] = useState([]);
   const [city, setCity] = useState('');
-  const selectedDate = useSelector(state => state.planDate.selectedDate);
+  const [nationUpdate, setNationUpdate] = useState('');
+  const [cityListUpdate, setCityListUpdate] = useState([]);
+  const [cityUpdate, setCityUpdate] = useState('');
   const [selectedStartDate, setSelectedStartDate] = useState(selectedDate);
   const [selectedEndDate, setSelectedEndDate] = useState(selectedStartDate);
   const [openCreate, setOpenCreate] = React.useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
-  const planTravelList = useSelector(
-    state => state.morePlanTravel.planTravelList,
-  );
-  const [nationUpdate, setNationUpdate] = useState('');
-  const [cityListUpdate, setCityListUpdate] = useState([]);
-  const [cityUpdate, setCityUpdate] = useState('');
   const [selectedStartDateUpdate, setSelectedStartDateUpdate] = useState('');
   const [selectedEndDateUpdate, setSelectedEndDateUpdate] = useState('');
   const [selectedListId, setSelectedListId] = useState('');
 
-  const handleChangeNation = event => {
-    setNation(event.target.value);
-    setCityList(cityData.filter(item => item.nid === event.target.value));
+  useEffect(() => {
+    getNationList().then(data => {
+      setNationList(data);
+    });
+  }, []);
+
+  const handleChangeNation = async nationItem => {
+    setNation(nationItem.target.value);
+    getCityList(nationItem.target.value).then(data => {
+      setCityList(data);
+    });
   };
 
   const handleChangeCity = event => {
@@ -99,10 +92,13 @@ const PlanTravel = () => {
     setOpenCreate(false);
   };
 
-  const handleClickOpenUpdate = item => {
+  const handleClickOpenUpdate = async item => {
+    console.log(cityList);
     setNationUpdate(item.nid);
-    setCityUpdate(item.cid);
-    setCityListUpdate(cityData.filter(i => i.nid === item.nid));
+    getCityList(item.nid).then(data => {
+      setCityListUpdate(data);
+      setCityUpdate(item.cid);
+    });
     setSelectedStartDateUpdate(item.startDate);
     setSelectedEndDateUpdate(item.endDate);
     setSelectedListId(item.slistId);
@@ -191,9 +187,12 @@ const PlanTravel = () => {
     </Grid>
   ));
 
-  const handleChangeNationUpdate = event => {
+  const handleChangeNationUpdate = async event => {
     setNationUpdate(event.target.value);
-    setCityListUpdate(cityData.filter(item => item.nid === event.target.value));
+    getCityList(event.target.value).then(data => {
+      setCityListUpdate(data);
+      setCityUpdate('');
+    });
   };
 
   const handleChangeCityUpdate = event => {
@@ -235,9 +234,6 @@ const PlanTravel = () => {
         style={{ width: 'inherit', height: 'inherit', margin: '0px' }}
       >
         <Grid item container justify="space-between">
-          <Grid item className={classes.center} xs={6}>
-            <Typography variant="h6">{selectedDate.split('T')[0]}</Typography>
-          </Grid>
           <Grid item xs={3}></Grid>
           <Grid item className={classes.center} xs={3}>
             {/* <Typography variant="button">여행 추가</Typography> */}
@@ -278,8 +274,11 @@ const PlanTravel = () => {
             label="나라"
             value={nation}
             onChange={handleChangeNation}
+            InputLabelProps={{
+              shrink: true,
+            }}
           >
-            {nationData.map(option => (
+            {nationList.map(option => (
               <MenuItem key={option.nid} value={option.nid}>
                 {option.name}
               </MenuItem>
@@ -292,6 +291,9 @@ const PlanTravel = () => {
             label="도시"
             value={city}
             onChange={handleChangeCity}
+            InputLabelProps={{
+              shrink: true,
+            }}
           >
             {cityList.map(option => (
               <MenuItem key={option.cid} value={option.cid}>
@@ -341,8 +343,11 @@ const PlanTravel = () => {
             label="나라"
             value={nationUpdate}
             onChange={handleChangeNationUpdate}
+            InputLabelProps={{
+              shrink: true,
+            }}
           >
-            {nationData.map(option => (
+            {nationList.map(option => (
               <MenuItem key={option.nid} value={option.nid}>
                 {option.name}
               </MenuItem>
@@ -355,6 +360,9 @@ const PlanTravel = () => {
             label="도시"
             value={cityUpdate}
             onChange={handleChangeCityUpdate}
+            InputLabelProps={{
+              shrink: true,
+            }}
           >
             {cityListUpdate.map(option => (
               <MenuItem key={option.cid} value={option.cid}>
