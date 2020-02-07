@@ -52,7 +52,7 @@ public class FileServiceImpl implements FileService {
 		String dtString = dt.format(dtf);
 		final String fileName = folderName + "/" + dtString + fileStream.getOriginalFilename();
 		if (fileName != null && !fileName.isEmpty() && fileName.contains(".")) {
-			final String extension = fileName.substring(fileName.lastIndexOf('.') + 1);
+			final String extension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
 			String[] allowedExt = {"jpg", "jpeg", "png", "gif"};
 			for (String s : allowedExt) {
 				if (extension.equals(s)) {
