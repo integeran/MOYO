@@ -5,6 +5,8 @@ import TextField from '@material-ui/core/TextField';
 import { storeMemo } from '../../modules/morePlanMemo';
 import moment from 'moment';
 import axios from '../../api/axios';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 
 const Memo = () => {
   const dispatch = useDispatch();
@@ -85,19 +87,35 @@ const Memo = () => {
   };
 
   return (
-    <div>
-      <TextField
-        id="outlined-multiline-static"
-        multiline
-        fullWidth
-        rows="4"
-        value={memoText}
-        onChange={handleChangeMemo}
-        variant="outlined"
-      ></TextField>
-      {/* <Button onClick={handleMemo}>저장하기</Button> */}
-      <Button></Button>
-    </div>
+    <>
+      <Grid
+        container
+        direction="column"
+        justify="center"
+        style={{ width: 'inherit', height: 'inherit', margin: '0px' }}
+      >
+        <Grid itme container justify="space-between">
+          <Grid item>
+            <Typography variant="overline">MEMO</Typography>
+          </Grid>
+          <Grid item onClick={handleMemo}>
+            <Typography variant="overline">저장</Typography>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <TextField
+            id="outlined-multiline-static"
+            multiline
+            fullWidth
+            rows="4"
+            value={memoText}
+            onChange={handleChangeMemo}
+            variant="outlined"
+          ></TextField>
+        </Grid>
+        <Button></Button>
+      </Grid>
+    </>
   );
 };
 
