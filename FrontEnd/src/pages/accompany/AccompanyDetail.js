@@ -31,7 +31,6 @@ const StyledDivider = styled(Divider)`
 const AccompanyListDetail = () => {
   const history = useHistory();
   const boardData = history.location.state.board;
-  console.log(boardData);
 
   const convertAgeToStr = age => {
     age = Number(age);
@@ -57,6 +56,9 @@ const AccompanyListDetail = () => {
   const handleMoveBack = () => {
     history.goBack();
   };
+  const handleMoveChat = () => {
+    history.push(`/dmroom/${boardData.uid}`);
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -67,6 +69,7 @@ const AccompanyListDetail = () => {
         rightType="icon"
         rightIcon={<ChatIcon />}
         leftClick={handleMoveBack}
+        rightClick={handleMoveChat}
       />
       <Grid
         container

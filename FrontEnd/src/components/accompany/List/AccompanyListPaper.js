@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
-import IU from '../../assets/img/iu.jpg';
+import IU from '../../../assets/img/iu.jpg';
 
 const DivStyled = styled.div`
   flex-grow: 1;

@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
-import KakaoLogin from 'react-kakao-login';
 import { useHistory } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { changeField, changeBool } from '../modules/auth';
 import axios from '../api/axios';
 
@@ -78,7 +77,7 @@ const Login = () => {
       localStorage.setItem('token', resData.data.data);
       dispatch(changeBool({ key: 'isLoggedIn', value: true }));
       history.push({
-        pathname: '/acc',
+        pathname: '/accompany',
       });
     } else {
       history.push({
