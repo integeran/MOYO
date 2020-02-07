@@ -11,7 +11,7 @@ import MoreMain from './pages/more/MoreMain';
 import MorePlan from './pages/more/MorePlan';
 import MoreSettings from './pages/more/MoreSettings';
 import CategoryNav from './components/common/CategoryNav';
-import { Route, Switch, useHistory, Redirect } from 'react-router-dom';
+import { Route, useHistory, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import Login from './pages/Login';
@@ -23,6 +23,7 @@ import PostMap from './pages/postmap/Postmap';
 import { changeBool } from './modules/auth';
 
 const StyledContainer = styled(Container)`
+  padding: 0 !important;
   position: relative;
   height: inherit;
   overflow-y: scroll;
@@ -81,10 +82,7 @@ const App = () => {
             <Route exact path="/more" component={MoreMain} />
             <Route path="/more/morePlan" component={MorePlan} />
             <Route path="/more/moreSettings" component={MoreSettings} />
-            <Switch>
-              <Route path="/dmroom/:receiverId" component={DmRoom} />
-              <Route path="/dmroom/" component={DmRoom} />
-            </Switch>
+            <Route path="/dmroom/:receiverId" component={DmRoom} />
             <Route path="/dmroomlist" component={DmRoomList} />
             <Route path="/postmap" component={PostMap} />
           </>

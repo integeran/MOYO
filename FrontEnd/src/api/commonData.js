@@ -72,8 +72,8 @@ export const getAgeList = (useNone = false) => {
 // 성별
 export const getGenderList = (useNone = false) => {
   let res = [
-    { value: 'M', name: '여자' },
     { value: 'F', name: '남자' },
+    { value: 'M', name: '여자' },
   ];
   if (useNone) {
     res.unshift({ value: 'N', name: '무관' });
