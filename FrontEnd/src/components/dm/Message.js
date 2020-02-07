@@ -1,71 +1,100 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
+import { useSelector } from 'react-redux';
+
 import FileMessage from './FileMessage';
 
-const Message = ({ sender, curUser, message, timeStamp, fileName, path }) => {
-  const useStyles = makeStyles({
-    card: {
-      minWidth: 275,
-      width: 150,
-      float: curUser.uId === sender.uId ? 'right' : '',
-    },
-    bullet: {
-      display: 'inline-block',
-      margin: '0 2px',
-      transform: 'scale(0.8)',
-    },
-    title: {
-      fontSize: 14,
-    },
-    pos: {
-      marginBottom: 12,
-    },
-  });
+import Typography from '@material-ui/core/Typography';
+import Avatar from '@material-ui/core/Avatar';
+import Grid from '@material-ui/core/Grid';
 
-  const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
+const Message = ({
+  senderId,
+  message,
+  timeStamp,
+  fileName,
+  url,
+  lastMessageUserId,
+  lastTimeStamp,
+}) => {
+  const userData = useSelector(state => state.auth.userData);
 
-  var gab = <span></span>;
-  if (curUser.uId === sender.uId) {
-    gab = <p style={{ clear: 'both' }}></p>;
-  }
+  const showRightMessage = () => {
+    return (
+      <Grid container justify="flex-end" style={{ padding: '1%' }}>
+        {showMessage(true)}
+      </Grid>
+    );
+  };
+
+  const showLeftMessage = () => {
+    return (
+      <Grid container style={{ padding: '1%' }}>
+        {showProfile()}
+        {showMessage()}
+      </Grid>
+    );
+  };
+
+  const showMessage = check => {
+    return (
+      <Grid item xs={7} style={{ padding: '1%' }}>
+        <div
+          style={{
+            float: check ? 'right' : 'left',
+          }}
+        >
+          {url ? (
+            <FileMessage url={url} fileName={fileName} timeStamp={timeStamp} />
+          ) : (
+            <Typography
+              variant="subtitle1"
+              style={{
+                backgroundColor: '#e0e0e0',
+                borderRadius: '8px',
+                textAlign: 'left',
+                paddingLeft: message.length >= 13 ? '3%' : '',
+              }}
+            >
+              {message.length < 13 && (
+                <span style={{ color: '#e6dbdb' }}>1</span>
+              )}
+              {message}
+              {message.length < 13 && (
+                <span style={{ color: '#e6dbdb' }}>1</span>
+              )}
+            </Typography>
+            // 가라를 쓰고 싶지않지만.. 이것이 최선이다 !
+          )}
+        </div>
+      </Grid>
+    );
+  };
+
+  const showProfile = () => {
+    if (senderId !== lastMessageUserId || timeStamp !== lastTimeStamp) {
+      return (
+        <Grid item xs={1} style={{ paddingRight: '1%' }}>
+          <Avatar
+            alt="메세지 보낸 사람의 프로필"
+            src={userData.image}
+            style={{ width: '30px', height: '30px' }}
+          />
+        </Grid>
+      );
+    } else {
+      return <Grid item xs={1} style={{ paddingRight: '1%' }}></Grid>;
+    }
+  };
 
   return (
     <>
-      <div>
-        <Card className={classes.card}>
-          <CardContent>
-            <Typography
-              className={classes.title}
-              color="textSecondary"
-              gutterBottom
-            >
-              <img
-                alt="메세지 보낸 사람의 프로필"
-                src={sender.image}
-                style={{ width: '40px', height: '40px' }}
-              ></img>
-            </Typography>
-            <Typography variant="h5" component="h2">
-              {sender.nickname}
-            </Typography>
-            {path ? (
-              <FileMessage path={path} fileName={fileName} />
-            ) : (
-              <Typography className={classes.pos} color="textSecondary">
-                {message}
-              </Typography>
-            )}
-            <Typography variant="body2" component="p">
-              {timeStamp}
-            </Typography>
-          </CardContent>
-        </Card>
-        {gab}
-      </div>
+      {timeStamp !== lastTimeStamp && (
+        <div style={{ textAlign: 'center' }}>
+          <Typography variant="caption">{timeStamp}</Typography>
+        </div>
+      )}
+
+      {senderId === userData.uid ? showRightMessage() : showLeftMessage()}
     </>
   );
 };

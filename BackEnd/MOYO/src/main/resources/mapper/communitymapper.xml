@@ -8,7 +8,8 @@
 		from community cm
 		left outer join user u on cm.u_id = u.u_id
 		left outer join city c on cm.c_id = c.c_id
-		left outer join community_type ct on cm.cm_type_id = ct.cm_type_id 
+		left outer join community_type ct on cm.cm_type_id = ct.cm_type_id
+		order by register_date desc
 	</select>
 	<select id="selectAllByUser" parameterType="int" resultType="community">
 		select u.nickname nickname, c.name city, ct.name communityType, cm.* 

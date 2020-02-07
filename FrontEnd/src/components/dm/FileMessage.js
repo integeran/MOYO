@@ -1,40 +1,92 @@
 import React from 'react';
-import * as firebase from 'firebase';
-import { Link } from 'react-router-dom';
+import moment from 'moment';
 
-const FileMessage = ({ fileName, path }) => {
+import VerticalAlignBottomIcon from '@material-ui/icons/VerticalAlignBottom';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+
+const FileMessage = ({ fileName, url, timeStamp }) => {
   const fileDownload = () => {
-    firebase
-      .storage()
-      .ref()
-      .child(path)
-      .getDownloadURL()
-      .then(url => {
-        var xhr = new XMLHttpRequest();
-        xhr.responseType = 'blob';
-        xhr.onload = function(event) {
-          var a = document.createElement('a');
-          var blob = xhr.response;
-          a.href = window.URL.createObjectURL(blob);
-          a.download = fileName;
-          a.style.display = 'none';
-          document.body.appendChild(a);
-          a.click();
-          // delete a;
-        };
-        xhr.open('GET', url);
-        xhr.send();
-        alert('다운로드가 완료되었습니다.');
-      })
-      .catch(error => {
-        console.log('Download Error: ', error);
-      });
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'blob';
+    xhr.onload = function(event) {
+      var a = document.createElement('a');
+      var blob = xhr.response;
+      a.href = window.URL.createObjectURL(blob);
+      a.download = fileName;
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      // delete a;
+    };
+    xhr.open('GET', url);
+    xhr.send();
+    alert('다운로드가 완료되었습니다.');
+  };
+
+  const extensionCheck = () => {
+    var extension = fileName.substr(fileName.lastIndexOf('.') + 1);
+    if (
+      extension.toLowerCase() === 'jpg' ||
+      extension.toLowerCase() === 'png'
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   return (
     <div>
-      <button onClick={fileDownload}>다운로드</button> <br></br>
-      <span>파일명: {fileName}</span>
+      {extensionCheck() ? (
+        <img
+          alt="미리보기"
+          src={url}
+          onClick={fileDownload}
+          width="100%"
+          height="100%"
+        ></img>
+      ) : (
+        <Grid container justify="center" alignItems="center">
+          <Grid
+            item
+            xs={3}
+            style={{ backgroundColor: '#e0e0e0', borderRadius: '8px' }}
+          >
+            <VerticalAlignBottomIcon
+              onClick={fileDownload}
+              color="primary"
+              style={{ width: '100%', height: '50%' }}
+            />
+          </Grid>
+
+          <Grid item xs={1}></Grid>
+
+          <Grid item xs={8}>
+            <Grid container direction="column">
+              <Grid item xs={6} style={{ maxWidth: '95%' }}>
+                <Typography
+                  style={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  <b>{fileName}</b>
+                </Typography>
+              </Grid>
+              <Grid item xs={6} style={{ maxWidth: '95%' }}>
+                <Typography variant="caption">
+                  유효기간: ~
+                  {moment(timeStamp)
+                    .add(1, 'months')
+                    .format('YYYY/MM/DD')}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      )}
     </div>
   );
 };

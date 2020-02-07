@@ -53,6 +53,16 @@ public class DailyAccompanyRestController {
 		}
 	}
 	
+	@GetMapping("dailyAccompany/selectAllByUser/{uId}/{day}")
+	public ResponseEntity<Map<String, Object>> selectAllByOneDay(@PathVariable int uId, @PathVariable String day) {
+		try {
+			log.trace("DailyAccompanyRestController - selectAllByOneDay");
+			return response(dAccompanyService.selectAllByOneDay(uId, day), HttpStatus.OK, true);
+		} catch (RuntimeException e) {
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
 	@GetMapping("dailyAccompany/selectOne/{dAcId}")
 	public ResponseEntity<Map<String, Object>> selectOne(@PathVariable int dAcId) {
 		try {
