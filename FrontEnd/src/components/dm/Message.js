@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import moment from 'moment';
 
 import FileMessage from './FileMessage';
 
@@ -9,6 +10,7 @@ import Grid from '@material-ui/core/Grid';
 
 const Message = ({
   senderId,
+  image,
   message,
   timeStamp,
   fileName,
@@ -71,12 +73,16 @@ const Message = ({
   };
 
   const showProfile = () => {
-    if (senderId !== lastMessageUserId || timeStamp !== lastTimeStamp) {
+    if (
+      senderId !== lastMessageUserId ||
+      moment(timeStamp).format('YYYY/MM/DD LT') !==
+        moment(lastTimeStamp).format('YYYY/MM/DD LT')
+    ) {
       return (
         <Grid item xs={1} style={{ paddingRight: '1%' }}>
           <Avatar
             alt="메세지 보낸 사람의 프로필"
-            src={userData.image}
+            src={image}
             style={{ width: '30px', height: '30px' }}
           />
         </Grid>
@@ -88,9 +94,12 @@ const Message = ({
 
   return (
     <>
-      {timeStamp !== lastTimeStamp && (
+      {moment(timeStamp).format('YYYY/MM/DD LT') !==
+        moment(lastTimeStamp).format('YYYY/MM/DD LT') && (
         <div style={{ textAlign: 'center' }}>
-          <Typography variant="caption">{timeStamp}</Typography>
+          <Typography variant="caption">
+            {moment(timeStamp).format('YYYY/MM/DD LT')}
+          </Typography>
         </div>
       )}
 

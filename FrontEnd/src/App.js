@@ -26,6 +26,7 @@ import CommunityWrite from './pages/community/CommunityWrite';
 import { changeBool } from './modules/auth';
 
 const StyledContainer = styled(Container)`
+  padding: 0 !important;
   position: relative;
   height: inherit;
   overflow-y: scroll;
