@@ -30,4 +30,8 @@ public interface AccompanyBoardRepository {
 	public List<City> selectCity(int nId);
 
 	public List<TravelType> selectTravelType();
+
+	public List<AccompanyBoard> selectAllByUser(int uId);
+	
+	public int updateDeadlineToggle(HashMap<String, Object> map);
 }
