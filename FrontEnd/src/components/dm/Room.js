@@ -94,7 +94,8 @@ const Room = ({ roomId, receiverId, lastMessage, timeStamp }) => {
           <Grid item xs={1}></Grid>
           <Grid item xs={3}>
             <Typography variant="caption">
-              {timeStamp === curTime
+              {moment(timeStamp).format('YYYY/MM/DD') ===
+              moment(curTime).format('YYYY/MM/DD')
                 ? moment(timeStamp).format('LT')
                 : moment(timeStamp).format('YYYY/MM/DD')}
             </Typography>
