@@ -21,6 +21,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Grid from '@material-ui/core/Grid';
 import InputBase from '@material-ui/core/InputBase';
+import AddAccompanyModal from '../../components/dm/AddAccompanyModal';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -45,10 +46,20 @@ const DmRoom = ({ match }) => {
   const [hookRoomId, setHookRoomId] = useState('');
   const [ivalue, setIvalue] = useState('');
   const [uploadModal, setUploadModal] = useState(false);
+  const [addAccompanyModal, setAddAccompanyModal] = useState(false);
 
   const onChangeIvalue = useCallback(e => {
     setIvalue(e.target.value);
   }, []);
+
+  const openAddModal = () => {
+    setAnchorEl(null);
+    setAddAccompanyModal(true);
+  };
+
+  const closeAddModal = () => {
+    setAddAccompanyModal(false);
+  };
 
   const openModal = () => {
     setUploadModal(true);
@@ -353,7 +364,7 @@ const DmRoom = ({ match }) => {
                   open={open}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={handleClose}>Profile</MenuItem>
+                  <MenuItem onClick={openAddModal}>동행추가</MenuItem>
                   <MenuItem onClick={handleClose}>My account</MenuItem>
                 </Menu>
               </div>
@@ -361,6 +372,11 @@ const DmRoom = ({ match }) => {
           </AppBar>
         </div>
         <UploadModal isOpen={uploadModal} close={closeModal} />
+        <AddAccompanyModal
+          isOpen={addAccompanyModal}
+          close={closeAddModal}
+          receiver={hookReceiver}
+        />
 
         <div
           id="messageList"
@@ -396,6 +412,7 @@ const DmRoom = ({ match }) => {
         <div
           id="chatdiv"
           style={{
+            marginTop: '1%',
             marginBottom: '5%',
             border: '1px solid #bdbdbd',
             borderRadius: '20px',
