@@ -33,7 +33,6 @@ public class AccompanyBoardRestController {
 	
 	@GetMapping("accompanyBoard/selectAll")
 	public ResponseEntity<Map<String, Object>> selectAll(@ModelAttribute Filter filter) {
-		System.out.println(filter);
 		try {
 			log.trace("AccompanyBoardRestController - selectAll : ",filter);
 			return response(acService.selectAll(filter), HttpStatus.OK, true);
@@ -120,6 +119,33 @@ public class AccompanyBoardRestController {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
+	
+	@GetMapping("accompanyBoard/selectAllByUser/{uId}")
+	public ResponseEntity<Map<String, Object>> selectAllByUser(@PathVariable int uId) {
+		System.out.println(uId);
+		try {
+			log.trace("AccompanyBoardRestController - selectAllByUser : ",uId);
+			return response(acService.selectAllByUser(uId), HttpStatus.OK, true);
+		} catch (RuntimeException e) {
+			log.error("AccompanyBoardRestController - selectAllByUser ");
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
+	@PutMapping("accompanyBoard/updateDeadlineToggle")
+	public ResponseEntity<Map<String, Object>> updateDeadlineToggle(@RequestBody AccompanyBoard accompanyBoard) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("acBoardId", accompanyBoard.getAcBoardId());
+		map.put("deadlineToggle", accompanyBoard.getDeadlineToggle());
+		try {
+			log.trace("AccompanyBoardRestController - updateDeadlineToggle : ", map);
+			return response(acService.updateDeadlineToggle(map), HttpStatus.OK, true);
+		} catch (RuntimeException e) {
+			log.error("AccompanyBoardRestController - updateDeadlineToggle : ",map);
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
 	
 	public ResponseEntity<Map<String, Object>> response(Object data, HttpStatus httpstatus, boolean status) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();

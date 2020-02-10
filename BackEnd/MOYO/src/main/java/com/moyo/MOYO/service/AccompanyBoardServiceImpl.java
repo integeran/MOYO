@@ -82,4 +82,16 @@ public class AccompanyBoardServiceImpl implements AccompanyBoardService {
 		log.trace("AccompanyBoardService - selectTravelType ");
 		return acRepo.selectTravelType();
 	}
+
+	@Override
+	public List<AccompanyBoard> selectAllByUser(int uId) {
+		log.trace("AccompanyBoardService - selectAllByUser :",uId);
+		return acRepo.selectAllByUser(uId);
+	}
+
+	@Override
+	public int updateDeadlineToggle(HashMap<String, Object> map) {
+		log.trace("AccompanyBoardService - updateDeadlineToggle :",map);
+		return acRepo.updateDeadlineToggle(map);
+	}
 }

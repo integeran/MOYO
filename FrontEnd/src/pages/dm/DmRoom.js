@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from '../../api/axios';
 import * as firebase from 'firebase';
 import { Link } from 'react-router-dom';
@@ -63,7 +63,6 @@ const DmRoom = ({ match }) => {
   const open = Boolean(anchorEl);
 
   useEffect(() => {
-    console.log('onInit');
     onInit();
   }, []);
 
@@ -89,6 +88,9 @@ const DmRoom = ({ match }) => {
         alert('익명사용자 에러 발생', error);
       });
 
+    var temp = document.getElementById('chatInput');
+    temp.focus();
+
     if (match.params.receiverId) {
       const axiosUserData = await onAxiosGetUser(match.params.receiverId);
       setHookReceiver(axiosUserData.data.data);
@@ -107,7 +109,7 @@ const DmRoom = ({ match }) => {
     firebase
       .database()
       .ref('UserRooms/' + sender.uid + '/' + receiver.uid)
-      .on('value', snapshot => {
+      .once('value', snapshot => {
         if (snapshot.val()) {
           roomInfo.roomId = snapshot.val().roomId;
           roomInfo.roomTitle = snapshot.val().roomTitle;
@@ -131,7 +133,6 @@ const DmRoom = ({ match }) => {
     if (roomId) {
       console.log('loadMessageListAfter');
       setHookRoomId(roomId);
-      setMessageList([]);
 
       const callback = async snapshot => {
         var val = snapshot.val();
@@ -146,7 +147,9 @@ const DmRoom = ({ match }) => {
 
         setMessageList(prevState => [...prevState, MessageInfo]);
         var list = document.getElementById('messageList');
-        list.scrollTop = list.scrollHeight;
+        if (list) {
+          list.scrollTop = list.scrollHeight;
+        }
       };
 
       loadMessageFirebase
@@ -204,9 +207,21 @@ const DmRoom = ({ match }) => {
           timeStamp: curTime,
         };
 
-        saveFirebase.update(multiUpdates).then(() => {
-          var list = document.getElementById('messageList');
-          list.scrollTop = list.scrollHeight;
+        saveFirebase.update(multiUpdates);
+        var temp = document.getElementById('chatInput');
+        temp.focus();
+
+        var triggerFirebase = firebase
+          .database()
+          .ref(
+            'ListRoomTrigger/' +
+              hookReceiver.uid +
+              '/' +
+              moment(curTime).format('YYYYMMDDhhmmssSSS'),
+          );
+
+        triggerFirebase.set({
+          trigger: true,
         });
       }
     }
@@ -398,6 +413,7 @@ const DmRoom = ({ match }) => {
                   borderRadius: '75px',
                   backgroundColor: '#4fc3f7',
                 }}
+                onClick={onAttachButton}
               >
                 <AttachFileIcon
                   style={{
@@ -405,7 +421,6 @@ const DmRoom = ({ match }) => {
                     marginLeft: '10%',
                     color: 'white',
                   }}
-                  onClick={onAttachButton}
                 />
               </div>
             </Grid>
@@ -414,6 +429,7 @@ const DmRoom = ({ match }) => {
 
             <Grid item xs={7}>
               <InputBase
+                id="chatInput"
                 onChange={onChangeIvalue}
                 value={ivalue}
                 onKeyPress={onEnterKey}
@@ -430,6 +446,7 @@ const DmRoom = ({ match }) => {
                   borderRadius: '75px',
                   backgroundColor: '#4fc3f7',
                 }}
+                onClick={loadMessage}
               >
                 <TelegramIcon
                   style={{
@@ -437,7 +454,6 @@ const DmRoom = ({ match }) => {
                     marginLeft: '10%',
                     color: 'white',
                   }}
-                  onClick={loadMessage}
                 />
               </div>
             </Grid>
