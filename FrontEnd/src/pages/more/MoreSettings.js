@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { changeBool } from '../../modules/auth';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import BaseAppBar from '../../components/common/BaseAppBar';
+import { Typography, Grid } from '@material-ui/core';
 
 const MoreSettings = () => {
   const history = useHistory();
@@ -21,15 +22,43 @@ const MoreSettings = () => {
   };
 
   return (
-    <div>
-      <BaseAppBar
-        title={'설정'}
-        Icon1={<ArrowBackIosIcon onClick={handleBackIcon} />}
-        // Icon2={<ChatIcon />}
-        // handleClick1={handleMoveBack}
-      />
-      <h1 onClick={handleLogOut}>로그아웃</h1>
-    </div>
+    <>
+      <div
+        style={{
+          width: 'inherit',
+          height: 'inherit',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <BaseAppBar
+          text="설정"
+          leftType="icon"
+          leftIcon={<ArrowBackIosIcon onClick={handleBackIcon} />}
+        />
+        <Grid
+          item
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: 'inherit',
+          }}
+        >
+          <Typography
+            variant="h6"
+            onClick={handleLogOut}
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            로그아웃
+          </Typography>
+        </Grid>
+      </div>
+    </>
   );
 };
 
