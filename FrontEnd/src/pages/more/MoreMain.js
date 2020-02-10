@@ -29,6 +29,9 @@ const MoreMain = ({ history }) => {
   const handlePlanClick = () => {
     history.push('/more/morePlan');
   };
+  const handleAccompanyManageClick = () => {
+    history.push('/more/accompanyManage');
+  };
   const handleSettingsClick = () => {
     history.push('/more/moreSettings');
   };
@@ -95,11 +98,14 @@ const MoreMain = ({ history }) => {
             <ArrowForwardIosIcon fontSize="small" />
           </Grid>
         </Grid>
-        <Grid item container justify="space-between">
+        <Grid
+          item
+          container
+          justify="space-between"
+          onClick={handleAccompanyManageClick}
+        >
           <Grid item>
-            <Typography variant="h6" onClick={handlePlanClick}>
-              내 동행 글
-            </Typography>
+            <Typography variant="h6">내 동행 글</Typography>
           </Grid>
           <Grid item className={classes.arrowIcon}>
             <ArrowForwardIosIcon fontSize="small" />

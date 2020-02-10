@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 import { Typography, Paper, Grid } from '@material-ui/core';
-import image from '../../../assets/img/banner_2.jpg';
 
 const BannerDateTypo = styled(Typography)`
   padding: 0.4rem 0;
@@ -38,7 +37,7 @@ const TripPaper = ({ scheduleInfo }) => {
             {scheduleInfo.nation}/{scheduleInfo.city}
           </BannerNationTypo>
         </Grid>
-        <BannerGrid item xs={5} img="../../../asserts/img/banner_2.jpg" />
+        <BannerGrid item xs={5} />
       </Grid>
     </Paper>
   );

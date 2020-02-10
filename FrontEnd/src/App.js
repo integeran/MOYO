@@ -10,6 +10,7 @@ import AccompanyWrite from './pages/accompany/AccompanyWrite';
 import MoreMain from './pages/more/MoreMain';
 import MorePlan from './pages/more/MorePlan';
 import MoreSettings from './pages/more/MoreSettings';
+import MoreAccompanyManage from './pages/more/MoreAccompanyManage';
 import CategoryNav from './components/common/CategoryNav';
 import { Route, useHistory, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -82,6 +83,14 @@ const App = () => {
             <Route exact path="/more" component={MoreMain} />
             <Route path="/more/morePlan" component={MorePlan} />
             <Route path="/more/moreSettings" component={MoreSettings} />
+            <Route
+              path="/more/accompanyManage"
+              component={MoreAccompanyManage}
+            />
+            <Route
+              path="/more/AccompanyDetail/:id"
+              component={AccompanyDetail}
+            />
             <Route path="/dmroom/:receiverId" component={DmRoom} />
             <Route path="/dmroomlist" component={DmRoomList} />
             <Route path="/postmap" component={PostMap} />
