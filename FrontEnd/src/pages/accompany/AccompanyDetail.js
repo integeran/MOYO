@@ -1,18 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ChatIcon from '@material-ui/icons/Chat';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Container from '@material-ui/core/Container';
-import Avatar from '@material-ui/core/Avatar';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
+import BorderColorIcon from '@material-ui/icons/BorderColor';
+import axios from '../../api/axios';
 import IU from '../../assets/img/iu.jpg';
 import styled from 'styled-components';
 import BaseAppBar from '../../components/common/BaseAppBar';
 import { navigationSelect } from '../../modules/baseNavigation';
+import {
+  Switch,
+  Button,
+  Divider,
+  Typography,
+  Avatar,
+  Container,
+  Paper,
+  Grid,
+} from '@material-ui/core';
 
 const CenterGrid = styled(Grid)`
   display: flex;
@@ -33,7 +39,9 @@ const StyledDivider = styled(Divider)`
 const AccompanyListDetail = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const boardData = history.location.state.board;
+  const [boardData, setBoardData] = useState(history.location.state.board);
+  const isModify =
+    history.location.pathname.indexOf('more') > -1 ? true : false;
 
   const convertAgeToStr = age => {
     age = Number(age);
@@ -56,40 +64,119 @@ const AccompanyListDetail = () => {
     }
   };
 
-  const handleMoveBack = () => {
+  const saveToggleChangeBoard = async changedToggle => {
+    try {
+      return axios.put(
+        'accompanyBoard/updateDeadlineToggle',
+        {
+          acBoardId: boardData.acBoardId,
+          deadlineToggle: changedToggle,
+        },
+        { headers: { userToken: localStorage.token } },
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const deleteBoard = async () => {
+    try {
+      return axios.delete(`accompanyBoard/delete/${boardData.acBoardId}`, {
+        headers: { userToken: localStorage.token },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleGoBack = () => {
     history.goBack();
   };
   const handleMoveChat = () => {
     dispatch(navigationSelect('DM'));
     history.push(`/dmroom/${boardData.uid}`);
   };
+  const handleModifyAccompany = () => {
+    history.push({
+      pathname: '/more/AccompanyDetail/write/' + boardData.acBoardId,
+      state: {
+        prevpath: history.location.pathname,
+        board: boardData,
+      },
+    });
+  };
+  const handleDeleteClick = async () => {
+    await deleteBoard().then(history.goBack());
+  };
+
+  const ModifyStateContainer = () => {
+    if (boardData.validDate && boardData.deadlineToggle === 'n') {
+      return <></>;
+    } else {
+      return (
+        <Typography variant="h6" align="center">
+          {boardData.validDate
+            ? '마감된 동행 글입니다.'
+            : '기간이 지난 동행 글입니다.'}
+        </Typography>
+      );
+    }
+  };
+
+  const NameContainer = () => {
+    const handleChangeToggle = () => {
+      if (!boardData.validDate) {
+        return;
+      }
+      const fetchSaveToggle = async () => {
+        const changedToggle = boardData.deadlineToggle === 'n' ? 'y' : 'n';
+        setBoardData({
+          ...boardData,
+          deadlineToggle: changedToggle,
+        });
+        await saveToggleChangeBoard(changedToggle);
+      };
+      fetchSaveToggle();
+    };
+    return (
+      <Grid item container>
+        <Grid item xs={7}>
+          <Typography variant="h6">{boardData.nickname}</Typography>
+        </Grid>
+        {isModify && (
+          <Grid item xs={5}>
+            마감
+            <Switch
+              checked={boardData.deadlineToggle === 'y'}
+              onChange={handleChangeToggle}
+              disable={String(!boardData.validDate)}
+            ></Switch>
+          </Grid>
+        )}
+      </Grid>
+    );
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <BaseAppBar
         text={boardData.title}
+        align="left"
         leftType="icon"
         leftIcon={<ArrowBackIosIcon />}
+        leftClick={handleGoBack}
         rightType="icon"
-        rightIcon={<ChatIcon />}
-        leftClick={handleMoveBack}
-        rightClick={handleMoveChat}
+        rightIcon={isModify ? <BorderColorIcon /> : <ChatIcon />}
+        rightClick={isModify ? handleMoveChat : handleModifyAccompany}
       />
-      <Grid
-        container
-        direction="column"
-        alignItems="stretch"
-        justify="flex-start"
-        spacing={2}
-      >
-        <Grid item container xs>
+      {isModify && <ModifyStateContainer />}
+      <Grid container direction="column" justify="flex-start">
+        <Grid item container>
           <CenterGrid item xs={4}>
-            <StyledAvatar alt="IU" src={IU} xs />
+            <StyledAvatar alt="IU" src={IU} />
           </CenterGrid>
-          <Grid item container direction="column" xs>
-            <Grid item>
-              <Typography variant="h6">{boardData.nickname}</Typography>
-            </Grid>
+          <Grid item container direction="column" xs={8}>
+            <NameContainer />
             <Grid item>
               <Typography variant="body1" color="textSecondary">
                 성별: {convertGenderToStr(boardData.gender)} / 연령:{' '}
@@ -104,15 +191,9 @@ const AccompanyListDetail = () => {
           </Grid>
         </Grid>
       </Grid>
-      <StyledDivider variant="middle" light="true" />
-      <Grid
-        container
-        direction="column"
-        alignItems="stretch"
-        justify="flex-start"
-        spacing={3}
-      >
-        <Grid item container xs direction="column">
+      <StyledDivider variant="middle" light={true} />
+      <Grid container direction="column" justify="flex-start">
+        <Grid item container direction="column">
           <Grid item>
             <Typography variant="subtitle1" style={{ marginLeft: '2rem' }}>
               이런 사람이면 더 좋겠어요!
@@ -130,23 +211,15 @@ const AccompanyListDetail = () => {
           </Grid>
         </Grid>
       </Grid>
-      <StyledDivider variant="middle" light="true" />
-      <Grid item container xs>
+      <StyledDivider variant="middle" light={true} />
+      <Grid item container>
         <Grid item xs={4}>
-          <Typography
-            variant="body2"
-            align="center"
-            style={{ borderRight: '1px solid #DDDDDD' }}
-          >
+          <Typography variant="body2" align="center">
             {boardData.nation}/{boardData.city}
           </Typography>
         </Grid>
         <Grid item xs={4}>
-          <Typography
-            variant="body2"
-            align="center"
-            style={{ borderRight: '1px solid #DDDDDD' }}
-          >
+          <Typography variant="body2" align="center">
             {boardData.startDate}
           </Typography>
         </Grid>
@@ -156,7 +229,7 @@ const AccompanyListDetail = () => {
           </Typography>
         </Grid>
       </Grid>
-      <Grid item xs style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+      <Grid item style={{ marginTop: '1rem', marginBottom: '1rem' }}>
         <Container>
           <Paper variant="outlined">
             <Typography
@@ -168,6 +241,18 @@ const AccompanyListDetail = () => {
           </Paper>
         </Container>
       </Grid>
+      {isModify && (
+        <Grid style={{ padding: '0 1rem' }}>
+          <Button
+            fullWidth={true}
+            variant="contained"
+            color="secondary"
+            onClick={handleDeleteClick}
+          >
+            삭제
+          </Button>
+        </Grid>
+      )}
     </div>
   );
 };
