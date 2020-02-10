@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Map, GoogleApiWrapper, Marker, InfoWindow } from 'google-maps-react';
-import axios from '../../api/axios';
 import {
-  getPostListAction,
-  getPostListTopAction,
   getPosAction,
   getInfoWindow,
+  getPostListAction,
 } from '../../modules/postmap';
+import axios from '../../api/axios';
 
 const PostmapGoogle = props => {
   const dispatch = useDispatch();
@@ -40,11 +39,9 @@ const PostmapGoogle = props => {
 
         dispatch(getPosAction(myposition));
 
-        const res1 = await getFetchMarker(myposition);
-        dispatch(getPostListAction(res1.data.data));
-        const res2 = await getPostListTop(myposition);
-        dispatch(getPostListTopAction(res2.data.data));
-        setData(res2.data.data);
+        props.listFetch(myposition);
+
+        setData(true);
       });
     }
   }, []);
@@ -52,15 +49,6 @@ const PostmapGoogle = props => {
   const getFetchMarker = async pos => {
     return await axios.get(
       `postmap/selectAll?latitude=${pos.latitude}&longitude=${pos.longitude}&uId=${userData.uid}`,
-      {
-        headers: { userToken: userData.userToken },
-      },
-    );
-  };
-
-  const getPostListTop = async pos => {
-    return await axios.get(
-      `postmap/selectTop?latitude=${pos.latitude}&longitude=${pos.longitude}&uId=${userData.uid}`,
       {
         headers: { userToken: userData.userToken },
       },
@@ -77,12 +65,12 @@ const PostmapGoogle = props => {
             lat: chat.latitude,
             lng: chat.longitude,
           }}
-          animation={props.google.maps.Animation.DROP}
+          // animation={props.google.maps.Animation.DROP}
           onClick={async () => {
             dispatch(getInfoWindow(chat));
 
-            const res2 = await getFetchMarker(pos);
-            dispatch(getPostListAction(res2.data.data));
+            const res = await getFetchMarker(pos);
+            dispatch(getPostListAction(res.data.data));
           }}
           icon={{
             path: props.google.maps.SymbolPath.CIRCLE,
@@ -124,10 +112,7 @@ const PostmapGoogle = props => {
 
           {infoWindow && (
             <InfoWindow
-              onCloseClick={() => {
-                props.setInfoWindow(null);
-                props.setInfoWindowCheck(false);
-              }}
+              onCloseClick={() => {}}
               position={{
                 lat: infoWindow.latitude,
                 lng: infoWindow.longitude,
