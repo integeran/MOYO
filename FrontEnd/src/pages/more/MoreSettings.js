@@ -5,6 +5,7 @@ import { changeBool } from '../../modules/auth';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import BaseAppBar from '../../components/common/BaseAppBar';
 import { Typography, Grid } from '@material-ui/core';
+import { navigationSelect } from '../../modules/baseNavigation';
 
 const MoreSettings = () => {
   const history = useHistory();
@@ -14,6 +15,7 @@ const MoreSettings = () => {
     // window.Kakao.Auth.logout();
     localStorage.removeItem('token');
     dispatch(changeBool({ key: 'isLoggedIn', value: false }));
+    dispatch(navigationSelect('accompany'));
     window.Kakao.cleanup();
   };
 
