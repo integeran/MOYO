@@ -81,4 +81,16 @@ public class AccompanyBoardRepositoryImpl implements AccompanyBoardRepository {
 		log.trace("AccompanyBoardRepository - selectTravelType ");
 		return session.selectList(ns+"selectTravelType");
 	}
+
+	@Override
+	public List<AccompanyBoard> selectAllByUser(int uId) {
+		log.trace("AccompanyBoardRepository - selectAllByUser :",uId);
+		return session.selectList(ns+"selectAllByUser",uId);
+	}
+
+	@Override
+	public int updateDeadlineToggle(HashMap<String, Object> map) {
+		log.trace("AccompanyBoardRepository - updateDeadlineToggle :",map);
+		return session.update(ns+"updateDeadlineToggle",map);
+	}
 }
