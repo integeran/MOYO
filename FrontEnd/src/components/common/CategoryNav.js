@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  createRef,
-  useRef,
-  useEffect,
-  useCallback,
-} from 'react';
+import React, { useState, createRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import CardTravelIcon from '@material-ui/icons/CardTravel';
@@ -14,63 +8,76 @@ import ForumIcon from '@material-ui/icons/Forum';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { useHistory } from 'react-router-dom';
 import { navigationSelect } from '../../modules/baseNavigation';
+import styled from 'styled-components';
 
+const StyledBottomNavigationAction = styled(BottomNavigationAction)`
+  min-width: 0 !important;
+  & .MuiBottomNavigationAction-label {
+    font-size: 0.45rem;
+  }
+  & .Mui-selected {
+    font-size: 0.62rem !important;
+  }
+`;
 const CategoryNav = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
   const select = useSelector(state => state.baseNavigation.select);
-  const [refAccompany, setRefAccompany] = useState(() => createRef());
-  const [refDM, setRefDM] = useState(() => createRef());
+  const refAccompany = useState(() => createRef());
+  const refDM = useState(() => createRef());
 
   const handleNavChange = (event, newValue) => {
-    console.log(newValue);
     dispatch(navigationSelect(newValue));
   };
 
-  const handleMoreClick = condition => {
+  const handleMoreClick = () => {
     history.push('/more');
   };
-  const handlePostMapClick = condition => {
+  const handlePostMapClick = () => {
     history.push('/postmap');
   };
-  const handleDMClick = condition => {
+  const handleDMClick = () => {
     history.push('/dmroomlist');
   };
 
-  const handleAccompanyClick = condition => {
+  const handleAccompanyClick = () => {
     history.push('/accompany');
   };
 
   return (
-    <BottomNavigation value={select} onChange={handleNavChange}>
-      <BottomNavigationAction
+    <BottomNavigation
+      value={select}
+      onChange={handleNavChange}
+      showLabels={true}
+    >
+      <StyledBottomNavigationAction
         ref={refAccompany}
         label="동행"
         value="accompany"
         icon={<CardTravelIcon />}
         onClick={handleAccompanyClick}
       />
-      <BottomNavigationAction
+      <StyledBottomNavigationAction
         label="포스트맵"
         value="postmap"
         icon={<RoomIcon />}
         onClick={handlePostMapClick}
       />
-      <BottomNavigationAction
+      <StyledBottomNavigationAction
         ref={refDM}
         label="채팅"
         value="DM"
         icon={<ChatIcon />}
         onClick={handleDMClick}
       />
-      <BottomNavigationAction
+      <StyledBottomNavigationAction
         label="커뮤니티"
         value="community"
         icon={<ForumIcon />}
         onClick={() => {}}
       />
-      <BottomNavigationAction
+      <StyledBottomNavigationAction
         label="더보기"
         value="more"
         icon={<MoreHorizIcon />}
