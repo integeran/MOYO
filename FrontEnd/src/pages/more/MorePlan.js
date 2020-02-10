@@ -147,7 +147,8 @@ const MorePlan = () => {
         container
         direction="column"
         justify="center"
-        style={{ width: 'inherit', height: 'inherit', margin: '0px' }}
+        style={{ margin: '0px' }}
+        wrap="nowrap"
       >
         <Grid item>
           <FullCalendar

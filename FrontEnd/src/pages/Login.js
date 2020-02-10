@@ -145,11 +145,12 @@ const Login = () => {
       ></KakaoLogin> */}
 
       <a id="custom-login-btn" onClick={loginWithKakao}>
-        <img
+        {/* <img
           src="//mud-kage.kakao.com/14/dn/btqbjxsO6vP/KPiGpdnsubSq3a0PHEGUK1/o.jpg"
           width="300"
           alt="Kakao"
-        />
+        /> */}
+        <button>kakao login </button>
       </a>
     </div>
   );

@@ -26,9 +26,12 @@ const Profile = props => {
   const jwtDecode = require('jwt-decode');
   const dispatch = useDispatch();
   const history = useHistory();
+
   const [ageList, setAgeList] = useState([]);
   const [genderList, setGenderList] = useState([]);
+
   const userData = useSelector(state => state.auth.userData);
+
   const prevPath = props.location.state.prevPath;
   const userSocialId = props.location.state.userSocialId;
   let userImage = props.location.state.userProfileImage;
@@ -59,28 +62,7 @@ const Profile = props => {
   const [genderError, setGenderError] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
 
-  const QueryBox = styled.div`
-    width: inherit;
-    height: inherit;
-    display: flex;
-    flex-direction: column;
-  `;
-
   const useStyles = makeStyles(theme => ({
-    root: {
-      display: 'flex',
-      flexWrap: 'wrap',
-      height: '100vh',
-      alignItems: 'center',
-      justifyContent: 'center',
-      flexDirection: 'column',
-    },
-    rootTextfield: {
-      marginTop: '2rem',
-    },
-    rootAvatar: {
-      marginBottom: '2rem',
-    },
     multilineColor: {
       color: 'black',
     },
@@ -92,8 +74,16 @@ const Profile = props => {
 
   const classes = useStyles();
 
+  const pushUserData = (k, v) => {
+    dispatch(changeField({ form: 'userData', key: k, value: v }));
+  };
+
   const handleBackIcon = () => {
-    history.push('/more');
+    if (isMe) {
+      history.push('/more');
+    } else {
+      history.goBack();
+    }
   };
 
   const handleProfileImage = () => {
@@ -125,10 +115,6 @@ const Profile = props => {
     setAgeList(getAgeList());
     setGenderList(getGenderList());
   }, []);
-
-  const pushUserData = (k, v) => {
-    dispatch(changeField({ form: 'userData', key: k, value: v }));
-  };
 
   const postRequest = async () => {
     try {
@@ -256,6 +242,30 @@ const Profile = props => {
     setOpenDialog(false);
   };
 
+  const [isMe, setIsMe] = useState(true);
+
+  useEffect(() => {
+    if (prevPath !== '/' && prevPath !== '/more') {
+      setIsMe(false);
+    }
+  }, []);
+
+  let profileButton = '';
+
+  if (prevPath === '/') {
+    profileButton = (
+      <Button variant="outlined" onClick={requestRegister}>
+        가입하기
+      </Button>
+    );
+  } else if (prevPath === '/more') {
+    profileButton = (
+      <Button variant="outlined" onClick={requestUpdate}>
+        수정하기
+      </Button>
+    );
+  }
+
   return (
     <>
       <div
@@ -266,10 +276,10 @@ const Profile = props => {
           flexDirection: 'column',
         }}
       >
-        {prevPath === '/more' && (
+        {!(prevPath === '/') && (
           <BaseAppBar
             style={{ flexGrow: '0' }}
-            text="프로필 편집"
+            text={isMe ? '프로필 편집' : `${userNickname}님의 프로필`}
             leftType="icon"
             leftIcon={<ArrowBackIosIcon onClick={handleBackIcon} />}
           />
@@ -287,20 +297,28 @@ const Profile = props => {
           }}
         >
           <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
-            <Badge
-              color="primary"
-              badgeContent={<AddIcon />}
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-              overlap="circle"
-              variant="standard"
-            >
+            {isMe ? (
+              <Badge
+                color="primary"
+                badgeContent={<AddIcon />}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                overlap="circle"
+                variant="standard"
+              >
+                <Avatar
+                  alt="Jeesoo Haa"
+                  src={tempUserImage}
+                  className={classes.large}
+                  onClick={handleProfileImage}
+                />
+              </Badge>
+            ) : (
               <Avatar
-                alt="Jeesoo Haa"
+                alt={userNickname}
                 src={tempUserImage}
                 className={classes.large}
-                onClick={handleProfileImage}
               />
-            </Badge>
+            )}
           </Grid>
           <Grid item container>
             <Grid item xs={2} />
@@ -328,6 +346,7 @@ const Profile = props => {
                   }}
                   InputProps={{
                     className: classes.multilineColor,
+                    readOnly: !isMe,
                   }}
                 />
               </Grid>
@@ -335,11 +354,17 @@ const Profile = props => {
                 <TextField
                   error={ageError}
                   id="standard-select-currency"
-                  select
+                  select={isMe}
                   fullWidth
                   label="AgeRange"
-                  value={age}
+                  value={
+                    isMe
+                      ? age
+                      : ageList.find(item => item.value === userAgeRangeFirst)
+                          .name
+                  }
                   onChange={handleChangeAge}
+                  InputProps={{ readOnly: !isMe }}
                 >
                   {ageList.map(option => (
                     <MenuItem key={option.value} value={option.value}>
@@ -352,12 +377,17 @@ const Profile = props => {
                 <TextField
                   error={genderError}
                   id="standard-select-currency"
-                  select
+                  select={isMe}
                   fullWidth
                   label="Gender"
-                  value={gender}
+                  value={
+                    isMe
+                      ? gender
+                      : genderList.find(item => item.value === userGenderFirst)
+                          .name
+                  }
                   onChange={handleChangeGender}
-                  InputProps={{ readOnly: false }}
+                  InputProps={{ readOnly: !isMe }}
                 >
                   {genderList.map(option => (
                     <MenuItem key={option.value} value={option.value}>
@@ -367,15 +397,7 @@ const Profile = props => {
                 </TextField>
               </Grid>
               <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
-                {prevPath === '/' ? (
-                  <Button variant="outlined" onClick={requestRegister}>
-                    가입하기
-                  </Button>
-                ) : (
-                  <Button variant="outlined" onClick={requestUpdate}>
-                    수정하기
-                  </Button>
-                )}
+                {profileButton}
               </Grid>
             </Grid>
             <Grid item xs={2} />
