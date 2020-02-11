@@ -1,12 +1,15 @@
 package com.moyo.MOYO.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.moyo.MOYO.dto.Community;
+import com.moyo.MOYO.dto.CommunityType;
 import com.moyo.MOYO.repository.CommunityRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +22,12 @@ public class CommunityServiceImpl implements CommunityService {
 	CommunityRepository cRepo;
 	
 	@Override
-	public List<Community> selectAll() {
+	public List<Community> selectAll(int cmTypeId, String searchWord) {
 		log.trace("CommunityService - selectAll");
-		return cRepo.selectAll();
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("cmTypeId", cmTypeId);
+		param.put("searchWord", searchWord);
+		return cRepo.selectAll(param);
 	}
 	
 	@Override
@@ -34,6 +40,12 @@ public class CommunityServiceImpl implements CommunityService {
 	public Community selectOne(int cmId) {
 		log.trace("CommunityService - selectOne");
 		return cRepo.selectOne(cmId);
+	}
+	
+	@Override
+	public List<CommunityType> selectCommunityType() {
+		log.trace("CommunityService - selectCommunityType");
+		return cRepo.selectCommunityType();
 	}
 	
 	@Override
