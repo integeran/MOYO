@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 public class Community {
 	private int cmId;
 	private int uId;
-	private int cId;
 	private int cmTypeId;
 	private String title;
 	private String contents;
@@ -18,6 +17,5 @@ public class Community {
 	private String registerDate;
 	private String updateDate;
 	private String nickname;
-	private String city;
 	private String communityType;
 }
