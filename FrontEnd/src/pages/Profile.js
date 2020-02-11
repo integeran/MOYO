@@ -20,7 +20,6 @@ import {
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import styled from 'styled-components';
 
 const Profile = props => {
   const jwtDecode = require('jwt-decode');
@@ -236,10 +235,15 @@ const Profile = props => {
   };
 
   const postImage = async () => {
-    const imgData = await postImageRequest();
-    setTempImageName(imgData.data.data.imageName);
-    setTempUserImage(imgData.data.data.image);
-    setOpenDialog(false);
+    const reg = /(.*?)\.(jpg|jpeg|png|gif)$/;
+    if (imageFile.name.match(reg)) {
+      const imgData = await postImageRequest();
+      setTempImageName(imgData.data.data.imageName);
+      setTempUserImage(imgData.data.data.image);
+      setOpenDialog(false);
+    } else {
+      alert('jpg, jpeg, png, gif 확장자만 지원합니다!');
+    }
   };
 
   const [isMe, setIsMe] = useState(true);

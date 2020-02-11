@@ -3,6 +3,9 @@ import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { changeField, changeBool } from '../modules/auth';
 import axios from '../api/axios';
+import { Typography } from '@material-ui/core';
+import kakaoBtnSmall from '../assets/img/kakaoLoginBtnSmall.png';
+import MOYOLogoMixed from '../assets/img/MOYOLogoMixed.svg';
 
 const Login = () => {
   const history = useHistory();
@@ -12,46 +15,6 @@ const Login = () => {
   const pushUserData = (k, v) => {
     dispatch(changeField({ form: 'userData', key: k, value: v }));
   };
-
-  // const getResponse = async res => {
-  //   try {
-  //     return await axios.post('user/issueToken', {
-  //       provider: 0,
-  //       socialId: res.profile.id,
-  //     });
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
-  // const getToken = async res => {
-  //   const resData = await getResponse(res);
-  //   dispatch(changeBool({ key: 'isLoggedIn', value: true }));
-  //   if (resData.data.status) {
-  //     const jwtData = jwtDecode(resData.data.data);
-  //     pushUserData('userToken', resData.data.data);
-  //     pushUserData('uid', jwtData.user.uid);
-  //     pushUserData('nickname', jwtData.user.nickname);
-  //     pushUserData('age', jwtData.user.age);
-  //     pushUserData('gender', jwtData.user.gender);
-  //     pushUserData('image', jwtData.user.image);
-  //     localStorage.setItem('token', resData.data.data);
-  //     history.push({
-  //       pathname: '/acc',
-  //     });
-  //   } else {
-  //     history.push({
-  //       pathname: '/profile',
-  //       state: {
-  //         userSocialId: res.profile.id,
-  //         userProfileImage: res.profile.properties.profile_image,
-  //         userNickname: res.profile.properties.nickname,
-  //         userAgeRange: res.profile.kakao_account.age_range,
-  //         userGender: res.profile.kakao_account.gender,
-  //       },
-  //     });
-  //   }
-  // };
 
   const getResponse = async res => {
     try {
@@ -106,12 +69,6 @@ const Login = () => {
           url: '/v2/user/me',
           success: res => {
             getToken(res);
-            // console.log(res);
-            // console.log(res.id);
-            // console.log(res.properties.nickname);
-            // console.log(res.properties.profile_image);
-            // console.log(res.kakao_account.age_range);
-            // console.log(res.kakao_account.gender);
             window.Kakao.Auth.logout();
           },
           fail: function(error) {
@@ -130,27 +87,16 @@ const Login = () => {
     <div
       style={{
         display: 'flex',
+        flexDirection: 'column',
         height: 'inherit',
         alignItems: 'center',
         justifyContent: 'center',
       }}
     >
-      {/* <KakaoLogin
-        jsKey={process.env.REACT_APP_KAKAO_KEY}
-        buttonText="kakao로 로그인"
-        onSuccess={result => getToken(result)}
-        onFailure={result => console.log(result)}
-        useDefaultStyle={true}
-        getProfile={true}
-      ></KakaoLogin> */}
-
+      <img src={MOYOLogoMixed} width="300" alt="logo" />
+      <Typography variant="h5">모여와 함께 하는 모두의 여행</Typography>
       <a id="custom-login-btn" onClick={loginWithKakao}>
-        {/* <img
-          src="//mud-kage.kakao.com/14/dn/btqbjxsO6vP/KPiGpdnsubSq3a0PHEGUK1/o.jpg"
-          width="300"
-          alt="Kakao"
-        /> */}
-        <button>kakao login </button>
+        <img src={kakaoBtnSmall} width="250" alt="Kakao" />
       </a>
     </div>
   );

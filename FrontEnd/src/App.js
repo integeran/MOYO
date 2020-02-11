@@ -61,7 +61,6 @@ const App = () => {
   return (
     <StyledDiv>
       <StyledContainer>
-        <Redirect path="*" to="/" />
         <Route exact path="/">
           {isLoggedIn ? <Redirect to="/accompany" /> : <Login />}
         </Route>

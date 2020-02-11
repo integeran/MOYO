@@ -1,14 +1,17 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
-import EditIcon from '@material-ui/icons/Edit';
+import { useHistory } from 'react-router-dom';
+import {
+  makeStyles,
+  Avatar,
+  Divider,
+  Grid,
+  Typography,
+} from '@material-ui/core';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
 
-const MoreMain = ({ history }) => {
+const MoreMain = () => {
+  const history = useHistory();
   const useStyles = makeStyles(theme => ({
     rootAvatar: {},
     large: {
@@ -80,7 +83,6 @@ const MoreMain = ({ history }) => {
               <Typography onClick={handleProfileEditClick}>
                 프로필 편집
               </Typography>
-              {/* <EditIcon fontSize="small" onClick={handleProfileEditClick} /> */}
             </Grid>
           </Grid>
         </Grid>
