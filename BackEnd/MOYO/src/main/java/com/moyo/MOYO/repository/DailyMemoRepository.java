@@ -1,6 +1,7 @@
 package com.moyo.MOYO.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import com.moyo.MOYO.dto.DailyMemo;
 
@@ -13,7 +14,7 @@ public interface DailyMemoRepository {
 	
 	public int create(DailyMemo dailyMemo);
 	
-	public int delete(int dMemoId);
+	public int delete(Map<String, Integer> param);
 	
 	public int update(DailyMemo dailyMemo);
 

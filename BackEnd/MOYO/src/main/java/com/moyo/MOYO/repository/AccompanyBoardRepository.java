@@ -2,7 +2,6 @@ package com.moyo.MOYO.repository;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.moyo.MOYO.dto.AccompanyBoard;
 import com.moyo.MOYO.dto.City;

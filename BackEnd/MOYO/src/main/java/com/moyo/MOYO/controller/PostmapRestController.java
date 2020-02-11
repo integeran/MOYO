@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.moyo.MOYO.dto.Postmap;
 import com.moyo.MOYO.dto.Postmaplike;
+import com.moyo.MOYO.repository.PostmapRepository;
 import com.moyo.MOYO.service.PostmapService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -31,15 +32,48 @@ public class PostmapRestController {
 	PostmapService pService;
 	
 	@GetMapping("postmap/selectAll")
-	private ResponseEntity<Map<String, Object>> selectAll(@RequestParam double latitude, @RequestParam double longitude) {
-		HashMap<String, Double> map = new HashMap<String, Double>();
+	private ResponseEntity<Map<String, Object>> selectAll(@RequestParam double latitude, @RequestParam double longitude, @RequestParam int uId) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("latitude", latitude);
 		map.put("longitude", longitude);
+		map.put("uId", uId);
 		try {
-			log.trace("PostmapRestController - selectAll : ", latitude,longitude);
+			log.trace("PostmapRestController - selectAll : ", latitude,longitude,uId);
 			return response(pService.selectAll(map), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
 			log.error("PostmapRestController - selectAll : ", latitude,longitude);
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
+	@GetMapping("postmap/selectTop")
+	private ResponseEntity<Map<String, Object>> selectTop(@RequestParam double latitude, @RequestParam double longitude, @RequestParam int uId) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("latitude", latitude);
+		map.put("longitude", longitude);
+		map.put("uId", uId);
+		map.put("top", PostmapRepository.TOP);
+		try {
+			log.trace("PostmapRestController - selectTop : ", latitude,longitude,uId);
+			return response(pService.selectTop(map), HttpStatus.OK, true);
+		} catch (RuntimeException e) {
+			log.error("PostmapRestController - selectTOp : ", latitude,longitude);
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
+	@GetMapping("postmap/selectExceptTop")
+	private ResponseEntity<Map<String, Object>> selectExceptTop(@RequestParam double latitude, @RequestParam double longitude, @RequestParam int uId) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("latitude", latitude);
+		map.put("longitude", longitude);
+		map.put("uId", uId);
+		map.put("top", PostmapRepository.TOP);
+		try {
+			log.trace("PostmapRestController - selectExceptTop : ", latitude,longitude,uId);
+			return response(pService.selectExceptTop(map), HttpStatus.OK, true);
+		} catch (RuntimeException e) {
+			log.error("PostmapRestController - selectExceptTop : ", latitude,longitude);
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
@@ -124,6 +158,18 @@ public class PostmapRestController {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
+	
+	@GetMapping("postmap/selectPostmapLike/{pmId}")
+	private ResponseEntity<Map<String, Object>> selectPostmapLike(@PathVariable int pmId) {
+		try {
+			log.trace("PostmapRestController - selectPostmapLike : ", pmId);
+			return response(pService.selectPostmapLike(pmId), HttpStatus.OK, true);
+		} catch (RuntimeException e) {
+			log.error("PostmapRestController - selectPostmapLike");
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
 	
 	
 	private ResponseEntity<Map<String, Object>> response(Object data, HttpStatus httpstatus, boolean status) {

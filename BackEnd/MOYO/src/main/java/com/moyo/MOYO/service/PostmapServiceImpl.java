@@ -20,9 +20,21 @@ public class PostmapServiceImpl implements PostmapService{
 	PostmapRepository pRepo;
 
 	@Override
-	public List<Postmap> selectAll(HashMap<String, Double> map) {
+	public List<Postmap> selectAll(HashMap<String, Object> map) {
 		log.trace("PostmapService - selectAll : ",map);
 		return pRepo.selectAll(map);
+	}
+	
+	@Override
+	public List<Postmap> selectExceptTop(HashMap<String, Object> map) {
+		log.trace("PostmapService - selectExceptTop : ",map);
+		return pRepo.selectExceptTop(map);
+	}
+	
+	@Override
+	public List<Postmap> selectTop(HashMap<String, Object> map) {
+		log.trace("PostmapService - selectTop : ",map);
+		return pRepo.selectTop(map);
 	}
 
 	@Override
