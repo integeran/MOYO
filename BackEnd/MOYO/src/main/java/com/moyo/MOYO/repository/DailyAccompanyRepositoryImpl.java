@@ -1,6 +1,8 @@
 package com.moyo.MOYO.repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,12 @@ public class DailyAccompanyRepositoryImpl implements DailyAccompanyRepository {
 	}
 	
 	@Override
+	public List<DailyAccompany> selectAllByOneDay(Map<String, Object> param) {
+		log.trace("DailyAccompanyRepository - selectAllByOneDay");
+		return session.selectList(ns + "selectAllByOneDay", param);
+	}
+	
+	@Override
 	public DailyAccompany selectOne(int dAcId) {
 		log.trace("DailyAccompanyRepository - selectOne");
 		return session.selectOne(ns + "selectOne", dAcId);
@@ -43,9 +51,9 @@ public class DailyAccompanyRepositoryImpl implements DailyAccompanyRepository {
 	}
 	
 	@Override
-	public int delete(int dAcId) {
+	public int delete(Map<String, Integer> param) {
 		log.trace("DailyAccompanyRepository - delete");
-		return session.delete(ns + "deleteDailyAccompany", dAcId);
+		return session.delete(ns + "deleteDailyAccompany", param);
 	}
 	
 	@Override

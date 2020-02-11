@@ -9,11 +9,13 @@ public interface DailyAccompanyService {
 	
 	public List<DailyAccompany> selectAllByUser(int uId);
 	
+	public List<DailyAccompany> selectAllByOneDay(int uId, String day);
+	
 	public DailyAccompany selectOne(int dAcId);
 	
 	public int create(DailyAccompany dailyAccompany);
 	
-	public int delete(int dAcId);
+	public int delete(int dAcId, int uId);
 	
 	public int update(DailyAccompany dailyAccompany);
 

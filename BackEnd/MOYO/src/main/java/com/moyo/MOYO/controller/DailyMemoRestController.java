@@ -6,42 +6,49 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.moyo.MOYO.dto.DailyMemo;
 import com.moyo.MOYO.service.DailyMemoService;
+import com.moyo.MOYO.service.JwtService;
 
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
+@CrossOrigin("*")
 public class DailyMemoRestController {
 	
 	@Autowired
 	DailyMemoService dMemoService;
+	
+	@Autowired
+	JwtService jwtService;
 	
 	@GetMapping("dailyMemo/selectAll")
 	public ResponseEntity<Map<String, Object>> selectAll() {
 		try {
 			log.trace("DailyMemoRestController - selectAll");
 			return response(dMemoService.selectAll(), HttpStatus.OK, true);
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
 	
 	@GetMapping("dailyMemo/selectAllByUser/{uId}")
-	public ResponseEntity<Map<String, Object>> selectAllByUser(int uId) {
+	public ResponseEntity<Map<String, Object>> selectAllByUser(@PathVariable int uId) {
 		try {
 			log.trace("DailyMemoRestController - selectAllByUser");
 			return response(dMemoService.selectAllByUser(uId), HttpStatus.OK, true);
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
@@ -51,7 +58,21 @@ public class DailyMemoRestController {
 		try {
 			log.trace("DailyMemoRestController - selectOne");
 			return response(dMemoService.selectOne(dMemoId), HttpStatus.OK, true);
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
+	@PostMapping("dailyMemo/post")
+	public ResponseEntity<Map<String, Object>> post(@RequestBody DailyMemo dailyMemo) {
+		try {
+			log.trace("DailyMemoRestController - post");
+			if (dMemoService.update(dailyMemo) == 1) {
+				return response(-1, HttpStatus.OK, true);
+			} else {
+				return response(dMemoService.create(dailyMemo), HttpStatus.OK, true);
+			}
+		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
@@ -61,17 +82,18 @@ public class DailyMemoRestController {
 		try {
 			log.trace("DailyMemoRestController - create");
 			return response(dMemoService.create(dailyMemo), HttpStatus.OK, true);
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
 	
 	@DeleteMapping("dailyMemo/delete/{dMemoId}")
-	public ResponseEntity<Map<String, Object>> delete(@PathVariable int dMemoId) {
+	public ResponseEntity<Map<String, Object>> delete(@PathVariable int dMemoId, @RequestHeader(value="userToken") String userToken) {
 		try {
 			log.trace("DailyMemoRestController - delete");
-			return response(dMemoService.delete(dMemoId), HttpStatus.OK, true);
-		} catch (Exception e) {
+			int uId = jwtService.getUser(userToken).getUId();
+			return response(dMemoService.delete(dMemoId, uId), HttpStatus.OK, true);
+		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
@@ -81,7 +103,7 @@ public class DailyMemoRestController {
 		try {
 			log.trace("DailyMemoRestController - update");
 			return response(dMemoService.update(dailyMemo), HttpStatus.OK, true);
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}

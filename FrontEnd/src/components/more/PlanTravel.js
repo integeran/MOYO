@@ -1,83 +1,118 @@
 import React, { useState, useEffect } from 'react';
-import DateFnsUtils from '@date-io/date-fns';
-import moment from 'moment';
-import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import { useSelector, useDispatch } from 'react-redux';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Divider from '@material-ui/core/Divider';
-import MenuItem from '@material-ui/core/MenuItem';
+import moment from 'moment';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
+import {
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  MenuItem,
+  Typography,
+  Grid,
+} from '@material-ui/core';
 import { storeSchedule } from '../../modules/morePlanTravel';
-
-const nationData = [
-  { nid: 2, name: '프랑스' },
-  { nid: 3, name: '스페인' },
-  { nid: 4, name: '이탈리아' },
-  { nid: 5, name: '스위스' },
-  { nid: 6, name: '영국' },
-  { nid: 7, name: '독일' },
-  { nid: 8, name: '포르투갈' },
-  { nid: 9, name: '크로아티아' },
-];
-const cityData = [
-  { cid: 1, nid: 2, name: '파리' },
-  { cid: 2, nid: 2, name: '니스' },
-  { cid: 3, nid: 3, name: '바르셀로나' },
-  { cid: 4, nid: 3, name: '마드리드' },
-  { cid: 5, nid: 4, name: '피렌체' },
-  { cid: 6, nid: 4, name: '로마' },
-];
+import axios from '../../api/axios';
+import { makeStyles } from '@material-ui/core/styles';
+import AddIcon from '@material-ui/icons/Add';
+import TripPaper from './schedule/TripSchedulePaper';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { getNationList, getCityList } from '../../api/commonData';
 
 const PlanTravel = () => {
+  const useStyles = makeStyles(theme => ({
+    center: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  }));
+
+  const classes = useStyles();
+
   const dispatch = useDispatch();
+  const userData = useSelector(state => state.auth.userData);
+  const selectedDate = useSelector(state => state.planDate.selectedDate);
+  const planTravelList = useSelector(
+    state => state.morePlanTravel.planTravelList,
+  );
+  const [nationList, setNationList] = useState([]);
   const [nation, setNation] = useState('');
   const [cityList, setCityList] = useState([]);
-  const handleChangeNation = event => {
-    setNation(event.target.value);
-    setCityList(cityData.filter(item => item.nid === event.target.value));
+  const [city, setCity] = useState('');
+  const [nationUpdate, setNationUpdate] = useState('');
+  const [cityListUpdate, setCityListUpdate] = useState([]);
+  const [cityUpdate, setCityUpdate] = useState('');
+  const [selectedStartDate, setSelectedStartDate] = useState(selectedDate);
+  const [selectedEndDate, setSelectedEndDate] = useState(selectedStartDate);
+  const [openCreate, setOpenCreate] = React.useState(false);
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [selectedStartDateUpdate, setSelectedStartDateUpdate] = useState('');
+  const [selectedEndDateUpdate, setSelectedEndDateUpdate] = useState('');
+  const [selectedListId, setSelectedListId] = useState('');
+
+  useEffect(() => {
+    getNationList().then(data => {
+      setNationList(data);
+    });
+  }, []);
+
+  const handleChangeNation = async nationItem => {
+    setNation(nationItem.target.value);
+    getCityList(nationItem.target.value).then(data => {
+      setCityList(data);
+    });
   };
 
-  const [city, setCity] = useState('');
   const handleChangeCity = event => {
     setCity(event.target.value);
   };
-
-  const selectedDate = useSelector(state => state.planDate.selectedDate);
-  const [selectedStartDate, setSelectedStartDate] = useState(selectedDate);
-
-  const userData = useSelector(state => state.auth.userData);
 
   useEffect(() => {
     setSelectedStartDate(selectedDate);
   }, [selectedDate]);
 
-  const [selectedEndDate, setSelectedEndDate] = useState(selectedStartDate);
-
   useEffect(() => {
     setSelectedEndDate(selectedStartDate);
   }, [selectedStartDate]);
 
-  const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleClickOpenCreate = () => {
+    setOpenCreate(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleCloseCreate = () => {
+    setSelectedStartDate(selectedDate);
+    setSelectedEndDate(selectedDate);
+    setNation('');
+    setCityList([]);
+    setOpenCreate(false);
   };
 
-  const axios = require('axios');
+  const handleClickOpenUpdate = async item => {
+    console.log(cityList);
+    setNationUpdate(item.nid);
+    getCityList(item.nid).then(data => {
+      setCityListUpdate(data);
+      setCityUpdate(item.cid);
+    });
+    setSelectedStartDateUpdate(item.startDate);
+    setSelectedEndDateUpdate(item.endDate);
+    setSelectedListId(item.slistId);
+    setOpenUpdate(true);
+  };
+
+  const handleCloseUpdate = () => {
+    setOpenUpdate(false);
+  };
 
   const postPlanTravelServer = async () => {
     try {
       return await axios.post(
-        'http://70.12.246.66:8080/scheduleList/create',
+        'scheduleList/create',
         {
           uid: userData.uid,
           cid: city,
@@ -94,8 +129,88 @@ const PlanTravel = () => {
 
   const getSchedule = async () => {
     try {
-      return await axios.get(
-        `http://70.12.246.66:8080/scheduleList/selectAllByUser/${userData.uid}`,
+      return await axios.get(`scheduleList/selectAllByUser/${userData.uid}`, {
+        headers: { userToken: userData.userToken },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const postPlanTravel = async () => {
+    await postPlanTravelServer();
+    const schData = await getSchedule();
+    dispatch(storeSchedule(schData.data.data));
+    setOpenCreate(false);
+  };
+
+  const deleteSchedule = async sId => {
+    try {
+      return await axios.delete(`scheduleList/delete/${sId}`, {
+        headers: { userToken: userData.userToken },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDeleteSchedule = async sId => {
+    await deleteSchedule(sId);
+    const schData = await getSchedule();
+    dispatch(storeSchedule(schData.data.data));
+  };
+
+  const newTravelList = planTravelList.map(item => (
+    <Grid container item>
+      <Grid item xs={11}>
+        <TripPaper scheduleInfo={item} />
+      </Grid>
+      <Grid
+        item
+        container
+        xs={1}
+        direction="column"
+        justify="space-evenly"
+        alignItems="center"
+      >
+        <Grid item>
+          <EditIcon onClick={() => handleClickOpenUpdate(item)} />
+        </Grid>
+        <Grid item>
+          <DeleteIcon
+            onClick={() => {
+              handleDeleteSchedule(item.slistId);
+            }}
+          />
+        </Grid>
+      </Grid>
+    </Grid>
+  ));
+
+  const handleChangeNationUpdate = async event => {
+    setNationUpdate(event.target.value);
+    getCityList(event.target.value).then(data => {
+      setCityListUpdate(data);
+      setCityUpdate('');
+    });
+  };
+
+  const handleChangeCityUpdate = event => {
+    setCityUpdate(event.target.value);
+  };
+
+  const putPlanTravelServer = async () => {
+    try {
+      return await axios.put(
+        'scheduleList/update',
+        {
+          uid: userData.uid,
+          cid: cityUpdate,
+          nid: nationUpdate,
+          slistId: selectedListId,
+          startDate: moment(selectedStartDateUpdate).format('YYYY-MM-DD'),
+          endDate: moment(selectedEndDateUpdate).format('YYYY-MM-DD 12:00:00'),
+        },
         { headers: { userToken: userData.userToken } },
       );
     } catch (error) {
@@ -103,33 +218,34 @@ const PlanTravel = () => {
     }
   };
 
-  const postPlanTravel = async () => {
-    const resData = await postPlanTravelServer();
+  const putPlanTravel = async () => {
+    await putPlanTravelServer();
     const schData = await getSchedule();
     dispatch(storeSchedule(schData.data.data));
-    setOpen(false);
-    // console.log(selectedStartDate);
-    // console.log(selectedEndDate);
+    setOpenUpdate(false);
   };
-
-  // useEffect(() => {
-  //   async function getData() {
-  //     const resData = await getSchedule();
-  //     dispatch(storeSchedule(resData.data.data));
-  //   }
-  //   getData();
-  // }, []);
 
   return (
     <div>
-      <h2>여행일정</h2>
+      <Grid
+        container
+        direction="column"
+        justify="center"
+        style={{ width: 'inherit', height: 'inherit', margin: '0px' }}
+      >
+        <Grid item container justify="space-between">
+          <Grid item xs={3}></Grid>
+          <Grid item className={classes.center} xs={3}>
+            {/* <Typography variant="button">여행 추가</Typography> */}
+            <AddIcon onClick={handleClickOpenCreate} />
+          </Grid>
+        </Grid>
+        {newTravelList}
+      </Grid>
 
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        여행 계획 추가
-      </Button>
       <Dialog
-        open={open}
-        onClose={handleClose}
+        open={openCreate}
+        onClose={handleCloseCreate}
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">여행 일정 추가</DialogTitle>
@@ -158,8 +274,11 @@ const PlanTravel = () => {
             label="나라"
             value={nation}
             onChange={handleChangeNation}
+            InputLabelProps={{
+              shrink: true,
+            }}
           >
-            {nationData.map(option => (
+            {nationList.map(option => (
               <MenuItem key={option.nid} value={option.nid}>
                 {option.name}
               </MenuItem>
@@ -172,6 +291,9 @@ const PlanTravel = () => {
             label="도시"
             value={city}
             onChange={handleChangeCity}
+            InputLabelProps={{
+              shrink: true,
+            }}
           >
             {cityList.map(option => (
               <MenuItem key={option.cid} value={option.cid}>
@@ -181,11 +303,80 @@ const PlanTravel = () => {
           </TextField>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleCloseCreate} color="primary">
             취소
           </Button>
           <Button onClick={postPlanTravel} color="primary">
             추가
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openUpdate}
+        onClose={handleCloseUpdate}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">여행 일정 수정</DialogTitle>
+        <DialogContent>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <DatePicker
+              disableToolbar
+              variant="dialog"
+              label="시작"
+              value={selectedStartDateUpdate}
+              onChange={setSelectedStartDateUpdate}
+            />
+            <DatePicker
+              disableToolbar
+              variant="dialog"
+              label="끝"
+              value={selectedEndDateUpdate}
+              onChange={setSelectedEndDateUpdate}
+              minDate={selectedStartDateUpdate}
+            />
+          </MuiPickersUtilsProvider>
+          <TextField
+            id="standard-select-currency"
+            select
+            fullWidth
+            label="나라"
+            value={nationUpdate}
+            onChange={handleChangeNationUpdate}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          >
+            {nationList.map(option => (
+              <MenuItem key={option.nid} value={option.nid}>
+                {option.name}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            id="standard-select-currency"
+            select
+            fullWidth
+            label="도시"
+            value={cityUpdate}
+            onChange={handleChangeCityUpdate}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          >
+            {cityListUpdate.map(option => (
+              <MenuItem key={option.cid} value={option.cid}>
+                {option.name}
+              </MenuItem>
+            ))}
+          </TextField>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseUpdate} color="primary">
+            취소
+          </Button>
+          <Button onClick={putPlanTravel} color="primary">
+            수정
           </Button>
         </DialogActions>
       </Dialog>
