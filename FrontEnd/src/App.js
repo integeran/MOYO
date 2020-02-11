@@ -20,6 +20,8 @@ import Container from '@material-ui/core/Container';
 import DmRoom from './pages/dm/DmRoom';
 import DmRoomList from './pages/dm/DmRoomList';
 import PostMap from './pages/postmap/Postmap';
+import PersonalGame from './pages/game/PersonalGame';
+
 import { changeBool } from './modules/auth';
 
 const StyledContainer = styled(Container)`
@@ -85,6 +87,7 @@ const App = () => {
             <Route path="/dmroom/:receiverId" component={DmRoom} />
             <Route path="/dmroomlist" component={DmRoomList} />
             <Route path="/postmap" component={PostMap} />
+            <Route path="/personalgame" component={PersonalGame} />
           </>
         )}
       </StyledContainer>

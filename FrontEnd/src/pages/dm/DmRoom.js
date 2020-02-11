@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import axios from '../../api/axios';
 import * as firebase from 'firebase';
 import { Link } from 'react-router-dom';
@@ -47,6 +47,7 @@ const DmRoom = ({ match }) => {
   const [ivalue, setIvalue] = useState('');
   const [uploadModal, setUploadModal] = useState(false);
   const [addAccompanyModal, setAddAccompanyModal] = useState(false);
+  const [receiverRead, setReceiverRead] = useState(false);
 
   const onChangeIvalue = useCallback(e => {
     setIvalue(e.target.value);
@@ -109,6 +110,40 @@ const DmRoom = ({ match }) => {
     }
   };
 
+  const waitReceiverRoomChange = (roomId, receiver) => {
+    const callback = snapshot => {
+      if (snapshot.val().read === true) {
+        firebase
+          .database()
+          .ref('LastMessage/' + roomId)
+          .once('value')
+          .then(snapshot1 => {
+            if (snapshot1.val().senderId === userData.uid) {
+              setReceiverRead(true);
+              var list = document.getElementById('messageList');
+              if (list) {
+                list.scrollTop = list.scrollHeight;
+              }
+            } else {
+              setReceiverRead(false);
+            }
+          });
+      } else {
+        setReceiverRead(false);
+      }
+    };
+
+    firebase
+      .database()
+      .ref('UserRooms/' + receiver.uid + '/' + userData.uid)
+      .once('value', callback);
+
+    firebase
+      .database()
+      .ref('UserRooms/' + receiver.uid)
+      .on('child_changed', callback);
+  };
+
   /*
    * 방 로드하기
    */
@@ -124,12 +159,12 @@ const DmRoom = ({ match }) => {
         if (snapshot.val()) {
           roomInfo.roomId = snapshot.val().roomId;
           roomInfo.roomTitle = snapshot.val().roomTitle;
-          loadMessageList(roomInfo.roomId);
+          loadMessageList(roomInfo.roomId, receiver);
         } else {
           roomInfo.roomId =
             MAKEID_CHAR + sender.uid + MAKEID_CHAR + receiver.uid;
           roomInfo.roomTitle = sender.nickname;
-          loadMessageList(roomInfo.roomId);
+          loadMessageList(roomInfo.roomId, receiver);
         }
       });
   };
@@ -137,13 +172,14 @@ const DmRoom = ({ match }) => {
   /**
    * 메세지 로드
    */
-  const loadMessageList = async roomId => {
+  const loadMessageList = async (roomId, receiver) => {
     console.log('loadMessageList');
 
     var loadMessageFirebase = firebase.database().ref('Messages/' + roomId);
     if (roomId) {
       console.log('loadMessageListAfter');
       setHookRoomId(roomId);
+      waitReceiverRoomChange(roomId, receiver);
 
       const callback = async snapshot => {
         var val = snapshot.val();
@@ -160,6 +196,27 @@ const DmRoom = ({ match }) => {
         var list = document.getElementById('messageList');
         if (list) {
           list.scrollTop = list.scrollHeight;
+        }
+
+        if (val.senderId !== userData.uid) {
+          firebase
+            .database()
+            .ref('UserRooms/' + userData.uid + '/' + receiver.uid)
+            .once('value')
+            .then(snapshot => {
+              if (snapshot.val().read === false) {
+                firebase
+                  .database()
+                  .ref('UserRooms/' + userData.uid + '/' + receiver.uid)
+                  .update({
+                    roomId: snapshot.val().roomId,
+                    receiverId: snapshot.val().receiverId,
+                    lastMessage: snapshot.val().lastMessage,
+                    timeStamp: snapshot.val().timeStamp,
+                    read: true,
+                  });
+              }
+            });
         }
       };
 
@@ -203,12 +260,18 @@ const DmRoom = ({ match }) => {
           url: url ? url : null,
         };
 
+        multiUpdates['LastMessage/' + hookRoomId] = {
+          senderId: userData.uid,
+          messageId: messageId,
+        };
+
         // 유저별 룸 리스트 저장
         multiUpdates['UserRooms/' + userData.uid + '/' + hookReceiver.uid] = {
           roomId: hookRoomId,
           receiverId: hookReceiver.uid,
           lastMessage: url ? '다운로드' : msg,
           timeStamp: curTime,
+          read: true,
         };
 
         multiUpdates['UserRooms/' + hookReceiver.uid + '/' + userData.uid] = {
@@ -216,6 +279,7 @@ const DmRoom = ({ match }) => {
           receiverId: userData.uid,
           lastMessage: url ? '다운로드' : msg,
           timeStamp: curTime,
+          read: false,
         };
 
         saveFirebase.update(multiUpdates);
@@ -407,6 +471,15 @@ const DmRoom = ({ match }) => {
               />
             );
           })}
+
+          {receiverRead && (
+            <Typography
+              variant="caption"
+              style={{ float: 'right', marginRight: '2%', marginTop: '-2%' }}
+            >
+              읽음
+            </Typography>
+          )}
         </div>
 
         <div

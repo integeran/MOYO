@@ -58,10 +58,10 @@ const AddAccompanyModal = ({ isOpen, close, receiver }) => {
 
     const res = await onAxiosPostAccompany(times);
     if (res) {
-      alert('날짜 추가가 완료되었습니다.');
+      alert('동행추가가 완료되었습니다.');
       close();
     } else {
-      alert('날짜 추가 중 에러가 발생했습니다.');
+      alert('동행추가 중 에러가 발생했습니다.');
     }
   };
 
