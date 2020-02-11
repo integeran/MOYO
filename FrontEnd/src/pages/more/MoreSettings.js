@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { changeBool } from '../../modules/auth';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import BaseAppBar from '../../components/common/BaseAppBar';
