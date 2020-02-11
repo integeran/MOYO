@@ -4,30 +4,27 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import {
   changeTitle,
   changeContents,
   changeType,
-  setCity,
 } from '../../modules/community';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import axios from '../../api/axios';
+import { Select } from '@material-ui/core';
 
 const CommunityWrite = () => {
-  const [communityTypeList, setCommunityTypeList] = useState([]);
-  const { uId, cId, cmTypeId, title, contents } = useSelector(
-    ({ community }) => ({
-      cId: community.cId,
-      cmTypeId: community.cmTypeId,
-      title: community.title,
-      contents: community.contents,
-    }),
-  );
+  const { cmId, cmTypeId, title, contents } = useSelector(({ community }) => ({
+    cmId: community.cmId,
+    cmTypeId: community.cmTypeId,
+    title: community.title,
+    contents: community.contents,
+  }));
   const userData = useSelector(state => state.auth.userData, []);
   const history = useHistory();
   const dispatch = useDispatch();
+  const communityTypeList = history.location.state.communityTypeList;
   const onChangeTitle = useCallback(title => dispatch(changeTitle(title)), [
     dispatch,
   ]);
@@ -38,24 +35,6 @@ const CommunityWrite = () => {
   const onChangeType = useCallback(cmTypeId => dispatch(changeType(cmTypeId)), [
     dispatch,
   ]);
-
-  const getCommunityTypeList = async () => {
-    try {
-      return await axios.get('community/selectCommunityType', {
-        headers: { userToken: userData.userToken },
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    const fetchCommunityTypeList = async () => {
-      const result = await getCommunityTypeList();
-      setCommunityTypeList(result.data.data);
-    };
-    fetchCommunityTypeList();
-  }, []);
 
   const handleChangeTitle = e => onChangeTitle(e.target.value);
   const handleChangeContents = e => onChangeContents(e.target.value);
@@ -72,33 +51,61 @@ const CommunityWrite = () => {
       console.error(error);
     }
   };
+  const putCommunity = async communityData => {
+    try {
+      return await axios.put('community/update', communityData, {
+        headers: { userToken: userData.userToken },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const handleSubmitClick = async () => {
     const communityData = {
-      uId: userData.uId,
-      cId: cId,
+      uId: userData.uid,
       cmTypeId: cmTypeId,
       title: title,
       contents: contents,
     };
     const fetchCommunity = async () => {
       await postCommunity(communityData);
-      history.goBack();
+      history.push('/community/');
     };
     fetchCommunity();
+  };
+  const handlePutClick = async () => {
+    const communityData = {
+      cmId: cmId,
+      uId: userData.uid,
+      cmTypeId: cmTypeId,
+      title: title,
+      contents: contents,
+    };
+    const fetchPutCommunity = async () => {
+      await putCommunity(communityData);
+      history.push('/community/');
+    };
+    fetchPutCommunity();
   };
   return (
     <div>
       <BaseAppBar
-        title="글 작성하기"
-        Icon1={<ArrowBackIosIcon />}
-        Icon2={<CheckCircleOutlineIcon type="submit" />}
-        handleClick1={handleBackClick}
-        handleClick2={handleSubmitClick}
+        text="글 작성하기"
+        align="left"
+        leftIcon={<ArrowBackIosIcon />}
+        leftType="icon"
+        rightText="완료"
+        leftClick={handleBackClick}
+        rightClick={
+          history.location.state.communityPutCheck
+            ? handlePutClick
+            : handleSubmitClick
+        }
       />
       <h1>커뮤니티 글쓰기 구현 중입니다.</h1>
       <form autoComplete="off">
-        <TextField
-          id="nationSelect"
+        <Select
+          id="typeSelect"
           select
           label="타입"
           fullWidth
@@ -110,7 +117,7 @@ const CommunityWrite = () => {
               {item.name}
             </MenuItem>
           ))}
-        </TextField>
+        </Select>
         <Typography variant="subtitle1" align="left">
           제목:
         </Typography>
