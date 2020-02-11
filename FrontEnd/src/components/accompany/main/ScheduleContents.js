@@ -28,7 +28,7 @@ const ScheduleContents = ({ tripSchedule, tripCompanion }) => {
           ))}
       </Grid>
       <SubtitleTypo variant="h6">오늘의 동행</SubtitleTypo>
-      <Grid container spacing={3}>
+      <Grid container>
         {tripCompanion.length > 0 &&
           tripCompanion.map(item => (
             <Grid item xs={6}>

@@ -4,12 +4,11 @@ import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
-import IU from '../../../assets/img/iu.jpg';
 
 const DivStyled = styled.div`
   flex-grow: 1;
   & + & {
-    margin-top: 2rem;
+    margin-top: 1rem;
   }
 `;
 
@@ -36,15 +35,16 @@ const MultiLineTypography = styled(({ ...other }) => <Typography {...other} />)`
 const StyledPaper = styled(({ ...other }) => <Paper {...other} />)``;
 
 const AccompanyListPaper = ({ boardInfo, onClick }) => {
+  console.log(boardInfo);
   return (
     <DivStyled onClick={onClick}>
       <StyledPaper>
-        <Grid container spacing={2}>
+        <Grid container>
           <CenterGrid item xs={2}>
-            <StyledAvatar alt="IU" src={IU} xs />
+            <StyledAvatar src={boardInfo.image} />
           </CenterGrid>
-          <Grid item container xs direction="column" spacing={2}>
-            <Grid item container xs spacing={2}>
+          <Grid item container xs direction="column">
+            <Grid item container xs>
               <Grid item xs={10}>
                 <MultiLineTypography variant="subtitle1">
                   {boardInfo.title}
@@ -60,7 +60,7 @@ const AccompanyListPaper = ({ boardInfo, onClick }) => {
                 </Typography>
               </CenterGrid>
             </Grid>
-            <Grid item container xs>
+            <Grid item container>
               <Grid item xs={5}>
                 <Typography variant="body2" align="left">
                   {boardInfo.nickname}

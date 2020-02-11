@@ -6,6 +6,7 @@ import AccompanySearchBar from '../../components/accompany/List/AccompanySearchB
 import AccompanyListSet from '../../components/accompany/List/AccompanyListSet';
 import { Grid, IconButton, Fab } from '@material-ui/core';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import HomeIcon from '@material-ui/icons/Home';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import AccompanyFilterDialog from '../../components/accompany/List/AccompanyFilterDialog';
@@ -114,6 +115,7 @@ const AccompanyList = () => {
     filterType: state.accompanyFilter.type,
   }));
   const [boardData, setBoardData] = useState([]);
+
   const convertFilterType = types => {
     const arr = ['식사', '관광', '카페', '투어'];
     const converted = Object.keys(types)
@@ -171,7 +173,7 @@ const AccompanyList = () => {
       setBoardData(resData);
     };
     getBoards();
-  }, [filterCondition, accDate]);
+  }, [filterCondition]);
 
   // ----------------------event-----------------------
   const handleSearchClick = text => {
@@ -206,7 +208,7 @@ const AccompanyList = () => {
       state: { prevpath: history.location.pathnmae },
     });
   };
-  const handleBackClick = () => {
+  const handleHomeClick = () => {
     history.push({
       pathname: '/accompany',
     });
@@ -231,15 +233,10 @@ const AccompanyList = () => {
   return (
     <>
       <MainGrid container direction="column">
-        <Grid
-          item
-          container
-          spacing={2}
-          style={{ paddingTop: '1rem', flex: '0 1 auto' }}
-        >
+        <Grid item container style={{ paddingTop: '1rem', flex: '0 1 auto' }}>
           <CenterGrid item xs={2}>
-            <IconButton color="inherit" onClick={handleBackClick}>
-              <ArrowBackIosIcon />
+            <IconButton color="inherit" onClick={handleHomeClick}>
+              <HomeIcon />
             </IconButton>
           </CenterGrid>
           <CenterGrid item xs={8} style={{ position: 'relative' }}>
@@ -252,7 +249,7 @@ const AccompanyList = () => {
           <Grid item xs={2}></Grid>
         </Grid>
 
-        <Grid item container spacing={2} style={{ flex: '0 1 auto' }}>
+        <Grid item container style={{ flex: '0 1 auto' }}>
           <Grid item xs={1}></Grid>
           <CenterGrid item xs={2}>
             <IconButton color="inherit" onClick={handlePreDayClick}>
@@ -281,6 +278,7 @@ const AccompanyList = () => {
           <AccompanyListSet boardData={boardData} />
         </ScrollGrid>
       </MainGrid>
+
       <CenterFab
         variant="extended"
         aria-label="filter"
@@ -289,6 +287,7 @@ const AccompanyList = () => {
         <FilterListIcon />
         필터
       </CenterFab>
+
       <AccompanyFilterDialog
         filterGender={filterGender}
         filterAge={filterAge}

@@ -5,7 +5,6 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ChatIcon from '@material-ui/icons/Chat';
 import BorderColorIcon from '@material-ui/icons/BorderColor';
 import axios from '../../api/axios';
-import IU from '../../assets/img/iu.jpg';
 import styled from 'styled-components';
 import BaseAppBar from '../../components/common/BaseAppBar';
 import { navigationSelect } from '../../modules/baseNavigation';
@@ -98,7 +97,7 @@ const AccompanyListDetail = () => {
   };
   const handleModifyAccompany = () => {
     history.push({
-      pathname: '/more/AccompanyDetail/write/' + boardData.acBoardId,
+      pathname: '/more/accompanyWrite',
       state: {
         prevpath: history.location.pathname,
         board: boardData,
@@ -167,13 +166,13 @@ const AccompanyListDetail = () => {
         leftClick={handleGoBack}
         rightType="icon"
         rightIcon={isModify ? <BorderColorIcon /> : <ChatIcon />}
-        rightClick={isModify ? handleMoveChat : handleModifyAccompany}
+        rightClick={isModify ? handleModifyAccompany : handleMoveChat}
       />
       {isModify && <ModifyStateContainer />}
       <Grid container direction="column" justify="flex-start">
         <Grid item container>
           <CenterGrid item xs={4}>
-            <StyledAvatar alt="IU" src={IU} />
+            <StyledAvatar src={boardData.image} />
           </CenterGrid>
           <Grid item container direction="column" xs={8}>
             <NameContainer />
