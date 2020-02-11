@@ -2,16 +2,22 @@ import React from 'react';
 import Carousel from 'nuka-carousel';
 import { Typography, Grid } from '@material-ui/core';
 import { useHistory } from 'react-router';
-import adTrip1 from '../../../assets/img/ad_trip_1.jpg';
-import adTrip2 from '../../../assets/img/ad_trip_2.jpg';
-import adTrip3 from '../../../assets/img/ad_trip_3.jpg';
+import ad1 from '../../../assets/img/promotion_prague.svg';
+import ad2 from '../../../assets/img/promotion_dubrovnik.svg';
+import styled from 'styled-components';
+
+const AdvertisingImage = styled.img`
+  border-radius: 1rem;
+`;
 
 const AdvertisingContents = () => {
   const history = useHistory();
   return (
-    <Grid container direction="column" spacing={2}>
+    <Grid container direction="column">
       <Grid item>
-        <Typography variant="h5">오늘의 광고</Typography>
+        <Typography variant="h6" style={{ padding: '0.5rem' }}>
+          프로모션
+        </Typography>
       </Grid>
       <Grid item>
         <Carousel
@@ -26,9 +32,8 @@ const AdvertisingContents = () => {
           renderCenterLeftControls={() => null}
           renderCenterRightControls={() => null}
         >
-          <img alt="ad1" src={adTrip1} />
-          <img alt="ad2" src={adTrip2} />
-          <img alt="ad3" src={adTrip3} />
+          <AdvertisingImage alt="ad1" src={ad1} />
+          <AdvertisingImage alt="ad2" src={ad2} />
         </Carousel>
       </Grid>
     </Grid>

@@ -60,7 +60,7 @@ const MoreAccompanyManage = () => {
 
   const handleModifyDetail = item => {
     history.push({
-      pathname: '/more/AccompanyDetail/' + item.acBoardId,
+      pathname: '/more/accompanyDetail/' + item.acBoardId,
       state: {
         prevpath: history.location.pathname,
         board: item,

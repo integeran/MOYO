@@ -78,18 +78,20 @@ const App = () => {
               component={AccompanyDateSelect}
             />
             <Route exact path="/accompany/accList" component={AccompanyList} />
-            <Route path="/accompany/accList/:id" component={AccompanyDetail} />
-            <Route path="/accompany/write" component={AccompanyWrite} />
+            <Route
+              path={['/accompany/accList/:id', '/more/accompanyDetail/:id']}
+              component={AccompanyDetail}
+            />
+            <Route
+              path={['/accompany/write', '/more/accompanyWrite']}
+              component={AccompanyWrite}
+            />
             <Route exact path="/more" component={MoreMain} />
             <Route path="/more/morePlan" component={MorePlan} />
             <Route path="/more/moreSettings" component={MoreSettings} />
             <Route
               path="/more/accompanyManage"
               component={MoreAccompanyManage}
-            />
-            <Route
-              path="/more/AccompanyDetail/:id"
-              component={AccompanyDetail}
             />
             <Route path="/dmroom/:receiverId" component={DmRoom} />
             <Route path="/dmroomlist" component={DmRoomList} />
