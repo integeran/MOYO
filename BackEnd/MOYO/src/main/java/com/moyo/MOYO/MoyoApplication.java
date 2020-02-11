@@ -18,7 +18,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableSwagger2
 @EnableTransactionManagement
-public class MoyoApplication extends SpringBootServletInitializer {
+
+public class MoyoApplication extends SpringBootServletInitializer{
 
 	public static void main(String[] args) {
 		SpringApplication.run(MoyoApplication.class, args);
