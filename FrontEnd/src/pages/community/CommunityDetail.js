@@ -10,6 +10,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import axios from '../../api/axios';
 import Typography from '@material-ui/core/Typography';
+import BaseAppBar from '../../components/common/BaseAppBar';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
 const CommunityDetail = () => {
   const history = useHistory();
@@ -43,8 +45,20 @@ const CommunityDetail = () => {
     history.push('/community/');
   };
   console.log(communityData);
+
+  const handleBackClick = () => {
+    history.goBack();
+  };
+
   return (
     <div>
+      <BaseAppBar
+        text={communityData.title}
+        align="left"
+        leftIcon={<ArrowBackIosIcon />}
+        leftType="icon"
+        leftClick={handleBackClick}
+      />
       {communityData.communityType}
       <br />
       {communityData.title}
