@@ -68,11 +68,13 @@ const CommunityCommentList = ({ cmId, userData }) => {
       uid: userData.uid,
       contents: writtenComment,
     };
-    const fetchComment = async () => {
-      await postComment(commentData);
-      getComments();
-    };
-    fetchComment();
+    if (writtenComment.trim() && writtenComment !== '댓글을 작성해주세요') {
+      const fetchComment = async () => {
+        await postComment(commentData);
+        getComments();
+      };
+      fetchComment();
+    }
   };
 
   const putComment = async commentData => {

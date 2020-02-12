@@ -36,6 +36,10 @@ const MoreMain = () => {
     history.push('/more/moreSettings');
   };
 
+  const handleCommunityClick = () => {
+    history.push('/more/moreCommunity');
+  };
+
   const handleProfileEditClick = () => {
     history.push({
       pathname: '/profile',
@@ -107,11 +111,14 @@ const MoreMain = () => {
             <ArrowForwardIosIcon fontSize="small" />
           </Grid>
         </Grid>
-        <Grid item container justify="space-between">
+        <Grid
+          item
+          container
+          justify="space-between"
+          onClick={handleCommunityClick}
+        >
           <Grid item>
-            <Typography variant="h6" onClick={handlePlanClick}>
-              내 커뮤니티 글
-            </Typography>
+            <Typography variant="h6">내 커뮤니티 글</Typography>
           </Grid>
           <Grid item className={classes.arrowIcon}>
             <ArrowForwardIosIcon fontSize="small" />
