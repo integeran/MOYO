@@ -265,6 +265,10 @@ const DmRoom = ({ match }) => {
           messageId: messageId,
         };
 
+        saveFirebase.update(multiUpdates);
+
+        multiUpdates = {};
+
         // 유저별 룸 리스트 저장
         multiUpdates['UserRooms/' + userData.uid + '/' + hookReceiver.uid] = {
           roomId: hookRoomId,
@@ -448,7 +452,6 @@ const DmRoom = ({ match }) => {
             width: '100%',
             height: '100%',
             overflow: 'auto',
-            backgroundColor: 'white',
           }}
         >
           {messageList.map((message, index) => {

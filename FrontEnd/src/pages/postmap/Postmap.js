@@ -114,7 +114,7 @@ const Postmap = () => {
 
   return (
     <>
-      <div style={{ padding: '4%', backgroundColor: '#f5f5f5' }}>
+      <div style={{ padding: '4%' }}>
         <PostmapGoogle listFetch={listFetch} />
         <PostmapChat listFetch={listFetch} />
         <div id="chatList">
