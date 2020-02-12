@@ -1,17 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { storeCompanion } from '../../modules/morePlanCompanion';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import {
+  Grid,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@material-ui/core';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 import moment from 'moment';
 import axios from '../../api/axios';
+import TripCompanionSet from './schedule/TripCompanionSet';
 
-const Companion = () => {
+const Companion = props => {
+  const setIsCompanion = props.setIsCompanion;
   const dispatch = useDispatch();
 
   const userData = useSelector(state => state.auth.userData);
@@ -43,27 +50,10 @@ const Companion = () => {
     }
   };
 
-  const handleDeleteCompanion = async dId => {
-    await deleteCompanion(dId);
-    const comData = await getCompanion();
-    dispatch(storeCompanion(comData.data.data));
-  };
-
-  const companionList = todayCompanion.map(item => (
-    <li key={item.dacId}>
-      {item.accompanyNickname} /{' '}
-      <a onClick={() => handleClickOpenUpdate(item)}>수정</a> /{' '}
-      <a
-        onClick={() => {
-          handleDeleteCompanion(item.dacId);
-        }}
-      >
-        삭제
-      </a>
-    </li>
-  ));
-
-  const [openUpdate, setOpenUpdate] = React.useState(false);
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [selectedDateUpdate, setSelectedDateUpdate] = useState(false);
+  const [selectedId, setSelectedId] = useState('');
+  const [openDelete, setOpenDelete] = useState(false);
 
   const handleClickOpenUpdate = item => {
     setSelectedDateUpdate(item.day);
@@ -74,8 +64,6 @@ const Companion = () => {
   const handleCloseUpdate = () => {
     setOpenUpdate(false);
   };
-
-  const [selectedDateUpdate, setSelectedDateUpdate] = React.useState(false);
 
   const putCompanion = async () => {
     try {
@@ -98,14 +86,58 @@ const Companion = () => {
     const comData = await getCompanion();
     dispatch(storeCompanion(comData.data.data));
     setOpenUpdate(false);
+    setIsCompanion(false);
   };
 
-  const [selectedId, setSelectedId] = React.useState('');
+  const handleDeleteCompanion = async () => {
+    await deleteCompanion(selectedId);
+    const comData = await getCompanion();
+    dispatch(storeCompanion(comData.data.data));
+    setSelectedId('');
+    setOpenDelete(false);
+    setIsCompanion(false);
+  };
+
+  const handleClickOpenDelete = dId => {
+    setOpenDelete(true);
+    setSelectedId(dId);
+  };
+
+  const handleCloseDelete = () => {
+    setOpenDelete(false);
+    setSelectedId('');
+  };
+
+  const companionList = todayCompanion.map(item => (
+    <Grid container item>
+      <Grid item xs={11}>
+        <TripCompanionSet companionInfo={item} />
+      </Grid>
+      <Grid
+        item
+        container
+        xs={1}
+        direction="column"
+        justify="space-evenly"
+        alignItems="center"
+      >
+        <Grid item>
+          <EditIcon onClick={() => handleClickOpenUpdate(item)} />
+        </Grid>
+        <Grid item>
+          <DeleteIcon
+            onClick={() => {
+              handleClickOpenDelete(item.dacId);
+            }}
+          />
+        </Grid>
+      </Grid>
+    </Grid>
+  ));
 
   return (
     <div>
-      <ul>{companionList}</ul>
-
+      {companionList}
       <Dialog
         open={openUpdate}
         onClose={handleCloseUpdate}
@@ -129,6 +161,21 @@ const Companion = () => {
           </Button>
           <Button onClick={putCompanionRequest} color="primary">
             수정
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={openDelete}
+        onClose={handleCloseDelete}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">정말 삭제하시겠습니까?</DialogTitle>
+        <DialogActions>
+          <Button onClick={handleCloseDelete} color="primary">
+            취소
+          </Button>
+          <Button onClick={handleDeleteCompanion} color="secondary">
+            삭제
           </Button>
         </DialogActions>
       </Dialog>
