@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { createRef, useState } from 'react';
 import moment from '../../../api/moment';
 import styled from 'styled-components';
 import Carousel from 'nuka-carousel';
 import { Typography, Grid, Avatar } from '@material-ui/core';
-import TempImage from '../../../assets/img/banner_paris.png';
+import TempImage from '../../../assets/img/banner_paris.svg';
 
 const HeaderDiv = styled.div`
   position: relative;
@@ -47,32 +47,35 @@ const HorizonContainer = styled.div`
     text-align: center;
   }
 `;
-
-const TripScheduleItem = ({ item }) => (
-  <HeaderDiv>
-    <img alt="innerImg" src={TempImage} />
-    <div className="headerTextDiv">
-      <Typography variant="h6" style={{ color: 'white' }}>
-        {item.nation}/{item.city}
-      </Typography>
-    </div>
-  </HeaderDiv>
-);
-
 const ScheduleContents = ({ tripSchedule, tripCompanion }) => {
-  console.log(tripSchedule);
+  const [carousrl, setCarousrl] = useState(() => createRef());
+  const _handleLoadImage = e => {
+    carousrl.current.setDimensions();
+  };
+
+  const TripScheduleItem = ({ item }) => (
+    <HeaderDiv>
+      <img alt="innerImg" src={TempImage} onLoad={_handleLoadImage} />
+      <div className="headerTextDiv">
+        <Typography variant="h6" style={{ color: 'white' }}>
+          {item.nation}/{item.city}
+        </Typography>
+      </div>
+    </HeaderDiv>
+  );
+
   return (
     <>
       <Typography variant="h6" style={{ padding: '0.5rem' }}>
         {moment.momentDateDayWithoutYear()}, 오늘의 여행
       </Typography>
-      <Grid container direction="column">
+      <Grid container direction="column" wrap="nowrap">
         <Grid item>
           <Carousel
-            style={{ maxHeight: '13rem' }}
+            ref={carousrl}
             autoplay
             autoplayInterval={6000}
-            wrapAround
+            wrapAround="true"
             defaultControlsConfig={{
               pagingDotsStyle: {
                 fill: 'white',

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import moyoColor from '../../api/moyoColor';
 import {
   List,
   ListItem,
@@ -18,7 +19,10 @@ import {
 
 const HeaderTypo = styled(Typography)`
   position: static;
-  padding: 2rem;
+  padding: 2.5rem 2rem;
+  color: white;
+  background: linear-gradient(to bottom, #4ac8d9, #4fdbc2);
+  background-size: 100% 100%;
   flex-grow: 0;
 `;
 const StyledDiv = styled.div`
@@ -28,11 +32,11 @@ const StyledDiv = styled.div`
   flex-direction: column;
 `;
 const ListContainer = styled.div`
+  background-color: white;
   position: relative;
   flex: 1 1 auto;
   min-height: 0;
   display: flex;
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
 `;
 const ScrollGrid = styled(Grid)`
   overflow-y: scroll;
