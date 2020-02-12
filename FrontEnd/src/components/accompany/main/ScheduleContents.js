@@ -1,40 +1,104 @@
 import React from 'react';
 import moment from '../../../api/moment';
 import styled from 'styled-components';
-import { Typography, Grid } from '@material-ui/core';
-import TripSchedulePaper from '../../more/schedule/TripSchedulePaper';
-import TripCompanionSet from '../../more/schedule/TripCompanionSet';
+import Carousel from 'nuka-carousel';
+import { Typography, Grid, Avatar } from '@material-ui/core';
+import TempImage from '../../../assets/img/banner_paris.png';
 
-const SubtitleTypo = styled.span`
+const HeaderDiv = styled.div`
+  position: relative;
   display: block;
-  padding: 0.5em 0.5em;
-  font-weight: 700;
-  font-size: 1.2em;
+  background-color: white;
+  & > img {
+    border-radius: 1.2rem 1.2rem 0rem 0rem;
+    width: 100%;
+    max-height: 13rem;
+  }
+  & > .headerTextDiv {
+    border-radius: 1.2rem 1.2rem 0rem 0rem;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    backdrop-filter: brightness(70%);
+    text-align: center;
+  }
 `;
 
+const CompanionAvatar = styled(Avatar)`
+  width: 13vw !important;
+  height: 13vw !important;
+  max-width: 125px !important;
+  max-height: 125px !important;
+`;
+
+const BottomGrid = styled(Grid)`
+  background-color: white;
+  width: 100%;
+  border-radius: 0rem 0rem 1.2rem 1.2rem;
+`;
+
+const HorizonContainer = styled.div`
+  overflow: auto;
+  white-space: nowrap;
+  & > .companionContainer {
+    display: inline-block;
+    margin: 0.4rem 0.9rem;
+    text-align: center;
+  }
+`;
+
+const TripScheduleItem = ({ item }) => (
+  <HeaderDiv>
+    <img alt="innerImg" src={TempImage} />
+    <div className="headerTextDiv">
+      <Typography variant="h6" style={{ color: 'white' }}>
+        {item.nation}/{item.city}
+      </Typography>
+    </div>
+  </HeaderDiv>
+);
+
 const ScheduleContents = ({ tripSchedule, tripCompanion }) => {
+  console.log(tripSchedule);
   return (
     <>
-      <Typography variant="h5" align="center">
-        {moment.momentDateDay()}
+      <Typography variant="h6" style={{ padding: '0.5rem' }}>
+        {moment.momentDateDayWithoutYear()}, 오늘의 여행
       </Typography>
-      <SubtitleTypo variant="h6">오늘의 여행</SubtitleTypo>
-      <Grid container direction="column" spacing={1} wrap="nowrap">
-        {tripSchedule.length > 0 &&
-          tripSchedule.map(item => (
-            <Grid item>
-              <TripSchedulePaper scheduleInfo={item} key={item.slistId} />
-            </Grid>
-          ))}
-      </Grid>
-      <SubtitleTypo variant="h6">오늘의 동행</SubtitleTypo>
-      <Grid container>
-        {tripCompanion.length > 0 &&
-          tripCompanion.map(item => (
-            <Grid item xs={6}>
-              <TripCompanionSet companionInfo={item} key={item.dacId} />
-            </Grid>
-          ))}
+      <Grid container direction="column">
+        <Grid item>
+          <Carousel
+            style={{ maxHeight: '13rem' }}
+            autoplay
+            autoplayInterval={6000}
+            wrapAround
+            defaultControlsConfig={{
+              pagingDotsStyle: {
+                fill: 'white',
+              },
+            }}
+            renderCenterLeftControls={() => null}
+            renderCenterRightControls={() => null}
+          >
+            {tripSchedule.map(item => (
+              <TripScheduleItem item={item} />
+            ))}
+          </Carousel>
+        </Grid>
+
+        <BottomGrid item>
+          <HorizonContainer>
+            {tripCompanion.map(user => (
+              <div className="companionContainer" key={user.dacId}>
+                <CompanionAvatar src={user.accompanyImage} />
+                <Typography variant="caption">
+                  {user.accompanyNickname}
+                </Typography>
+              </div>
+            ))}
+          </HorizonContainer>
+        </BottomGrid>
       </Grid>
     </>
   );

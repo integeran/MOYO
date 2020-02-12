@@ -69,6 +69,8 @@ export default {
   },
   caption: {
     fontFamily: 'Nanum Gothic, sans-serif',
+    fontWeight: '700',
+    letterSpacing: '0rem',
   },
   overline: {
     fontFamily: 'Nanum Gothic, sans-serif',
