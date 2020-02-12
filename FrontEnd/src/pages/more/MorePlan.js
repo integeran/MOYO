@@ -111,6 +111,7 @@ const MorePlan = () => {
           title: `${item.nation} / ${item.city}`,
           start: item.startDate.split(' ')[0],
           end: item.endDate,
+          color: 'salmon',
         };
       }),
     );
