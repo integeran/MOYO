@@ -7,8 +7,17 @@ import moment from 'moment';
 import ButtonContents from '../../components/accompany/main/ButtonContents';
 import ScheduleContents from '../../components/accompany/main/ScheduleContents';
 import AdvertisingContents from '../../components/accompany/main/AdvertisingContents';
+import TitleContents from '../../components/accompany/main/TitleContents';
 
 import { Grid } from '@material-ui/core';
+import styled from 'styled-components';
+
+const InnerGrid = styled(Grid)`
+  width: 85%;
+  margin: 0 auto !important;
+  margin-top: 1rem !important;
+  margin-bottom: 1.2rem !important;
+`;
 
 const AccompanyMain = () => {
   const history = useHistory();
@@ -74,22 +83,23 @@ const AccompanyMain = () => {
   };
 
   return (
-    <Grid container direction="column" spacing={5}>
-      <Grid item>
+    <Grid container direction="column">
+      <TitleContents />
+      <InnerGrid item>
         <ButtonContents
           onFindClick={handleAccompanyFindClick}
           onWriteClick={handleAccompanyWriteClick}
         />
-      </Grid>
-      <Grid item>
+      </InnerGrid>
+      <InnerGrid item>
         <ScheduleContents
           tripSchedule={tripSchedule}
           tripCompanion={tripCompanion}
         />
-      </Grid>
-      <Grid item>
+      </InnerGrid>
+      <InnerGrid item>
         <AdvertisingContents />
-      </Grid>
+      </InnerGrid>
     </Grid>
   );
 };

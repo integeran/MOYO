@@ -11,6 +11,7 @@ import MoreMain from './pages/more/MoreMain';
 import MorePlan from './pages/more/MorePlan';
 import MoreCommunity from './pages/more/MoreCommunity';
 import MoreSettings from './pages/more/MoreSettings';
+import MoreAccompanyManage from './pages/more/MoreAccompanyManage';
 import CategoryNav from './components/common/CategoryNav';
 import { Route, useHistory, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,6 +25,8 @@ import PostMap from './pages/postmap/Postmap';
 import CommunityList from './pages/community/CommunityList';
 import CommunityDetail from './pages/community/CommunityDetail';
 import CommunityWrite from './pages/community/CommunityWrite';
+import PersonalGame from './pages/game/PersonalGame';
+
 import { changeBool } from './modules/auth';
 
 const StyledContainer = styled(Container)`
@@ -81,11 +84,21 @@ const App = () => {
               component={AccompanyDateSelect}
             />
             <Route exact path="/accompany/accList" component={AccompanyList} />
-            <Route path="/accompany/accList/:id" component={AccompanyDetail} />
-            <Route path="/accompany/write" component={AccompanyWrite} />
+            <Route
+              path={['/accompany/accList/:id', '/more/accompanyDetail/:id']}
+              component={AccompanyDetail}
+            />
+            <Route
+              path={['/accompany/write', '/more/accompanyWrite']}
+              component={AccompanyWrite}
+            />
             <Route exact path="/more" component={MoreMain} />
             <Route path="/more/morePlan" component={MorePlan} />
             <Route path="/more/moreSettings" component={MoreSettings} />
+            <Route
+              path="/more/accompanyManage"
+              component={MoreAccompanyManage}
+            />
             <Route path="/more/moreCommunity" component={MoreCommunity} />
             <Route path="/dmroom/:receiverId" component={DmRoom} />
             <Route path="/dmroomlist" component={DmRoomList} />
@@ -96,6 +109,7 @@ const App = () => {
               path="/community/communityList/:id"
               component={CommunityDetail}
             />
+            <Route path="/personalgame" component={PersonalGame} />
           </>
         )}
       </StyledContainer>

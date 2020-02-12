@@ -39,11 +39,14 @@ const DmRoomList = () => {
     const callback = snapshot => {
       var val = snapshot.val();
 
+      console.log(val);
+
       var RoomInfo = {
         roomId: val.roomId,
         receiverId: val.receiverId,
         lastMessage: val.lastMessage,
         timeStamp: val.timeStamp,
+        read: val.read,
       };
 
       setRoomList(prevState => [...prevState, RoomInfo]);
@@ -82,6 +85,7 @@ const DmRoomList = () => {
                 receiverId={room.receiverId}
                 lastMessage={room.lastMessage}
                 timeStamp={room.timeStamp}
+                read={room.read}
               ></Room>
             );
           })
