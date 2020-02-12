@@ -111,6 +111,7 @@ const MorePlan = () => {
           title: `${item.nation} / ${item.city}`,
           start: item.startDate.split(' ')[0],
           end: item.endDate,
+          color: 'salmon',
         };
       }),
     );
@@ -147,7 +148,8 @@ const MorePlan = () => {
         container
         direction="column"
         justify="center"
-        style={{ width: 'inherit', height: 'inherit', margin: '0px' }}
+        style={{ margin: '0px' }}
+        wrap="nowrap"
       >
         <Grid item>
           <FullCalendar

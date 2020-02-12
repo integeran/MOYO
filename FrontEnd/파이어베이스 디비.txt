@@ -5,3 +5,5 @@ UserRooms/userId/roomId => (roomId, roomUserName, roomUserlist, roomType, roomOn
 수정본
 Messages/{roomId}/{messageId} => (senderId, message, timeStamp, fileName, path) // (메세지 작성한 사람의 정보, 메세지 내용, 시간, 파일이름, 경로)
 UserRooms/{senderId}/{receiverId} => (roomId, receiverId, lastMessage, timeStamp) // (룸아이디, 상대방의 정보, 최근 메세지, 시간)
+LastMessage/{roomId} => (senderId, messageId) // 
+ListRoomTrigger/{receiverId}/{timeStamp} => {trigger} //

@@ -2,6 +2,7 @@ package com.moyo.MOYO.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.ServletException;
 
@@ -147,15 +148,19 @@ public class UserRestController {
 		}
 	}
 	
-	@PostMapping(value="user/postImage")
-	public ResponseEntity<Map<String, Object>> postImage(@RequestParam(value="imageName", required=false) String imageName, @RequestParam("file") MultipartFile[] file, @RequestHeader("userToken") String userToken) {
+	@PostMapping("user/postImage")
+	public ResponseEntity<Map<String, Object>> postImage(@RequestParam(value="imageName", required=false) String imageName, @RequestParam("file") MultipartFile[] file, @RequestHeader(value="userToken", required=false) String userToken) {
 		try {
 			log.trace("UserRestController - postImage");
 			Map<String, Object> responseImage = fileService.uploadImage(file[0], "profile");
-			User originUser = jwtService.getUser(userToken);
-			responseImage.put("uId", originUser.getUId());
-			String originImageName = originUser.getImageName();
-			if (imageName != null && originImageName != imageName) {
+			if (!userToken.isEmpty()) {
+				User originUser = jwtService.getUser(userToken);
+				responseImage.put("uId", originUser.getUId());
+				String originImageName = originUser.getImageName();
+				if (imageName != null && originImageName != imageName) {
+					fileService.deleteImage(imageName);
+				}
+			} else if (imageName != null) {
 				fileService.deleteImage(imageName);
 			}
 			return response(responseImage, HttpStatus.OK, true);

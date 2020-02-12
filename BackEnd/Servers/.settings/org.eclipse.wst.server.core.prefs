@@ -1,3 +1,9 @@
-#Fri Feb 07 13:39:06 KST 2020
+<<<<<<< HEAD
+
+#Mon Feb 10 11:31:25 KST 2020
+
+=======
+#Mon Feb 10 16:02:04 KST 2020
+>>>>>>> feature_personalgame_backend
 org.eclipse.wst.server.core.isServerProject=true
 eclipse.preferences.version=1
