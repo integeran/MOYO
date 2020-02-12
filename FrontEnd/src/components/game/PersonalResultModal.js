@@ -2,6 +2,8 @@ import React from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -22,23 +24,20 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
   },
   paper: {
-    width: 400,
-    backgroundColor: theme.palette.background.paper,
+    width: '100%',
+    backgroundColor: 'white',
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
+    padding: '4%',
+    textAlign: 'center',
   },
 }));
 
-const PersonalModal = ({ close, message }) => {
+const PersonalResultModal = ({ closeResult, resultMessage }) => {
   const classes = useStyles();
   const rootRef = React.useRef(null);
 
-  const test = () => {
-    console.log(message);
-  };
-
-  return message ? (
+  return resultMessage ? (
     <div>
       <div className={classes.root} ref={rootRef}>
         <Modal
@@ -50,20 +49,25 @@ const PersonalModal = ({ close, message }) => {
           container={() => rootRef.current}
         >
           <div className={classes.paper}>
-            <h2 id="server-modal-title">{message}}</h2>
-            <p id="server-modal-description">
-              <img
-                alt="라이언 뛰어넘기"
-                src="https://item.kakaocdn.net/do/dcabec0932617c4c8adf2a55504119e9f43ad912ad8dd55b04db6a64cddaf76d"
-              ></img>
-              <button onClick={close}>닫기</button>
-            </p>
+            <Typography variant="h4">당신의 성향은</Typography>
+            <Typography variant="h4" style={{ color: 'red' }}>
+              {resultMessage}
+            </Typography>
+            <Typography variant="h4">입니다.</Typography>
+            <img
+              alt="라이언 뛰어넘기"
+              src="https://item.kakaocdn.net/do/dcabec0932617c4c8adf2a55504119e9f43ad912ad8dd55b04db6a64cddaf76d"
+              style={{ width: '80%', height: '50%' }}
+            ></img>
+
+            <Button variant="contained" color="primary" onClick={closeResult}>
+              홈으로
+            </Button>
           </div>
         </Modal>
       </div>
-      {message}
     </div>
   ) : null;
 };
 
-export default PersonalModal;
+export default PersonalResultModal;
