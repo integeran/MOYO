@@ -20,6 +20,7 @@ import {
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
 
 const Profile = props => {
   const jwtDecode = require('jwt-decode');
@@ -306,6 +307,13 @@ const Profile = props => {
             margin: '0px',
           }}
         >
+          <Grid item>
+            <SportsEsportsIcon
+              onClick={() => {
+                history.push('/PersonalGame');
+              }}
+            />
+          </Grid>
           <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
             {isMe ? (
               <Badge

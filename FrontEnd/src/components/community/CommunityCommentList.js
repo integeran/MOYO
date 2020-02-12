@@ -22,10 +22,15 @@ const CommunityCommentList = ({ cmId, userData }) => {
     comments => dispatch(changeComments(comments)),
     [dispatch],
   );
-  const onChangeEdit = useCallback(
+  const onChangeEditCallback = useCallback(
     cmCommentId => dispatch(changeEdit(cmCommentId)),
     [dispatch],
   );
+
+  const onChangeEdit = comment => {
+    onChangeEditCallback(comment.cmCommentId);
+    setEditComment(comment.contents);
+  };
 
   const getCommentList = async () => {
     try {
@@ -88,17 +93,19 @@ const CommunityCommentList = ({ cmId, userData }) => {
   };
 
   const handleEditClick = async cmCommentId => {
-    const commentData = {
-      cmCommentId: cmCommentId,
-      uid: userData.uid,
-      contents: editComment,
-    };
-    const fetchEditComment = async () => {
-      await putComment(commentData);
-      getComments();
-    };
-    onChangeEdit(cmCommentId);
-    fetchEditComment();
+    if (editComment.trim()) {
+      const commentData = {
+        cmCommentId: cmCommentId,
+        uid: userData.uid,
+        contents: editComment,
+      };
+      const fetchEditComment = async () => {
+        await putComment(commentData);
+        getComments();
+      };
+      onChangeEditCallback(cmCommentId);
+      fetchEditComment();
+    }
   };
 
   const deleteComment = async cmCommentId => {
@@ -157,7 +164,7 @@ const CommunityCommentList = ({ cmId, userData }) => {
                 color="secondary"
                 size="small"
                 aria-label="edit"
-                onClick={() => onChangeEdit(comment.cmCommentId)}
+                onClick={() => onChangeEdit(comment)}
               >
                 <EditIcon />
               </Fab>
@@ -166,9 +173,6 @@ const CommunityCommentList = ({ cmId, userData }) => {
               <TextField
                 id="commentEdit"
                 value={editComment}
-                onClick={() => {
-                  setEditComment('');
-                }}
                 onChange={handleCommentEdit}
                 variant="outlined"
               />
@@ -179,7 +183,7 @@ const CommunityCommentList = ({ cmId, userData }) => {
                 color="primary"
                 onClick={() => handleEditClick(comment.cmCommentId)}
               >
-                등록
+                수정
               </Button>
             ) : null}
           </div>
