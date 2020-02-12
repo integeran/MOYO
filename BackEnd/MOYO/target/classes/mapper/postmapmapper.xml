@@ -11,6 +11,15 @@
           left outer join postmap_like pl on p.pm_id = pl.pm_id group by p.pm_id
 	</select>
 	
+	<select id="selectTop" resultType="postmap" parameterType="map">
+		 select p.*, pml.pm_like_id, count(pl.pm_like_id) likes
+		  from postmap p
+          left outer join postmap_like pml on p.pm_id = pml.pm_id and #{uId} = pml.u_id
+          left outer join postmap_like pl on p.pm_id = pl.pm_id group by p.pm_id
+          order by likes desc
+          limit 0, #{top}
+	</select>
+	
 	<select id="selectOne" resultType="postmap" parameterType="int">
 		select p.* , count(pm_like_id) as likes
 		from postmap p

@@ -2,7 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   root: {

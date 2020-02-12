@@ -25,7 +25,7 @@ const DmRoomList = () => {
 
     firebase.database().goOnline();
 
-    loadRoomList(userData);
+    waitRoomListTrigger(userData);
   };
 
   /**
@@ -39,11 +39,14 @@ const DmRoomList = () => {
     const callback = snapshot => {
       var val = snapshot.val();
 
+      console.log(val);
+
       var RoomInfo = {
         roomId: val.roomId,
         receiverId: val.receiverId,
         lastMessage: val.lastMessage,
         timeStamp: val.timeStamp,
+        read: val.read,
       };
 
       setRoomList(prevState => [...prevState, RoomInfo]);
@@ -52,10 +55,28 @@ const DmRoomList = () => {
     loadRoomFirebase.orderByChild('timeStamp').on('child_added', callback); // 메세지를 받을 때 마다 목록을 갱신시키기 위해 once메소드가 아닌 on메소드 사용
   };
 
+  const waitRoomListTrigger = sender => {
+    console.log('waitRoomListTrigger');
+    var roomListTriggerFirebase = firebase
+      .database()
+      .ref('ListRoomTrigger/' + sender.uid);
+
+    const callback = snapshot => {
+      setRoomList([]);
+      loadRoomList(sender);
+      firebase
+        .database()
+        .ref('ListRoomTrigger/' + sender.uid)
+        .remove();
+    };
+
+    roomListTriggerFirebase.on('value', callback);
+  };
+
   return (
     <>
       <div>
-        {roomList.reverse().length !== 0 ? (
+        {roomList.length !== 0 ? (
           roomList.map((room, index) => {
             return (
               <Room
@@ -64,6 +85,7 @@ const DmRoomList = () => {
                 receiverId={room.receiverId}
                 lastMessage={room.lastMessage}
                 timeStamp={room.timeStamp}
+                read={room.read}
               ></Room>
             );
           })

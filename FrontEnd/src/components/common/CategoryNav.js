@@ -45,6 +45,10 @@ const CategoryNav = () => {
     history.push('/accompany');
   };
 
+  const handleCommunityClick = () => {
+    history.push('/community');
+  };
+
   return (
     <BottomNavigation
       value={select}
@@ -75,7 +79,7 @@ const CategoryNav = () => {
         label="커뮤니티"
         value="community"
         icon={<ForumIcon />}
-        onClick={() => {}}
+        onClick={handleCommunityClick}
       />
       <StyledBottomNavigationAction
         label="더보기"

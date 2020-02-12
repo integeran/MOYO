@@ -51,7 +51,7 @@ const PlanDaily = () => {
         </Grid>
         {isCompanion && (
           <Grid item>
-            <Companion />
+            <Companion setIsCompanion={setIsCompanion} />
           </Grid>
         )}
         {/* <Grid item>
