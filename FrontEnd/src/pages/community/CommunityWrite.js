@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import BaseAppBar from '../../components/common/BaseAppBar';
+import { InputLabel } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
@@ -59,32 +60,41 @@ const CommunityWrite = () => {
       console.error(error);
     }
   };
+
   const handleSubmitClick = async () => {
-    const communityData = {
-      uId: userData.uid,
-      cmTypeId: cmTypeId,
-      title: title,
-      contents: contents,
-    };
-    const fetchCommunity = async () => {
-      await postCommunity(communityData);
-      history.push('/community/');
-    };
-    fetchCommunity();
+    if (title.trim() && contents.trim() && cmTypeId) {
+      const communityData = {
+        uId: userData.uid,
+        cmTypeId: cmTypeId,
+        title: title,
+        contents: contents,
+      };
+      const fetchCommunity = async () => {
+        await postCommunity(communityData);
+        history.push('/community/');
+      };
+      fetchCommunity();
+    } else {
+      alert('아앜');
+    }
   };
   const handlePutClick = async () => {
-    const communityData = {
-      cmId: cmId,
-      uId: userData.uid,
-      cmTypeId: cmTypeId,
-      title: title,
-      contents: contents,
-    };
-    const fetchPutCommunity = async () => {
-      await putCommunity(communityData);
-      history.push('/community/');
-    };
-    fetchPutCommunity();
+    if (title.trim() && contents.trim() && cmTypeId) {
+      const communityData = {
+        cmId: cmId,
+        uId: userData.uid,
+        cmTypeId: cmTypeId,
+        title: title,
+        contents: contents,
+      };
+      const fetchPutCommunity = async () => {
+        await putCommunity(communityData);
+        history.push('/community/');
+      };
+      fetchPutCommunity();
+    } else {
+      alert('으아앜');
+    }
   };
 
   const [communityTypeList, setCommunityTypeList] = useState([]);
@@ -122,8 +132,10 @@ const CommunityWrite = () => {
             : handleSubmitClick
         }
       />
-      <h1>커뮤니티 글쓰기 구현 중입니다.</h1>
       <form autoComplete="off">
+        <InputLabel shrink htmlFor="select-multiple-native">
+          타입
+        </InputLabel>
         <Select
           id="typeSelect"
           select
@@ -132,6 +144,9 @@ const CommunityWrite = () => {
           value={cmTypeId}
           onChange={handleChangeType}
         >
+          <MenuItem value="">
+            <em>타입을 선택해주세요</em>
+          </MenuItem>
           {communityTypeList.map(item => (
             <MenuItem key={item.cmTypeId} value={item.cmTypeId}>
               {item.name}

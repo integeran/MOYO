@@ -122,7 +122,7 @@ const CommunityList = () => {
           onChangeCmId(null);
           onChangeTitle('');
           onChangeContents('');
-          onChangeType(1);
+          onChangeType('');
         }}
       >
         글쓰기
