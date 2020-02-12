@@ -1,6 +1,5 @@
 package com.moyo.MOYO.repository;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +46,13 @@ public class DailyAccompanyRepositoryImpl implements DailyAccompanyRepository {
 	@Override
 	public int create(DailyAccompany dailyAccompany) {
 		log.trace("DailyAccompanyRepository - create");
-		return session.insert(ns + "createDailyAccompany", dailyAccompany);
+		
+		int size = 0;
+		for(int i=0; i<dailyAccompany.getDays().size(); i++) {
+			dailyAccompany.setDay(dailyAccompany.getDays().get(i));
+			size = size + session.insert(ns + "createDailyAccompany", dailyAccompany);
+		}
+		return size;
 	}
 	
 	@Override

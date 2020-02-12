@@ -23,6 +23,8 @@ import PostMap from './pages/postmap/Postmap';
 import CommunityList from './pages/community/CommunityList';
 import CommunityDetail from './pages/community/CommunityDetail';
 import CommunityWrite from './pages/community/CommunityWrite';
+import PersonalGame from './pages/game/PersonalGame';
+
 import { changeBool } from './modules/auth';
 
 const StyledContainer = styled(Container)`
@@ -88,12 +90,16 @@ const App = () => {
             <Route path="/dmroom/:receiverId" component={DmRoom} />
             <Route path="/dmroomlist" component={DmRoomList} />
             <Route path="/postmap" component={PostMap} />
+<<<<<<< HEAD
             <Route exact path="/community" component={CommunityList} />
             <Route path="/community/write" component={CommunityWrite} />
             <Route
               path="/community/communityList/:id"
               component={CommunityDetail}
             />
+=======
+            <Route path="/personalgame" component={PersonalGame} />
+>>>>>>> feature_personalgame_backend
           </>
         )}
       </StyledContainer>
