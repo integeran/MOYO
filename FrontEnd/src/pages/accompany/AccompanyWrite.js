@@ -27,6 +27,8 @@ import {
 const AccompanyWrite = () => {
   const userData = useSelector(state => state.auth.userData, []);
   const history = useHistory();
+  const isModify = history.location.pathname.indexOf('more') > -1;
+  const modifyBoard = history.location.state.board;
 
   const [cityList, setCityList] = useState([]);
   const [nationList, setNationList] = useState([]);
@@ -52,13 +54,37 @@ const AccompanyWrite = () => {
       setGenderList(await getGenderList(true));
       setAgeList(await getAgeList(true));
       setTypeList(await getTypeList(true));
+      if (isModify && modifyBoard) {
+        setCityList(await getCityList(modifyBoard.nid));
+      }
     };
     fetchNationList();
+    if (isModify) {
+      setTitle(modifyBoard.title);
+      setStartDate(modifyBoard.startDate);
+      setEndDate(modifyBoard.endDate);
+      setNation(modifyBoard.nid);
+      setCity(modifyBoard.cid);
+      setContent(modifyBoard.contents);
+      setGender(modifyBoard.wantGender.toUpperCase());
+      setAge(modifyBoard.wantAge);
+      setType(String(modifyBoard.ttypeId));
+    }
   }, []);
 
-  const inputAccompanyBoard = async boardData => {
+  const postAccompanyBoard = async boardData => {
     try {
       return await axios.post(`accompanyBoard/create`, boardData, {
+        headers: { userToken: userData.userToken },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const putAccompanyBoard = async boardData => {
+    try {
+      return await axios.put(`accompanyBoard/update`, boardData, {
         headers: { userToken: userData.userToken },
       });
     } catch (error) {
@@ -70,21 +96,24 @@ const AccompanyWrite = () => {
     history.goBack();
   };
 
-  const handleSubmitClick = async () => {
+  const handleSubmitClick = () => {
     const fetchBoard = async () => {
       const boardData = {
+        acBoardId: modifyBoard.acBoardId || 0,
         nid: nation,
         cid: city,
         contents: content,
         startDate: moment(startDate).format('YYYY-MM-DD'),
         endDate: moment(endDate).format('YYYY-MM-DD'),
         title: title,
-        ttypeId: '0',
+        ttypeId: type,
         uid: userData.uid,
-        wantAge: '0',
-        wantGender: 'N',
+        wantAge: age.toLowerCase(),
+        wantGender: gender,
       };
-      await inputAccompanyBoard(boardData);
+      isModify
+        ? await putAccompanyBoard(boardData)
+        : await postAccompanyBoard(boardData);
     };
     fetchBoard();
     history.goBack();
