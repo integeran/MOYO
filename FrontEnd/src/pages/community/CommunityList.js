@@ -117,7 +117,6 @@ const CommunityList = () => {
             state: {
               prevpath: history.location.pathname,
               communityPutCheck: false,
-              communityTypeList: communityTypeList,
             },
           });
           onChangeCmId(null);
