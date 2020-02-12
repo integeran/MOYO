@@ -106,10 +106,6 @@ const Profile = props => {
     setGender(event.target.value);
   };
 
-  const changeImageFile = file => {
-    setImageFile(file);
-  };
-
   useEffect(() => {
     setAgeList(getAgeList());
     setGenderList(getGenderList());
@@ -236,7 +232,9 @@ const Profile = props => {
 
   const postImage = async () => {
     const reg = /(.*?)\.(jpg|jpeg|png|gif)$/;
-    if (imageFile.name.match(reg)) {
+    if (!imageFile) {
+      setOpenDialog(false);
+    } else if (imageFile.name.match(reg)) {
       const imgData = await postImageRequest();
       setTempImageName(imgData.data.data.imageName);
       setTempUserImage(imgData.data.data.image);
@@ -244,6 +242,14 @@ const Profile = props => {
     } else {
       alert('jpg, jpeg, png, gif 확장자만 지원합니다!');
     }
+  };
+
+  const deleteImage = async () => {
+    setImageFile('');
+    await postImageRequest();
+    setTempImageName('');
+    setTempUserImage('');
+    setOpenDialog(false);
   };
 
   const [isMe, setIsMe] = useState(true);
@@ -419,15 +425,18 @@ const Profile = props => {
           <input
             type="file"
             name="file"
-            onChange={e => changeImageFile(e.target.files[0])}
+            onChange={e => setImageFile(e.target.files[0])}
           ></input>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog} color="primary">
             취소
           </Button>
+          <Button onClick={deleteImage} color="primary">
+            기본 이미지
+          </Button>
           <Button onClick={postImage} color="primary">
-            수정
+            사진 수정
           </Button>
         </DialogActions>
       </Dialog>
