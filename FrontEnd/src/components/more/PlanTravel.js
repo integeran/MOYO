@@ -93,7 +93,6 @@ const PlanTravel = () => {
   };
 
   const handleClickOpenUpdate = async item => {
-    console.log(cityList);
     setNationUpdate(item.nid);
     getCityList(item.nid).then(data => {
       setCityListUpdate(data);
@@ -137,11 +136,19 @@ const PlanTravel = () => {
     }
   };
 
+  const [postClick, setPostClick] = useState(true);
+
   const postPlanTravel = async () => {
-    await postPlanTravelServer();
-    const schData = await getSchedule();
-    dispatch(storeSchedule(schData.data.data));
-    setOpenCreate(false);
+    if (postClick) {
+      await postPlanTravelServer();
+      const schData = await getSchedule();
+      dispatch(storeSchedule(schData.data.data));
+      setOpenCreate(false);
+      setPostClick(false);
+      setTimeout(() => {
+        setPostClick(true);
+      }, 1000);
+    }
   };
 
   const deleteSchedule = async sId => {
@@ -154,11 +161,26 @@ const PlanTravel = () => {
     }
   };
 
-  const handleDeleteSchedule = async sId => {
-    await deleteSchedule(sId);
+  const handleDeleteSchedule = async () => {
+    await deleteSchedule(deleteItem);
     const schData = await getSchedule();
     dispatch(storeSchedule(schData.data.data));
+    setDeleteItem('');
+    setOpenDelete(false);
   };
+
+  const handleClickOpenDelete = sId => {
+    setOpenDelete(true);
+    setDeleteItem(sId);
+  };
+
+  const handleCloseDelete = () => {
+    setOpenDelete(false);
+    setDeleteItem('');
+  };
+
+  const [openDelete, setOpenDelete] = useState(false);
+  const [deleteItem, setDeleteItem] = useState('');
 
   const newTravelList = planTravelList.map(item => (
     <Grid container item>
@@ -179,7 +201,7 @@ const PlanTravel = () => {
         <Grid item>
           <DeleteIcon
             onClick={() => {
-              handleDeleteSchedule(item.slistId);
+              handleClickOpenDelete(item.slistId);
             }}
           />
         </Grid>
@@ -219,10 +241,14 @@ const PlanTravel = () => {
   };
 
   const putPlanTravel = async () => {
-    await putPlanTravelServer();
-    const schData = await getSchedule();
-    dispatch(storeSchedule(schData.data.data));
-    setOpenUpdate(false);
+    if (selectedStartDateUpdate <= selectedEndDateUpdate) {
+      await putPlanTravelServer();
+      const schData = await getSchedule();
+      dispatch(storeSchedule(schData.data.data));
+      setOpenUpdate(false);
+    } else {
+      alert('날짜를 변경해주세요!');
+    }
   };
 
   return (
@@ -328,6 +354,7 @@ const PlanTravel = () => {
               onChange={setSelectedStartDateUpdate}
             />
             <DatePicker
+              helperText={''}
               disableToolbar
               variant="dialog"
               label="끝"
@@ -377,6 +404,22 @@ const PlanTravel = () => {
           </Button>
           <Button onClick={putPlanTravel} color="primary">
             수정
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openDelete}
+        onClose={handleCloseDelete}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">정말 삭제하시겠습니까?</DialogTitle>
+        <DialogActions>
+          <Button onClick={handleCloseDelete} color="primary">
+            취소
+          </Button>
+          <Button onClick={handleDeleteSchedule} color="secondary">
+            삭제
           </Button>
         </DialogActions>
       </Dialog>

@@ -9,6 +9,7 @@ import AccompanyDetail from './pages/accompany/AccompanyDetail';
 import AccompanyWrite from './pages/accompany/AccompanyWrite';
 import MoreMain from './pages/more/MoreMain';
 import MorePlan from './pages/more/MorePlan';
+import MoreCommunity from './pages/more/MoreCommunity';
 import MoreSettings from './pages/more/MoreSettings';
 import CategoryNav from './components/common/CategoryNav';
 import { Route, useHistory, Redirect } from 'react-router-dom';
@@ -87,6 +88,7 @@ const App = () => {
             <Route exact path="/more" component={MoreMain} />
             <Route path="/more/morePlan" component={MorePlan} />
             <Route path="/more/moreSettings" component={MoreSettings} />
+            <Route path="/more/moreCommunity" component={MoreCommunity} />
             <Route path="/dmroom/:receiverId" component={DmRoom} />
             <Route path="/dmroomlist" component={DmRoomList} />
             <Route path="/postmap" component={PostMap} />

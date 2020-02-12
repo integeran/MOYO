@@ -1,14 +1,17 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
-import EditIcon from '@material-ui/icons/Edit';
+import { useHistory } from 'react-router-dom';
+import {
+  makeStyles,
+  Avatar,
+  Divider,
+  Grid,
+  Typography,
+} from '@material-ui/core';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
 
-const MoreMain = ({ history }) => {
+const MoreMain = () => {
+  const history = useHistory();
   const useStyles = makeStyles(theme => ({
     rootAvatar: {},
     large: {
@@ -31,6 +34,10 @@ const MoreMain = ({ history }) => {
   };
   const handleSettingsClick = () => {
     history.push('/more/moreSettings');
+  };
+
+  const handleCommunityClick = () => {
+    history.push('/more/moreCommunity');
   };
 
   const handleProfileEditClick = () => {
@@ -80,7 +87,6 @@ const MoreMain = ({ history }) => {
               <Typography onClick={handleProfileEditClick}>
                 프로필 편집
               </Typography>
-              {/* <EditIcon fontSize="small" onClick={handleProfileEditClick} /> */}
             </Grid>
           </Grid>
         </Grid>
@@ -105,11 +111,14 @@ const MoreMain = ({ history }) => {
             <ArrowForwardIosIcon fontSize="small" />
           </Grid>
         </Grid>
-        <Grid item container justify="space-between">
+        <Grid
+          item
+          container
+          justify="space-between"
+          onClick={handleCommunityClick}
+        >
           <Grid item>
-            <Typography variant="h6" onClick={handlePlanClick}>
-              내 커뮤니티 글
-            </Typography>
+            <Typography variant="h6">내 커뮤니티 글</Typography>
           </Grid>
           <Grid item className={classes.arrowIcon}>
             <ArrowForwardIosIcon fontSize="small" />
