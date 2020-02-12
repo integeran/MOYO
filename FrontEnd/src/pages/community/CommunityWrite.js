@@ -24,7 +24,6 @@ const CommunityWrite = () => {
   const userData = useSelector(state => state.auth.userData, []);
   const history = useHistory();
   const dispatch = useDispatch();
-  const communityTypeList = history.location.state.communityTypeList;
   const onChangeTitle = useCallback(title => dispatch(changeTitle(title)), [
     dispatch,
   ]);
@@ -87,6 +86,27 @@ const CommunityWrite = () => {
     };
     fetchPutCommunity();
   };
+
+  const [communityTypeList, setCommunityTypeList] = useState([]);
+
+  const getCommunityTypeList = async () => {
+    try {
+      return await axios.get('community/selectCommunityType', {
+        headers: { userToken: userData.userToken },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchCommunityTypeList = async () => {
+      const result = await getCommunityTypeList();
+      setCommunityTypeList(result.data.data);
+    };
+    fetchCommunityTypeList();
+  }, []);
+
   return (
     <div>
       <BaseAppBar
