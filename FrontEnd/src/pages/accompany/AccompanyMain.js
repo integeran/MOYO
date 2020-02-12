@@ -15,8 +15,8 @@ import styled from 'styled-components';
 const InnerGrid = styled(Grid)`
   width: 85%;
   margin: 0 auto !important;
-  margin-top: 1.4rem !important;
-  margin-bottom: 1.4rem !important;
+  margin-top: 1rem !important;
+  margin-bottom: 1.2rem !important;
 `;
 
 const AccompanyMain = () => {
@@ -81,6 +81,7 @@ const AccompanyMain = () => {
       state: { prevpath: history.location.pathname },
     });
   };
+
   return (
     <Grid container direction="column">
       <TitleContents />
