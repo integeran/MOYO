@@ -8,6 +8,8 @@ import morePlanTravel from './morePlanTravel';
 import Dm from './Dm';
 import morePlanCompanion from './morePlanCompanion';
 import morePlanMemo from './morePlanMemo';
+import community from './community';
+import communityComment from './communityComment';
 import postmap from './postmap';
 import baseNavigation from './baseNavigation';
 
@@ -21,6 +23,8 @@ const rootReducer = combineReducers({
   Dm,
   morePlanCompanion,
   morePlanMemo,
+  community,
+  communityComment,
   postmap,
   baseNavigation,
 });
