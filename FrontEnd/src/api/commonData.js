@@ -88,8 +88,8 @@ export const getTypeList = async (useNone = false) => {
   if (res && res.data && res.data.data) {
     result = res.data.data;
   }
-  if (useNone) {
-    result.unshift({ tTypeId: 0, name: '무관' });
+  if (!useNone) {
+    result = result.filter(item => item.tTypeId !== 0);
   }
   return result.map(item => {
     return { ttypeId: String(item.ttypeId), name: item.name };
