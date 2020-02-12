@@ -90,16 +90,13 @@ const App = () => {
             <Route path="/dmroom/:receiverId" component={DmRoom} />
             <Route path="/dmroomlist" component={DmRoomList} />
             <Route path="/postmap" component={PostMap} />
-<<<<<<< HEAD
             <Route exact path="/community" component={CommunityList} />
             <Route path="/community/write" component={CommunityWrite} />
             <Route
               path="/community/communityList/:id"
               component={CommunityDetail}
             />
-=======
             <Route path="/personalgame" component={PersonalGame} />
->>>>>>> feature_personalgame_backend
           </>
         )}
       </StyledContainer>
