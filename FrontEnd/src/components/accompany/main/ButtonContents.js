@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Grid, Typography } from '@material-ui/core';
-import accompanyFindImg from '../../../assets/img/suitcase.svg';
-import accompanyWriteImg from '../../../assets/img/passport.svg';
+import accompanyFindImg from '../../../assets/icon/suitcase.svg';
+import accompanyWriteImg from '../../../assets/icon/passport.svg';
 
 const ContainerGrid = styled(Grid)`
   background-color: white;

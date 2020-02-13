@@ -66,6 +66,7 @@ export default {
   },
   button: {
     fontFamily: 'Nanum Gothic, sans-serif',
+    fontWeight: '700',
   },
   caption: {
     fontFamily: 'Nanum Gothic, sans-serif',
