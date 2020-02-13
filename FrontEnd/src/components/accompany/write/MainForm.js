@@ -5,45 +5,81 @@ import {
 } from '@material-ui/pickers';
 import { Grid, Typography, TextField, MenuItem } from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
+import styled from 'styled-components';
+
+const CustomKeyboardDatePicker = styled(KeyboardDatePicker)`
+  & > div {
+    & > div > button {
+      padding: 0 !important;
+      & > span > svg {
+        width: 1.2rem;
+        height: 1.2rem;
+      }
+    }
+    & > input {
+      font-size: 0.8rem;
+    }
+  }
+`;
+
+const CustomTextField = styled(TextField)`
+  & > div > div {
+    padding-bottom: 0.3rem !important;
+  }
+`;
+
+const FormTypo = styled(Typography)`
+  text-align: left;
+  font-weight: 700 !important;
+`;
 
 const MainForm = ({ ...props }) => {
   return (
-    <Grid container direction="column">
-      <Grid item container>
+    <Grid container direction="column" style={{ padding: '1rem' }}>
+      <Grid item container justify="center" alignItems="center">
         <Grid xs={3} item>
-          <Typography variant="subtitle1" align="right">
-            제목:
-          </Typography>
+          <FormTypo style={{ letterSpacing: '-0.05rem' }}>제목</FormTypo>
         </Grid>
         <Grid xs={9} item>
-          <TextField
+          <input
             id="titleInput"
             value={props.title}
             fullWidth
             onChange={props.onTitleChange}
+            style={{
+              padding: '0rem',
+              borderStyle: 'none',
+              borderBottom: '0.03rem solid gray',
+            }}
           />
         </Grid>
       </Grid>
-      <Grid item container justify="center" alignItems="center">
+      <Grid
+        item
+        container
+        justify="center"
+        alignItems="center"
+        style={{ marginTop: '1rem' }}
+      >
         <Grid item xs={3}>
-          <Typography variant="subtitle1" align="right">
-            여행날짜:
-          </Typography>
+          <FormTypo style={{ letterSpacing: '-0.05rem' }}>여행날짜</FormTypo>
         </Grid>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <Grid item xs={4}>
-            <KeyboardDatePicker
+            <CustomKeyboardDatePicker
+              disablePast
               disableToolbar
+              placeholder="시작"
               autoOk
               variant="inline"
               format="yyyy-MM-dd"
-              margin="normal"
               id="startDatePicker"
               value={props.startDate}
               onChange={props.onStartDateChange}
               KeyboardButtonProps={{
                 'aria-label': 'change date',
               }}
+              style={{ paddingRight: '0rem' }}
             />
           </Grid>
           <Grid item xs={1}>
@@ -52,12 +88,13 @@ const MainForm = ({ ...props }) => {
             </Typography>
           </Grid>
           <Grid item xs={4}>
-            <KeyboardDatePicker
+            <CustomKeyboardDatePicker
+              disablePast
               disableToolbar
+              placeholder="종료"
               autoOk
               variant="inline"
               format="yyyy-MM-dd"
-              margin="normal"
               id="endDatePicker"
               value={props.endDate}
               onChange={props.onEndDateChange}
@@ -70,15 +107,16 @@ const MainForm = ({ ...props }) => {
       </Grid>
       <Grid item container justify="center" alignItems="center">
         <Grid item xs={3}>
-          <Typography variant="subtitle1" align="right">
-            장소:
-          </Typography>
+          <FormTypo style={{ letterSpacing: '-0.05rem', paddingTop: '1.2rem' }}>
+            장소
+          </FormTypo>
         </Grid>
         <Grid item xs={4}>
-          <TextField
+          <CustomTextField
             id="nationSelect"
             select
-            label="도시"
+            label="나라"
+            size="small"
             fullWidth
             value={props.nation}
             onChange={props.onNationChange}
@@ -88,18 +126,23 @@ const MainForm = ({ ...props }) => {
                 {item.name}
               </MenuItem>
             ))}
-          </TextField>
+          </CustomTextField>
         </Grid>
         <Grid item xs={1}>
-          <Typography variant="subtitle1" align="center">
+          <Typography
+            variant="subtitle1"
+            align="center"
+            style={{ letterSpacing: '-0.05rem', paddingTop: '1.0rem' }}
+          >
             /
           </Typography>
         </Grid>
         <Grid item xs={4}>
-          <TextField
+          <CustomTextField
             id="citySelect"
             select
-            label="나라"
+            label="도시"
+            size="small"
             fullWidth
             disabled={`${props.nation}` ? false : true}
             value={props.city}
@@ -110,7 +153,7 @@ const MainForm = ({ ...props }) => {
                 {item.name}
               </MenuItem>
             ))}
-          </TextField>
+          </CustomTextField>
         </Grid>
       </Grid>
     </Grid>

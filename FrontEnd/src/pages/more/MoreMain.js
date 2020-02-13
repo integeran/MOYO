@@ -1,33 +1,21 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import {
-  makeStyles,
-  Avatar,
-  Divider,
-  Grid,
-  Typography,
-} from '@material-ui/core';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import { Grid } from '@material-ui/core';
+import MoreTitleContents from '../../components/more/main/MoreTitleContents';
+import MoreButtonContents from '../../components/more/main/MoreButtonContents';
+import CalenderIcon from '../../../src/assets/icon/icon_calender.svg';
+import AccompanyIcon from '../../../src/assets/icon/icon_accompany.svg';
+import CommunityIcon from '../../../src/assets/icon/icon_community.svg';
+import styled from 'styled-components';
+
+const InnerGrid = styled(Grid)`
+  width: 85%;
+  margin: 0 auto !important;
+  margin-top: 1rem !important;
+`;
 
 const MoreMain = () => {
   const history = useHistory();
-  const useStyles = makeStyles(theme => ({
-    rootAvatar: {},
-    large: {
-      width: theme.spacing(10),
-      height: theme.spacing(10),
-    },
-    arrowIcon: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  }));
-
-  const classes = useStyles();
-
-  const userData = useSelector(state => state.auth.userData);
 
   const handlePlanClick = () => {
     history.push('/more/morePlan');
@@ -35,128 +23,36 @@ const MoreMain = () => {
   const handleAccompanyManageClick = () => {
     history.push('/more/accompanyManage');
   };
-  const handleSettingsClick = () => {
-    history.push('/more/moreSettings');
-  };
 
   const handleCommunityClick = () => {
     history.push('/more/moreCommunity');
   };
 
-  const handleProfileEditClick = () => {
-    history.push({
-      pathname: '/profile',
-      state: {
-        userSocialId: '',
-        userProfileImage: userData.image,
-        userNickname: userData.nickname,
-        userAgeRange: userData.age,
-        userGender: userData.gender,
-        prevPath: history.location.pathname,
-      },
-    });
-  };
-
   return (
     <>
-      <Grid
-        container
-        direction="column"
-        justify="center"
-        spacing={4}
-        style={{ width: 'inherit', height: 'inherit', margin: '0px' }}
-      >
-        <Grid item xs={1} />
-        <Grid item container justify="space-between">
-          <Grid item xs={4}>
-            <Avatar
-              alt={userData.nickname}
-              src={userData.image}
-              className={classes.large}
-            />
-          </Grid>
-          <Grid
-            item
-            container
-            direction="column"
-            justify="space-between"
-            alignItems="flex-end"
-            xs={8}
-          >
-            <Grid item>
-              <Typography variant="h6">{userData.nickname} 안녕!</Typography>
-            </Grid>
-            <Grid item container direction="row" justify="flex-end">
-              <Typography onClick={handleProfileEditClick}>
-                프로필 편집
-              </Typography>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item>
-          <Divider variant="fullWidth" />
-        </Grid>
-        <Grid item container justify="space-between" onClick={handlePlanClick}>
-          <Grid item>
-            <Typography variant="h6">일정 관리</Typography>
-          </Grid>
-          <Grid item className={classes.arrowIcon}>
-            <ArrowForwardIosIcon fontSize="small" />
-          </Grid>
-        </Grid>
-        <Grid
-          item
-          container
-          justify="space-between"
-          onClick={handleAccompanyManageClick}
-        >
-          <Grid item>
-            <Typography variant="h6">내 동행 글</Typography>
-          </Grid>
-          <Grid item className={classes.arrowIcon}>
-            <ArrowForwardIosIcon fontSize="small" />
-          </Grid>
-        </Grid>
-        <Grid
-          item
-          container
-          justify="space-between"
-          onClick={handleCommunityClick}
-        >
-          <Grid item>
-            <Typography variant="h6">내 커뮤니티 글</Typography>
-          </Grid>
-          <Grid item className={classes.arrowIcon}>
-            <ArrowForwardIosIcon fontSize="small" />
-          </Grid>
-        </Grid>
-        <Grid item>
-          <Divider variant="fullWidth" />
-        </Grid>
-        <Grid item container justify="space-between">
-          <Grid item>
-            <Typography variant="h6" onClick={handlePlanClick}>
-              공지사항
-            </Typography>
-          </Grid>
-          <Grid item className={classes.arrowIcon}>
-            <ArrowForwardIosIcon fontSize="small" />
-          </Grid>
-        </Grid>
-        <Grid
-          item
-          container
-          justify="space-between"
-          onClick={handleSettingsClick}
-        >
-          <Grid item>
-            <Typography variant="h6">앱 설정</Typography>
-          </Grid>
-          <Grid item className={classes.arrowIcon}>
-            <ArrowForwardIosIcon fontSize="small" />
-          </Grid>
-        </Grid>
-        <Grid item xs={1} />
+      <Grid container direction="column">
+        <MoreTitleContents />
+        <InnerGrid item>
+          <MoreButtonContents
+            icon={CalenderIcon}
+            onClick={handlePlanClick}
+            menuName="여행 일정 관리"
+          />
+        </InnerGrid>
+        <InnerGrid item>
+          <MoreButtonContents
+            icon={AccompanyIcon}
+            onClick={handleAccompanyManageClick}
+            menuName="내 동행 글"
+          />
+        </InnerGrid>
+        <InnerGrid item>
+          <MoreButtonContents
+            icon={CommunityIcon}
+            onClick={handleCommunityClick}
+            menuName="내 커뮤니티 글"
+          />
+        </InnerGrid>
       </Grid>
     </>
   );
