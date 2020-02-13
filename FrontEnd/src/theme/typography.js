@@ -53,24 +53,30 @@ export default {
     letterSpacing: '-0.02rem',
   },
   subtitle1: {
+    fontSize: '1.15rem',
+    fontWeight: '700',
     fontFamily: 'Nanum Gothic, sans-serif',
   },
   subtitle2: {
+    fontSize: '1.05rem',
+    fontWeight: '700',
     fontFamily: 'Nanum Gothic, sans-serif',
   },
   body1: {
+    fontSize: '1rem',
     fontFamily: 'Nanum Gothic, sans-serif',
   },
   body2: {
     fontFamily: 'Nanum Gothic, sans-serif',
   },
   button: {
+    fontWeight: '700',
     fontFamily: 'Nanum Gothic, sans-serif',
   },
   caption: {
     fontFamily: 'Nanum Gothic, sans-serif',
     fontWeight: '700',
-    letterSpacing: '0rem',
+    letterSpacing: '0.2rem',
   },
   overline: {
     fontFamily: 'Nanum Gothic, sans-serif',

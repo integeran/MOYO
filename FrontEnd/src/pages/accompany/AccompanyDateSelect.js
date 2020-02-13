@@ -10,7 +10,7 @@ import { useHistory } from 'react-router';
 import moment from 'moment';
 
 const HeaderTypo = styled(Typography)`
-  padding: 2rem;
+  padding: 1rem 2rem;
   flex: 0 1 auto;
 `;
 
@@ -92,7 +92,7 @@ const AccompanyDateSelect = () => {
         <ButtonContainer>
           <Button
             variant="contained"
-            color="primary"
+            color="secondary"
             fullWidth
             disabled={date === null}
             onClick={HandleClick}

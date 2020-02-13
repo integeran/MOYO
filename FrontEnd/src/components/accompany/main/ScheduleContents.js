@@ -48,7 +48,7 @@ const HorizonContainer = styled.div`
   }
 `;
 const ScheduleContents = ({ tripSchedule, tripCompanion }) => {
-  const [carousrl, setCarousrl] = useState(() => createRef());
+  const [carousrl] = useState(() => createRef());
   const _handleLoadImage = e => {
     carousrl.current.setDimensions();
   };
