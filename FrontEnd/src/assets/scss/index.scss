@@ -16,6 +16,12 @@ body {
   background-color: #f2f5f8;
 }
 
+.moyo_center_grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 #root {
   height: 100%;
 }
