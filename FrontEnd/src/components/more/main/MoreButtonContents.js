@@ -13,6 +13,7 @@ const ButtonContainer = styled.div`
   width: 30%;
   margin: 0.7rem 0 0.35rem 2rem;
 `;
+
 const ButtonTypo = styled(Typography)`
   margin: 1.8rem 1.7rem 0.3rem 0 !important;
   text-align: right;

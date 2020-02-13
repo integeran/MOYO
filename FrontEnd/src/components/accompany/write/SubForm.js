@@ -14,7 +14,7 @@ const SubForm = ({ ...props }) => {
   return (
     <Grid container direction="column">
       <Grid item>
-        <Typography variant="subtitle1" align="center">
+        <Typography variant="subtitle1" align="left">
           원하는 성별
         </Typography>
       </Grid>
@@ -38,7 +38,7 @@ const SubForm = ({ ...props }) => {
         </FormControl>
       </Grid>
       <Grid item>
-        <Typography variant="subtitle1" align="center">
+        <Typography variant="subtitle1" align="left">
           원하는 나이대
         </Typography>
       </Grid>
@@ -63,7 +63,7 @@ const SubForm = ({ ...props }) => {
         </FormControl>
       </Grid>
       <Grid item>
-        <Typography variant="subtitle1" align="center">
+        <Typography variant="subtitle1" align="left">
           대표 여행 타입
         </Typography>
       </Grid>

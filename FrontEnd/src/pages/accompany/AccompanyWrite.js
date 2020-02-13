@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { useSelector } from 'react-redux';
 import {
+  Typography,
   TextField,
   Grid,
   Divider,
@@ -23,6 +24,31 @@ import {
   getAgeList,
   getTypeList,
 } from '../../api/commonData';
+import styled from 'styled-components';
+
+const InnerGrid = styled(Grid)`
+  width: 85%;
+  background-color: white;
+  border-radius: 1rem;
+  margin: 0 auto !important;
+  margin-top: 1rem !important;
+  margin-bottom: 1.2rem !important;
+`;
+
+const CustomInputField = styled(TextField)`
+  & > div::before {
+    border-bottom: 0;
+  }
+`;
+
+const CustomExpansionPanel = styled(ExpansionPanel)`
+  & > div {
+    padding-left: 1rem;
+    & > div {
+      margin: 0;
+    }
+  }
+`;
 
 const AccompanyWrite = () => {
   const userData = useSelector(state => state.auth.userData, []);
@@ -183,66 +209,75 @@ const AccompanyWrite = () => {
         leftClick={handleBackClick}
         rightClick={handleSubmitClick}
       />
-      <form autoComplete="off">
-        <Grid container direction="column">
-          <MainForm
-            title={title}
-            startDate={startDate}
-            endDate={endDate}
-            nationList={nationList}
-            cityList={cityList}
-            nation={nation}
-            city={city}
-            onTitleChange={handleTitleChange}
-            onStartDateChange={handleStartDate}
-            onEndDateChange={handleEndDate}
-            onNationChange={handleNationChange}
-            onCityChange={handleCityChange}
-          />
-          <Divider />
-          <ExpansionPanel
-            square
-            expanded={expanded === 'panel1'}
-            onChange={handleExpandChange('panel1')}
-          >
-            <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1d-content"
-              id="panel1d-header"
-            >
-              상세 설정
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <SubForm
-                genderList={genderList}
-                typeList={typeList}
-                ageList={ageList}
-                gender={gender}
-                type={type}
-                age={age}
-                onGenderChange={handleGenderChange}
-                onAgeChecked={handleAgeChecked}
-                onAgeChange={handleAgeChange}
-                onTypeChange={handleTypeChange}
-              />
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-
-          <Divider />
-          <Grid item style={{ marginTop: '1rem', marginBottom: '1rem' }}>
-            <TextField
-              id="outlined-multiline-static"
-              label="내용"
-              multiline
-              fullWidth
-              rows="10"
-              value={content}
-              onChange={handleContentChange}
-              variant="outlined"
+      <InnerGrid>
+        <form autoComplete="off">
+          <Grid container direction="column">
+            <MainForm
+              title={title}
+              startDate={startDate}
+              endDate={endDate}
+              nationList={nationList}
+              cityList={cityList}
+              nation={nation}
+              city={city}
+              onTitleChange={handleTitleChange}
+              onStartDateChange={handleStartDate}
+              onEndDateChange={handleEndDate}
+              onNationChange={handleNationChange}
+              onCityChange={handleCityChange}
             />
+            <Divider />
+            <CustomExpansionPanel
+              square
+              expanded={expanded === 'panel1'}
+              onChange={handleExpandChange('panel1')}
+              elevation={0}
+            >
+              <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1d-content"
+                id="panel1d-header"
+              >
+                <Grid item xs={4}>
+                  <Typography
+                    style={{ letterSpacing: '-0.05rem', fontWeight: '700' }}
+                  >
+                    상세설정
+                  </Typography>
+                </Grid>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <SubForm
+                  genderList={genderList}
+                  typeList={typeList}
+                  ageList={ageList}
+                  gender={gender}
+                  type={type}
+                  age={age}
+                  onGenderChange={handleGenderChange}
+                  onAgeChecked={handleAgeChecked}
+                  onAgeChange={handleAgeChange}
+                  onTypeChange={handleTypeChange}
+                />
+              </ExpansionPanelDetails>
+            </CustomExpansionPanel>
+
+            <Divider />
+            <Grid item>
+              <CustomInputField
+                id="outlined-multiline-static"
+                placeholder="내용을 입력해주세요"
+                multiline
+                fullWidth
+                rows="10"
+                value={content}
+                onChange={handleContentChange}
+                style={{ padding: '1rem' }}
+              />
+            </Grid>
           </Grid>
-        </Grid>
-      </form>
+        </form>
+      </InnerGrid>
     </div>
   );
 };
