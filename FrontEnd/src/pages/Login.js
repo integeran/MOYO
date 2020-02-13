@@ -3,9 +3,10 @@ import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { changeField, changeBool } from '../modules/auth';
 import axios from '../api/axios';
-import { Typography } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import kakaoBtnSmall from '../assets/img/kakaoLoginBtnSmall.png';
 import MOYOLogoMixed from '../assets/img/MOYOLogoMixed.svg';
+import styled from 'styled-components';
 
 const Login = () => {
   const history = useHistory();
@@ -84,21 +85,26 @@ const Login = () => {
   }
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: 'inherit',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
+    <Grid
+      item
+      container
+      direction="column"
+      justify="center"
+      alignContent="center"
+      style={{ marginTop: '12rem', textAlign: 'center' }}
     >
-      <img src={MOYOLogoMixed} width="300" alt="logo" />
-      <Typography variant="h5">모여와 함께 하는 모두의 여행</Typography>
-      <a id="custom-login-btn" onClick={loginWithKakao}>
-        <img src={kakaoBtnSmall} width="250" alt="Kakao" />
-      </a>
-    </div>
+      <Grid item style={{ marginBottom: '0.7rem' }}>
+        <img src={MOYOLogoMixed} width="80%" alt="logo" />
+      </Grid>
+      <Grid item>
+        <Typography variant="h6" style={{ letterSpacing: '-0.08rem' }}>
+          모여와 함께 하는 모두의 여행
+        </Typography>
+      </Grid>
+      <Grid item onClick={loginWithKakao} style={{ marginTop: '6rem' }}>
+        <img src={kakaoBtnSmall} width="60%" alt="Kakao" />
+      </Grid>
+    </Grid>
   );
 };
 
