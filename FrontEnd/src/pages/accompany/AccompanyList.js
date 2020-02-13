@@ -2,36 +2,37 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import AccompanySearchBar from '../../components/accompany/List/AccompanySearchBar';
-import AccompanyListSet from '../../components/accompany/List/AccompanyListSet';
-import { Grid, IconButton, Fab } from '@material-ui/core';
+import moment from 'moment';
+import qs from 'qs';
+import axios from '../../api/axios';
+import moyoColor from '../../api/moyoColor';
+
+import { Grid, IconButton, Fab, Typography } from '@material-ui/core';
+
 import FilterListIcon from '@material-ui/icons/FilterList';
-import HomeIcon from '@material-ui/icons/Home';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import MoyoIcon from '../../assets/icon/icon_moyo_white.svg';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import AccompanyFilterDialog from '../../components/accompany/List/AccompanyFilterDialog';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+
 import {
   accompanyFilterGender,
   accompanyFilterAge,
   accompanyFilterType,
 } from '../../modules/accompanyFilter';
 import { accompanyDate } from '../../modules/accompanyCondition';
-import axios from '../../api/axios';
-import moment from 'moment';
-import qs from 'qs';
-import { Typography } from '@material-ui/core';
+
+import AccompanySearchBar from '../../components/accompany/List/AccompanySearchBar';
+import AccompanyListSet from '../../components/accompany/List/AccompanyListSet';
+import AccompanyFilterDialog from '../../components/accompany/List/AccompanyFilterDialog';
 
 const MainGrid = styled(Grid)`
   height: inherit;
 `;
-
-const StyledDiv = styled.div`
-  text-align: center;
-  padding-top: 0.6rem;
-  padding-bottom: 0.6rem;
-  margin: 0 auto;
+const HeaderGrid = styled(Grid)`
+  background-color: ${moyoColor.moyo_green_1};
+  flex: 0 1 auto;
 `;
-
 const CenterGrid = styled(Grid)`
   display: flex;
   align-items: center;
@@ -47,52 +48,23 @@ const ScrollGrid = styled(Grid)`
   }
 `;
 
-const CenterFab = styled(Fab)`
+const HeaderTypo = styled(Typography)`
+  color: white;
+  display: inline-block;
+`;
+
+const StyledDiv = styled.div`
+  display: flex;
+  align-content: center;
+  text-align: center;
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+`;
+
+const FloatingFab = styled(Fab)`
   position: fixed !important;
   right: 8%;
   bottom: 12%;
-`;
-
-const UnderlineTypo = styled(Typography)`
-  text-transform: uppercase;
-  text-decoration: none;
-  &:before,
-  &:after {
-    content: '';
-    position: absolute;
-    bottom: 1rem;
-    left: 2rem;
-    right: 2rem;
-    height: 2px;
-    background-color: #f37272;
-  }
-  &:before {
-    opacity: 0;
-    transform: translateY(-8px);
-    transition: transform 0s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0s;
-  }
-  &:after {
-    opacity: 0;
-    transform: translateY(8px/2);
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-      opacity 0.2s;
-  }
-  &:hover,
-  &:focus {
-    &:before,
-    &:after {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    &:before {
-      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-        opacity 0.2s;
-    }
-    &:after {
-      transition: transform 0s 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-        opacity 0s 0.2s;
-    }
-  }
 `;
 
 const AccompanyList = () => {
@@ -233,44 +205,43 @@ const AccompanyList = () => {
   return (
     <>
       <MainGrid container direction="column">
-        <Grid item container style={{ paddingTop: '1rem', flex: '0 1 auto' }}>
+        <HeaderGrid item container>
           <CenterGrid item xs={2}>
             <IconButton color="inherit" onClick={handleHomeClick}>
-              <HomeIcon />
+              <img
+                alt="icon_moyo_white"
+                src={MoyoIcon}
+                style={{ height: '2rem' }}
+              />
             </IconButton>
           </CenterGrid>
           <CenterGrid item xs={8} style={{ position: 'relative' }}>
             <StyledDiv onClick={handleLocationSelect}>
-              <UnderlineTypo variant="h5" align="center">
-                {accNation.name}/{accCity.name}
-              </UnderlineTypo>
+              <HeaderTypo variant="h5" align="center">
+                {accNation.name} / {accCity.name}
+              </HeaderTypo>
+              <ArrowDropDownIcon style={{ color: 'white' }} />
             </StyledDiv>
           </CenterGrid>
           <Grid item xs={2}></Grid>
-        </Grid>
-
-        <Grid item container style={{ flex: '0 1 auto' }}>
-          <Grid item xs={1}></Grid>
-          <CenterGrid item xs={2}>
-            <IconButton color="inherit" onClick={handlePreDayClick}>
-              <ArrowBackIosIcon fontSize="small" color="disabled" />
-            </IconButton>
-          </CenterGrid>
-          <CenterGrid item xs={6} style={{ position: 'relative' }}>
-            <StyledDiv onClick={handleDateSelect}>
-              <UnderlineTypo variant="subtitle1" align="center">
-                {convertDate(accDate)}
-              </UnderlineTypo>
-            </StyledDiv>
-          </CenterGrid>
-          <Grid item xs={2}>
-            <IconButton color="inherit" onClick={handleNextDayClick}>
-              <ArrowForwardIosIcon fontSize="small" color="disabled" />
-            </IconButton>
-          </Grid>
-          <Grid item xs={1}></Grid>
-        </Grid>
-
+        </HeaderGrid>
+        <CenterGrid item>
+          <IconButton color="inherit" onClick={handlePreDayClick}>
+            <ArrowBackIosIcon fontSize="small" />
+          </IconButton>
+          <StyledDiv onClick={handleDateSelect}>
+            <Typography
+              variant="subtitle1"
+              align="center"
+              style={{ fontWeight: '700' }}
+            >
+              {convertDate(accDate)}
+            </Typography>
+          </StyledDiv>
+          <IconButton color="inherit" onClick={handleNextDayClick}>
+            <ArrowForwardIosIcon fontSize="small" />
+          </IconButton>
+        </CenterGrid>
         <Grid item style={{ flex: '0 1 auto', marginBottom: '1rem' }}>
           <AccompanySearchBar onClick={handleSearchClick} />
         </Grid>
@@ -279,14 +250,15 @@ const AccompanyList = () => {
         </ScrollGrid>
       </MainGrid>
 
-      <CenterFab
+      <FloatingFab
         variant="extended"
+        color="secondary"
         aria-label="filter"
         onClick={handleFilteringClick}
       >
         <FilterListIcon />
         필터
-      </CenterFab>
+      </FloatingFab>
 
       <AccompanyFilterDialog
         filterGender={filterGender}

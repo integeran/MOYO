@@ -4,10 +4,10 @@ import AccompanyListPaper from './AccompanyListPaper';
 import styled from 'styled-components';
 
 const ListComponent = styled.div`
-  width: 90%;
+  width: 85%;
   min-height: 0;
   margin: auto;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   margin-bottom: 6rem;
 `;
 
