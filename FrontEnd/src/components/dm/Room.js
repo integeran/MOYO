@@ -80,7 +80,7 @@ const Room = ({ roomId, receiverId, lastMessage, timeStamp, read }) => {
               </Grid>
               <Grid item xs={6} style={{ maxWidth: '100%' }}>
                 <Typography
-                  variant="subtitle1"
+                  variant="body2"
                   style={{
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
@@ -101,7 +101,7 @@ const Room = ({ roomId, receiverId, lastMessage, timeStamp, read }) => {
             )}
           </Grid>
           <Grid item xs={3}>
-            <Typography variant="caption">
+            <Typography variant="caption" style={{ float: 'right' }}>
               {moment(timeStamp).format('YYYY/MM/DD') ===
               moment(curTime).format('YYYY/MM/DD')
                 ? moment(timeStamp).format('LT')
