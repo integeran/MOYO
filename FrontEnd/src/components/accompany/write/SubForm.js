@@ -9,18 +9,55 @@ import {
   Radio,
   Checkbox,
 } from '@material-ui/core';
+import styled from 'styled-components';
+
+const MenuTypo = styled(Typography)`
+  text-align: left;
+  font-weight: 700 !important;
+  font-size: 0.9rem !important;
+  margin-top: 0.7rem !important;
+  margin-bottom: 0.3rem !important;
+`;
+
+const CustomRadioGroup = styled(RadioGroup)`
+  & > label {
+    margin-right: 0.5rem;
+    & > span {
+      font-size: 0.85rem;
+      padding-top: 0.3rem;
+      padding-bottom: 0.3rem;
+      padding-right: 0.5rem;
+      & > span > div > svg {
+        width: 1.4rem;
+      }
+    }
+  }
+`;
+
+const CustomFormGroup = styled(FormGroup)`
+  & > label {
+    margin-right: 0.5rem;
+    & > span {
+      font-size: 0.85rem;
+      padding-top: 0.3rem;
+      padding-bottom: 0.3rem;
+      padding-right: 0.5rem;
+      & > span > svg {
+        width: 1.4rem;
+      }
+    }
+  }
+`;
 
 const SubForm = ({ ...props }) => {
   return (
     <Grid container direction="column">
       <Grid item>
-        <Typography variant="subtitle1" align="left">
-          원하는 성별
-        </Typography>
+        <MenuTypo>원하는 성별</MenuTypo>
       </Grid>
       <Grid item>
         <FormControl fullWidth>
-          <RadioGroup
+          <CustomRadioGroup
             name="gender"
             value={props.gender}
             onChange={props.onGenderChange}
@@ -34,17 +71,15 @@ const SubForm = ({ ...props }) => {
                 label={item.name}
               />
             ))}
-          </RadioGroup>
+          </CustomRadioGroup>
         </FormControl>
       </Grid>
       <Grid item>
-        <Typography variant="subtitle1" align="left">
-          원하는 나이대
-        </Typography>
+        <MenuTypo>원하는 나이대</MenuTypo>
       </Grid>
       <Grid item>
         <FormControl fullWidth>
-          <FormGroup row>
+          <CustomFormGroup row>
             {props.ageList.map(item => (
               <FormControlLabel
                 key={item.value}
@@ -59,16 +94,14 @@ const SubForm = ({ ...props }) => {
                 label={item.name}
               />
             ))}
-          </FormGroup>
+          </CustomFormGroup>
         </FormControl>
       </Grid>
       <Grid item>
-        <Typography variant="subtitle1" align="left">
-          대표 여행 타입
-        </Typography>
+        <MenuTypo>대표 여행 타입</MenuTypo>
       </Grid>
       <FormControl fullWidth>
-        <RadioGroup
+        <CustomRadioGroup
           name="ttypeId"
           value={props.type}
           onChange={props.onTypeChange}
@@ -82,7 +115,7 @@ const SubForm = ({ ...props }) => {
               label={item.name}
             />
           ))}
-        </RadioGroup>
+        </CustomRadioGroup>
       </FormControl>
     </Grid>
   );
