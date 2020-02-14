@@ -25,12 +25,12 @@ com\moyo\MOYO\controller\AccompanyBoardRestController.class
 com\moyo\MOYO\repository\PostmapRepository.class
 com\moyo\MOYO\controller\CommunityRestController.class
 com\moyo\MOYO\repository\DailyMemoRepositoryImpl.class
-com\moyo\MOYO\repository\PostmapRepositoryImpl$1.class
 com\moyo\MOYO\service\DailyAccompanyService.class
 com\moyo\MOYO\repository\ScheduleListRepository.class
 com\moyo\MOYO\controller\CommunityCommentRestController.class
 com\moyo\MOYO\repository\CommunityCommentRepositoryImpl.class
 com\moyo\MOYO\service\AccompanyBoardService.class
+com\moyo\MOYO\dto\CommunityType.class
 com\moyo\MOYO\repository\UserRepository.class
 com\moyo\MOYO\controller\UserRestController.class
 com\moyo\MOYO\repository\DailyAccompanyRepository.class
@@ -44,7 +44,6 @@ com\moyo\MOYO\service\PostmapServiceImpl.class
 com\moyo\MOYO\controller\DailyMemoRestController.class
 com\moyo\MOYO\repository\PostmapRepositoryImpl.class
 com\moyo\MOYO\service\ScheduleListService.class
-com\moyo\MOYO\repository\PostmapRepositoryImpl$2.class
 com\moyo\MOYO\service\CommunityServiceImpl.class
 com\moyo\MOYO\service\CommunityCommentService.class
 com\moyo\MOYO\service\JwtService.class
