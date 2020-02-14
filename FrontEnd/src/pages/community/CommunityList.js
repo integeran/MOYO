@@ -35,6 +35,9 @@ const CommunityContainer = styled(Grid)`
   margin: 0 auto !important;
   flex: 1;
   overflow: auto;
+  ::-webkit-scrollbar {
+    display: none;
+  }
   min-height: 0;
 `;
 
