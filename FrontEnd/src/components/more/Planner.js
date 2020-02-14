@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import PlanTravel from './PlanTravel';
 import PlanDaily from './PlanDaily';
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Grid from '@material-ui/core/Grid';
+import { Typography, Paper, Tabs, Tab, Grid, Divider } from '@material-ui/core';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles({
   root: {
@@ -15,6 +13,7 @@ const useStyles = makeStyles({
 
 const Planner = () => {
   const classes = useStyles();
+  const selectedDate = useSelector(state => state.planDate.selectedDate);
   const [tabsValue, setTabsValue] = React.useState('');
 
   const handleChangeTabs = (event, newValue) => {
@@ -36,12 +35,24 @@ const Planner = () => {
   }
   return (
     <>
+      <Divider />
       <Grid
         container
         direction="column"
         justify="center"
-        style={{ width: 'inherit', height: 'inherit', margin: '0px' }}
+        style={{ margin: '0px' }}
+        wrap="nowrap"
       >
+        <Grid
+          item
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginTop: '1em',
+          }}
+        >
+          <Typography variant="h6">{selectedDate.split('T')[0]}</Typography>
+        </Grid>
         <Grid item>
           <Paper className={classes.root} elevation={0}>
             <Tabs

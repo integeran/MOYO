@@ -9,6 +9,10 @@ import com.moyo.MOYO.dto.Postmaplike;
 public interface PostmapService {
 	public List<Postmap> selectAll(HashMap<String, Object> map);
 	
+	public List<Postmap> selectTop(HashMap<String, Object> map);
+	
+	public List<Postmap> selectExceptTop(HashMap<String, Object> map);
+	
 	public Postmap selectOne(int pmId);
 	
 	public int insertPostmap(Postmap postmap);

@@ -1,59 +1,46 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Grid, Typography } from '@material-ui/core';
-import accompanyFindImg from '../../../assets/img/accompany_find.PNG';
-import accompanyWriteImg from '../../../assets/img/accompany_write.PNG';
+import accompanyFindImg from '../../../assets/icon/icon_suitcase.svg';
+import accompanyWriteImg from '../../../assets/icon/icon_passport.svg';
 
-const TitleTypo = styled(Typography)`
-  padding: 1.2rem 2rem;
-`;
-
-const ButtonContainerGrid = styled(Grid)`
-  position: relative;
-  padding: 0 2rem !important;
-`;
-
-const RoundImage = styled.img`
-  width: 100%;
-  border-radius: 50%;
-  filter: brightness(70%);
-`;
-
-const CenterSpan = styled.span`
-  font-weight: 800;
-  font-size: 1.2rem;
-  color: white;
-  position: absolute;
+const ContainerGrid = styled(Grid)`
+  background-color: white;
+  width: 100% !important;
+  border-radius: 1rem;
   margin: 0 auto;
-  left: 0;
-  right: 0;
-  top: 45%;
-  z-index: 999;
-  text-align: center;
-  pointer-events: none;
+`;
+
+const ButtonContainer = styled.div`
+  width: 35%;
+  margin: 0 auto;
+  margin-top: 1.4rem;
+`;
+const ButtonTypo = styled(Typography)`
+  margin: 0.5rem 0 1.5rem 0 !important;
+  font-weight: 800 !important;
 `;
 
 const ButtonContents = ({ onFindClick, onWriteClick }) => {
   return (
-    <Grid container direction="column" spacing={2}>
-      <Grid item>
-        <TitleTypo variant="h5">
-          모두를 위한 여행 동행
-          <br />
-          MOYO
-        </TitleTypo>
+    <ContainerGrid container>
+      <Grid item xs={6} onClick={onFindClick}>
+        <ButtonContainer>
+          <img alt="find_Img" src={accompanyFindImg} />
+        </ButtonContainer>
+        <ButtonTypo variant="h5" align="center">
+          동행 찾기
+        </ButtonTypo>
       </Grid>
-      <Grid item container spacing={2}>
-        <ButtonContainerGrid item xs={6}>
-          <CenterSpan>동행 찾기</CenterSpan>
-          <RoundImage src={accompanyFindImg} onClick={onFindClick} />
-        </ButtonContainerGrid>
-        <ButtonContainerGrid item xs={6}>
-          <CenterSpan>동행 만들기</CenterSpan>
-          <RoundImage src={accompanyWriteImg} onClick={onWriteClick} />
-        </ButtonContainerGrid>
+      <Grid item xs={6} onClick={onWriteClick}>
+        <ButtonContainer>
+          <img alt="write_img" src={accompanyWriteImg} />
+        </ButtonContainer>
+        <ButtonTypo variant="h5" align="center">
+          동행 구하기
+        </ButtonTypo>
       </Grid>
-    </Grid>
+    </ContainerGrid>
   );
 };
 

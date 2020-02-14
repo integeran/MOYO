@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Typography from '@material-ui/core/Typography';
+import moyoColor from '../../api/moyoColor';
+import {
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+  Grid,
+  Divider,
+} from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import { getNationList, getCityList } from '../../api/commonData';
@@ -14,8 +19,11 @@ import {
 
 const HeaderTypo = styled(Typography)`
   position: static;
-  padding: 2rem;
-  flex: 0 1 auto;
+  padding: 2.5rem 2rem;
+  color: white;
+  background: linear-gradient(to bottom, #4ac8d9, #4fdbc2);
+  background-size: 100% 100%;
+  flex-grow: 0;
 `;
 const StyledDiv = styled.div`
   width: inherit;
@@ -24,20 +32,13 @@ const StyledDiv = styled.div`
   flex-direction: column;
 `;
 const ListContainer = styled.div`
+  background-color: white;
   position: relative;
   flex: 1 1 auto;
   min-height: 0;
   display: flex;
 `;
-const NationList = styled(List)`
-  flex-grow: 1;
-  overflow-y: scroll;
-  ::-webkit-scrollbar {
-    display: none;
-  }
-`;
-const CityList = styled(List)`
-  flex-grow: 3;
+const ScrollGrid = styled(Grid)`
   overflow-y: scroll;
   ::-webkit-scrollbar {
     display: none;
@@ -46,17 +47,23 @@ const CityList = styled(List)`
 
 const AccompanyLocationSelect = () => {
   const history = useHistory();
-  const [nationList, setNationList] = useState([]);
-  const [cityList, setCityList] = useState([]);
   const dispatch = useDispatch();
 
+  const [nationList, setNationList] = useState([]);
+  const [cityList, setCityList] = useState([]);
+  const [selectedNation, setSelectedNation] = useState(0);
+
   useEffect(() => {
-    getNationList().then(data => {
-      setNationList(data);
-    });
+    const fetchNationList = async () => {
+      const resData = await getNationList();
+      setNationList(resData);
+      handleNationClick(resData[0], 0);
+    };
+    fetchNationList();
   }, []);
 
-  const onNationClick = async nationItem => {
+  const handleNationClick = async (nationItem, idx) => {
+    setSelectedNation(idx);
     getCityList(nationItem.nid).then(data => {
       setCityList(data);
       dispatch(
@@ -65,7 +72,7 @@ const AccompanyLocationSelect = () => {
     });
   };
 
-  const onCityClick = cityItem => {
+  const handleCityClick = cityItem => {
     dispatch(accompanyCity({ code: cityItem.cid, name: cityItem.name }));
     const path =
       history.location.state.prevpath === '/accompany'
@@ -81,26 +88,35 @@ const AccompanyLocationSelect = () => {
     <StyledDiv>
       <HeaderTypo variant="h4">어디로 여행 가실건가요?</HeaderTypo>
       <ListContainer>
-        <NationList component="nav">
-          {nationList.map(item => (
-            <ListItem
-              alignItems="center"
-              button
-              key={item.nid}
-              onClick={() => onNationClick(item)}
-            >
-              <ListItemText primary={item.name} />
-            </ListItem>
-          ))}
-        </NationList>
-        <CityList component="nav">
-          {cityList.length !== 0 &&
-            cityList.map(item => (
-              <ListItem button key={item.cid} onClick={() => onCityClick(item)}>
-                <ListItemText primary={item.name} />
+        <ScrollGrid item xs={5}>
+          <List component="nav" disablePadding={true}>
+            {nationList.map((item, idx) => (
+              <ListItem
+                key={item.nid}
+                divider={true}
+                selected={idx === selectedNation}
+                onClick={() => handleNationClick(item, idx)}
+              >
+                <ListItemText primary={item.name} align="center" />
               </ListItem>
             ))}
-        </CityList>
+          </List>
+        </ScrollGrid>
+        <Divider orientation="vertical" />
+        <ScrollGrid item xs={7}>
+          <List component="nav" disablePadding={true}>
+            {cityList.length !== 0 &&
+              cityList.map(item => (
+                <ListItem
+                  key={item.cid}
+                  onClick={() => handleCityClick(item)}
+                  divider={true}
+                >
+                  <ListItemText primary={item.name} align="center" />
+                </ListItem>
+              ))}
+          </List>
+        </ScrollGrid>
       </ListContainer>
     </StyledDiv>
   );

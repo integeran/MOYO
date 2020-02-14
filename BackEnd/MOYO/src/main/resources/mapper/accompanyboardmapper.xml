@@ -87,6 +87,20 @@
 	    where ac_board_id = #{acBoardId}
 	</update>
 	
+	<select id="selectAllByUser" parameterType="int" resultType="accompanyBoard">
+		select u.nickname, u.image, u.age, u.gender, ab.*, c.name city, na.name nation, tt.name type
+		  FROM accompany_board ab
+		  left outer join user u on ab.u_id = u.u_id
+		  left outer join city c on ab.c_id = c.c_id
+		  left outer join nation na on ab.n_id = na.n_id
+		  left outer join travel_type tt on ab.t_type_id = tt.t_type_id 
+		 where ab.u_id = #{uId}
+	</select>
+	
+	<update id="updateDeadlineToggle" parameterType="map">
+		update accompany_board set deadline_toggle = #{deadlineToggle} where ac_board_id = #{acBoardId}
+	</update>
+	
 	<select id="selectNation" resultType="nation">
 		select * from nation
 	</select>

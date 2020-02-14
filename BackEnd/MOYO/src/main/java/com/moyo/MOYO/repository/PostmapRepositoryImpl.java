@@ -44,6 +44,40 @@ public class PostmapRepositoryImpl implements PostmapRepository{
 		
 		return postmapList;
 	}
+	
+	@Override
+	public List<Postmap> selectExceptTop(HashMap<String, Object> map) {
+		log.trace("PostmapRepository - selectExceptTop : ",map);
+		List<Postmap> selectAll = session.selectList(ns+ "selectAll", map);
+		List<Postmap> selectTop = session.selectList(ns+ "selectTop", map);
+		
+		for(int i=0; i<selectTop.size(); i++) {
+			selectAll.remove(selectTop.get(i));
+		}
+		
+		List<Postmap> postmapList = new ArrayList<>();
+		
+		double latitude = Math.toRadians((double) map.get("latitude"));
+		double longitude = Math.toRadians((double) map.get("longitude"));
+		for(Postmap post : selectAll) {
+			double pLat = Math.toRadians(post.getLatitude());
+			double pLng = Math.toRadians(post.getLongitude());
+			double distance = ( 6371 * Math.acos( Math.cos( latitude ) * Math.cos( pLat )
+			          * Math.cos( pLng - longitude )
+			          + Math.sin( latitude ) * Math.sin( pLat ) ) );
+			if(distance < 5) {
+				postmapList.add(post);
+			}
+		}
+		
+		return postmapList;
+	}
+	
+	@Override
+	public List<Postmap> selectTop(HashMap<String, Object> map) {
+		log.trace("PostmapRepository - selectTop : ", map);
+		return session.selectList(ns+ "selectTop",map);
+	}
 
 	@Override
 	public Postmap selectOne(int pmId) {

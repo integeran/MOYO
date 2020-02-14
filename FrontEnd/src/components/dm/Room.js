@@ -8,8 +8,9 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import ListItem from '@material-ui/core/ListItem';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
-const Room = ({ roomId, receiverId, lastMessage, timeStamp }) => {
+const Room = ({ roomId, receiverId, lastMessage, timeStamp, read }) => {
   const history = useHistory();
 
   const userData = useSelector(state => state.auth.userData);
@@ -91,13 +92,20 @@ const Room = ({ roomId, receiverId, lastMessage, timeStamp }) => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={1}></Grid>
+          <Grid item xs={1}>
+            {read === false && (
+              <FiberManualRecordIcon
+                fontSize="small"
+                style={{ color: 'red' }}
+              />
+            )}
+          </Grid>
           <Grid item xs={3}>
             <Typography variant="caption">
-              {timeStamp.substr(0, timeStamp.indexOf(' ')) ===
+              {moment(timeStamp).format('YYYY/MM/DD') ===
               moment(curTime).format('YYYY/MM/DD')
-                ? timeStamp.substr(timeStamp.indexOf(' ') + 1)
-                : timeStamp.substr(0, timeStamp.indexOf(' '))}
+                ? moment(timeStamp).format('LT')
+                : moment(timeStamp).format('YYYY/MM/DD')}
             </Typography>
           </Grid>
         </Grid>

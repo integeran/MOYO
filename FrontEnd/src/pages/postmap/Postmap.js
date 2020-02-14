@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from '../../api/axios';
 
@@ -8,20 +8,30 @@ import Typography from '@material-ui/core/Typography';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import Grid from '@material-ui/core/Grid';
-import moment from 'moment';
-import PostmapGoogle from './PostmapGoogle';
-import PostmapChat from './PostmapChat';
-
-const mapStyles = {
-  height: '300px',
-};
+import PostmapGoogle from '../../components/postmap/PostmapGoogle';
+import PostmapChat from '../../components/postmap/PostmapChat';
+import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
 
 const Postmap = () => {
   const dispatch = useDispatch();
 
   const userData = useSelector(state => state.auth.userData);
-  const postList = useSelector(state => state.postmap.postList);
+
   const pos = useSelector(state => state.postmap.pos);
+
+  const [postListTop, setPostListTop] = useState([]);
+  const [postListExceptTop, setPostListExceptTop] = useState([]);
+  const [curTime, setCurTime] = useState('');
+
+  useEffect(() => {
+    onInit();
+  }, []);
+
+  const onInit = async () => {
+    const res = await onAxiosGetTime();
+    setCurTime(res.data.data);
+  };
 
   const getFetchMarker = async pos => {
     return await axios.get(
@@ -30,6 +40,12 @@ const Postmap = () => {
         headers: { userToken: userData.userToken },
       },
     );
+  };
+
+  const onAxiosGetTime = async () => {
+    return await axios.get('DM/getTime', {
+      headers: { userToken: userData.userToken },
+    });
   };
 
   const likePost = async pmId => {
@@ -46,72 +62,186 @@ const Postmap = () => {
     );
   };
 
+  const listFetch = async curpos => {
+    const res = await getFetchMarker(curpos);
+    dispatch(getPostListAction(res.data.data));
+
+    const TOP = 3;
+    var tempList = res.data.data;
+    tempList.sort(function(a, b) {
+      return b.likes - a.likes;
+    });
+
+    var listTop = [];
+    for (var i = 0; i < TOP; i++) {
+      listTop.push(tempList[i]);
+    }
+
+    setPostListTop(listTop);
+
+    var listExceptTop = [];
+    res.data.data.forEach(data => {
+      for (var i = 0; i < TOP; i++) {
+        if (listTop[i].pmId === data.pmId) {
+          break;
+        }
+
+        if (i === TOP - 1) {
+          listExceptTop.push(data);
+        }
+      }
+    });
+
+    setPostListExceptTop(listExceptTop);
+  };
+
+  const calcTime = time => {
+    var distanceTime = (new Date(curTime) - new Date(time)) / (1000 * 60);
+    if (distanceTime >= 60) {
+      distanceTime = distanceTime / 60;
+      if (distanceTime >= 24) {
+        distanceTime = Math.ceil(distanceTime / 24);
+        return distanceTime + '일 전';
+      } else {
+        distanceTime = Math.ceil(distanceTime);
+        return distanceTime + '시간 전';
+      }
+    } else {
+      distanceTime = Math.ceil(distanceTime);
+      return distanceTime + '분 전';
+    }
+  };
+
   return (
     <>
-      <div>
-        <PostmapGoogle mapStyles={mapStyles} />
-        <PostmapChat />
-        <div id="chatList" style={{ overflow: 'auto' }}>
-          {postList.map((chat, index) => {
-            return (
-              <>
-                <Grid container alignItems="center" style={{ padding: '2%' }}>
-                  <Grid
-                    item
-                    xs={10}
-                    onClick={async () => {
-                      dispatch(getInfoWindow(chat));
+      <div style={{ padding: '4%' }}>
+        <PostmapGoogle listFetch={listFetch} />
+        <PostmapChat listFetch={listFetch} />
+        <div id="chatList">
+          <div id="chatListTop">
+            <div>
+              {postListTop.map((chat, index) => {
+                return (
+                  <>
+                    <Grid
+                      container
+                      alignItems="center"
+                      style={{ padding: '2%' }}
+                    >
+                      <Grid
+                        item
+                        xs={10}
+                        onClick={async () => {
+                          dispatch(getInfoWindow(chat));
 
-                      const res2 = await getFetchMarker(pos);
-                      dispatch(getPostListAction(res2.data.data));
-                    }}
-                  >
-                    <Grid container direction="column">
-                      <Grid item xs={6} style={{ maxWidth: '100%' }}>
-                        <Typography>{chat.contents}</Typography>
+                          listFetch(pos);
+                        }}
+                      >
+                        <Grid container direction="column">
+                          <Grid item xs={6} style={{ maxWidth: '100%' }}>
+                            <Typography>{chat.contents}</Typography>
+                          </Grid>
+                          <Typography variant="caption">
+                            {calcTime(chat.registerDate)}
+                          </Typography>
+                          <Grid item xs={6} style={{ maxWidth: '100%' }}></Grid>
+                        </Grid>
                       </Grid>
-                      <Typography variant="caption">
-                        {moment(chat.registerDate).format(
-                          'YYYY-MM-DD HH:SS:DD',
+                      <Grid
+                        item
+                        xs={2}
+                        onClick={async () => {
+                          const res = await likePost(chat.pmId);
+                          if (res) {
+                            listFetch(pos);
+                          }
+                        }}
+                      >
+                        <Typography style={{ float: 'right' }}>
+                          x{chat.likes}
+                        </Typography>
+                        {chat.pmLikeId !== 0 ? (
+                          <FavoriteIcon
+                            style={{
+                              float: 'right',
+                              cursor: 'pointer',
+                              color: 'red',
+                            }}
+                          />
+                        ) : (
+                          <FavoriteBorderIcon
+                            style={{ float: 'right', cursor: 'pointer' }}
+                          />
                         )}
+                      </Grid>
+                    </Grid>
+                    <Divider />
+                  </>
+                );
+              })}
+            </div>
+          </div>
+
+          <div id="chatListBottom" style={{ overflow: 'auto' }}>
+            {postListExceptTop.map((chat, index) => {
+              return (
+                <>
+                  <Grid container alignItems="center" style={{ padding: '2%' }}>
+                    <Grid
+                      item
+                      xs={10}
+                      onClick={async () => {
+                        dispatch(getInfoWindow(chat));
+
+                        listFetch(pos);
+                      }}
+                    >
+                      <Grid container direction="column">
+                        <Grid item xs={6} style={{ maxWidth: '100%' }}>
+                          <Typography>{chat.contents}</Typography>
+                        </Grid>
+                        <Typography variant="caption">
+                          {calcTime(chat.registerDate)}
+                        </Typography>
+                        <Grid item xs={6} style={{ maxWidth: '100%' }}></Grid>
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={2}>
+                      <Typography style={{ float: 'right' }}>
+                        x{chat.likes}
                       </Typography>
-                      <Grid item xs={6} style={{ maxWidth: '100%' }}></Grid>
+                      {chat.pmLikeId !== 0 ? (
+                        <FavoriteIcon
+                          style={{
+                            float: 'right',
+                            cursor: 'pointer',
+                            color: 'red',
+                          }}
+                          onClick={async () => {
+                            const res = await likePost(chat.pmId);
+                            if (res) {
+                              listFetch(pos);
+                            }
+                          }}
+                        />
+                      ) : (
+                        <FavoriteBorderIcon
+                          style={{ float: 'right', cursor: 'pointer' }}
+                          onClick={async () => {
+                            const res = await likePost(chat.pmId);
+                            if (res) {
+                              listFetch(pos);
+                            }
+                          }}
+                        />
+                      )}
                     </Grid>
                   </Grid>
-                  <Grid item xs={2}>
-                    <span style={{ float: 'right' }}>x{chat.likes}</span>
-                    {chat.pmLikeId !== 0 ? (
-                      <FavoriteIcon
-                        style={{
-                          float: 'right',
-                          cursor: 'pointer',
-                          color: 'red',
-                        }}
-                        onClick={async () => {
-                          const res = await likePost(chat.pmId);
-                          if (res) {
-                            const res2 = await getFetchMarker(pos);
-                            dispatch(getPostListAction(res2.data.data));
-                          }
-                        }}
-                      />
-                    ) : (
-                      <FavoriteBorderIcon
-                        style={{ float: 'right', cursor: 'pointer' }}
-                        onClick={async () => {
-                          const res = await likePost(chat.pmId);
-                          if (res) {
-                            const res2 = await getFetchMarker(pos);
-                            dispatch(getPostListAction(res2.data.data));
-                          }
-                        }}
-                      />
-                    )}
-                  </Grid>
-                </Grid>
-              </>
-            );
-          })}
+                  <Divider />
+                </>
+              );
+            })}
+          </div>
         </div>
       </div>
     </>

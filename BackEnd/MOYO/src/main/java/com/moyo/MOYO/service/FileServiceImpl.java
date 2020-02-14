@@ -13,6 +13,9 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,13 +35,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FileServiceImpl implements FileService {
 	
+	@Autowired
+	ResourceLoader resourceLoader;
+	
 	@Override
 	public Map<String, Object> uploadImage(MultipartFile fileStream, String folderName) throws IOException, ServletException {
 		
 		log.trace("FileService - uploadImage");
-		
-		//	static Storage storage = StorageOptions.getDefaultInstance().getService();
-		Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("../MOYO/src/main/resources/moyo-credential.json"));
+		Resource resource = resourceLoader.getResource("classpath:/moyo-credential.json");
+		Credentials credentials = GoogleCredentials.fromStream(new FileInputStream(resource.getFile()));
 		Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
 		String bucketName = "moyo-cloud-storage";
 		
@@ -47,7 +52,7 @@ public class FileServiceImpl implements FileService {
 		String dtString = dt.format(dtf);
 		final String fileName = folderName + "/" + dtString + fileStream.getOriginalFilename();
 		if (fileName != null && !fileName.isEmpty() && fileName.contains(".")) {
-			final String extension = fileName.substring(fileName.lastIndexOf('.') + 1);
+			final String extension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
 			String[] allowedExt = {"jpg", "jpeg", "png", "gif"};
 			for (String s : allowedExt) {
 				if (extension.equals(s)) {
@@ -82,7 +87,8 @@ public class FileServiceImpl implements FileService {
 	
 	@Override
 	public int deleteImage(String imageName) throws IOException, ServletException {
-		Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("C:\\Users\\multicampus\\project\\MOYO_imageUpload\\BackEnd\\MOYO\\src\\main\\resources\\moyo-credential.json"));
+		Resource resource = resourceLoader.getResource("classpath:/moyo-credential.json");
+		Credentials credentials = GoogleCredentials.fromStream(new FileInputStream(resource.getFile()));
 		Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
 		String bucketName = "moyo-cloud-storage";
 		

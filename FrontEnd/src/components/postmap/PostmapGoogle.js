@@ -1,30 +1,61 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Map, GoogleApiWrapper, Marker, InfoWindow } from 'google-maps-react';
+import {
+  getPosAction,
+  getInfoWindow,
+  getPostListAction,
+} from '../../modules/postmap';
+import axios from '../../api/axios';
 
-const mapStyles = {
-  width: '400px',
-  height: '300px',
-};
+const PostmapGoogle = props => {
+  const dispatch = useDispatch();
 
-const PostmapGoogle = (
-  props,
-  {
-    postList,
-    pos,
-    onSetInish,
-    infoWindow,
-    setInfoWindow,
-    infoWindowCheck,
-    setInfoWindowCheck,
-  },
-) => {
-  const test = () => {
-    console.log(postList);
-    console.log('구글맵~~~~!!!' + pos);
+  const userData = useSelector(state => state.auth.userData);
+  const postList = useSelector(state => state.postmap.postList);
+  const pos = useSelector(state => state.postmap.pos);
+  const infoWindow = useSelector(state => state.postmap.infoWindow);
+  const infoWindowCheck = useSelector(state => state.postmap.infoWindowCheck);
+
+  const [data, setData] = useState('');
+
+  const mapStyles = {
+    height: '300px',
+  };
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      const getPosition = async options => {
+        return await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, options);
+        });
+      };
+
+      getPosition().then(async position => {
+        var myposition = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        };
+
+        dispatch(getPosAction(myposition));
+
+        props.listFetch(myposition);
+
+        setData(true);
+      });
+    }
+  }, []);
+
+  const getFetchMarker = async pos => {
+    return await axios.get(
+      `postmap/selectAll?latitude=${pos.latitude}&longitude=${pos.longitude}&uId=${userData.uid}`,
+      {
+        headers: { userToken: userData.userToken },
+      },
+    );
   };
 
   const displayMarkers = () => {
-    console.log('displayMarkers: ', postList);
     return postList.map((chat, index) => {
       return (
         <Marker
@@ -34,11 +65,21 @@ const PostmapGoogle = (
             lat: chat.latitude,
             lng: chat.longitude,
           }}
-          onClick={() => {
-            console.log(chat);
-            setInfoWindow(chat);
-            setInfoWindowCheck(true);
-            onSetInish();
+          // animation={props.google.maps.Animation.DROP}
+          onClick={async () => {
+            dispatch(getInfoWindow(chat));
+
+            const res = await getFetchMarker(pos);
+            dispatch(getPostListAction(res.data.data));
+          }}
+          icon={{
+            path: props.google.maps.SymbolPath.CIRCLE,
+            fillColor: '#D03A3A',
+            fillOpacity: 1,
+            strokeColor: '#912626',
+            strokeOpacity: 1,
+            strokeWeight: 1,
+            scale: 7,
           }}
         />
       );
@@ -46,41 +87,47 @@ const PostmapGoogle = (
   };
 
   return (
-    <>
-      {test()}
-      <Map
-        google={props.google}
-        zoom={13}
-        style={mapStyles}
-        initialCenter={{ lat: '37.4566', lng: '127.415452' }}
-        onClick={() => {
-          console.log('mapClick');
+    data && (
+      <div
+        id="googleMap"
+        style={{
+          width: 'inherit',
+          display: 'flex',
+          flexDirection: 'column',
         }}
-        mapTypeControl={false}
-        streetViewControl={false}
-        fullscreenControl={false}
       >
-        {displayMarkers()}
-        {/* {infoWindow && (
-          <InfoWindow
-            onCloseClick={() => {
-              setInfoWindow(null);
-              setInfoWindowCheck(false);
-            }}
-            position={{
-              lat: infoWindow.latitude,
-              lng: infoWindow.longitude,
-            }}
-            visible={infoWindowCheck}
-          >
-            <div>
-              <h2>{infoWindow.registerId}</h2>
-              <p>{infoWindow.contents}</p>
-            </div>
-          </InfoWindow>
-        )} */}
-      </Map>
-    </>
+        <Map
+          google={props.google}
+          zoom={13}
+          style={mapStyles}
+          initialCenter={{ lat: pos.latitude, lng: pos.longitude }}
+          onClick={() => {
+            console.log('mapClick');
+          }}
+          mapTypeControl={false}
+          streetViewControl={false}
+          fullscreenControl={false}
+        >
+          {displayMarkers()}
+
+          {infoWindow && (
+            <InfoWindow
+              onCloseClick={() => {}}
+              position={{
+                lat: infoWindow.latitude,
+                lng: infoWindow.longitude,
+              }}
+              visible={infoWindowCheck}
+            >
+              <div>
+                {/* <h2>{infoWindow.registerId}</h2> */}
+                <p>{infoWindow.contents}</p>
+              </div>
+            </InfoWindow>
+          )}
+        </Map>
+      </div>
+    )
   );
 };
 
