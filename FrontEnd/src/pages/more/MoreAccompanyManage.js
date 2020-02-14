@@ -3,18 +3,10 @@ import { useHistory } from 'react-router';
 import { useSelector } from 'react-redux';
 import axios from '../../api/axios';
 import moment from '../../api/moment';
-import { Grid, Typography, Divider, Paper } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import BaseAppBar from '../../components/common/BaseAppBar';
-import styled from 'styled-components';
 import MoreAccompanyListSet from '../../components/more/list/MoreAccompanyListSet';
-
-const HrDiv = styled.div`
-  flex-grow: 1;
-  align-items: center;
-  display: flex;
-  justify-content: center;
-`;
 
 const MoreAccompanyManage = () => {
   const history = useHistory();
@@ -73,17 +65,6 @@ const MoreAccompanyManage = () => {
     history.goBack();
   };
 
-  const TextBar = ({ text }) => (
-    <Grid container>
-      <div style={{ flexGrow: '0' }}>
-        <Typography variant="body1">{text}</Typography>
-      </div>
-      <HrDiv>
-        <Divider style={{ width: '90%' }} />
-      </HrDiv>
-    </Grid>
-  );
-
   return (
     <>
       <BaseAppBar
@@ -92,13 +73,18 @@ const MoreAccompanyManage = () => {
         leftIcon={<ArrowBackIosIcon />}
         leftClick={handleLeftClick}
       />
-      <TextBar text="진행 중인 동행 글" />
-      <MoreAccompanyListSet
-        boardData={curList}
-        handleClick={handleModifyDetail}
-      />
-      <TextBar text="종료된 동행 글" />
-      <MoreAccompanyListSet boardData={prevList} />
+      <Grid container style={{ marginTop: '0.8rem' }}>
+        <MoreAccompanyListSet
+          title="진행 중인 동행 글"
+          boardData={curList}
+          handleClick={handleModifyDetail}
+        />
+        <MoreAccompanyListSet
+          title="종료된 동행 글"
+          boardData={prevList}
+          handleClick={handleModifyDetail}
+        />
+      </Grid>
     </>
   );
 };
