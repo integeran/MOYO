@@ -48,6 +48,7 @@ const DmRoom = ({ match }) => {
   const [uploadModal, setUploadModal] = useState(false);
   const [addAccompanyModal, setAddAccompanyModal] = useState(false);
   const [receiverRead, setReceiverRead] = useState(false);
+  const [tempCurTime, setTempCurTime] = useState('');
 
   const onChangeIvalue = useCallback(e => {
     setIvalue(e.target.value);
@@ -185,6 +186,7 @@ const DmRoom = ({ match }) => {
 
       const callback = async snapshot => {
         var val = snapshot.val();
+        setTempCurTime((await onAxiosGetTime()).data.data);
 
         const MessageInfo = {
           senderId: val.senderId,
@@ -462,6 +464,7 @@ const DmRoom = ({ match }) => {
                 url={message.url}
                 lastMessageUserId={tempLastMessageUserId}
                 lastTimeStamp={tempLastTimeStamp}
+                curTime={tempCurTime}
               />
             );
           })}
