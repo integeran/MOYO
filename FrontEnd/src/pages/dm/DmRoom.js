@@ -48,6 +48,7 @@ const DmRoom = ({ match }) => {
   const [uploadModal, setUploadModal] = useState(false);
   const [addAccompanyModal, setAddAccompanyModal] = useState(false);
   const [receiverRead, setReceiverRead] = useState(false);
+  const [tempCurTime, setTempCurTime] = useState('');
 
   const onChangeIvalue = useCallback(e => {
     setIvalue(e.target.value);
@@ -111,6 +112,7 @@ const DmRoom = ({ match }) => {
   };
 
   const waitReceiverRoomChange = (roomId, receiver, roomexist) => {
+    console.log('waitReceiverRoomChange');
     const callback = snapshot => {
       if (snapshot.val().read === true) {
         firebase
@@ -179,12 +181,12 @@ const DmRoom = ({ match }) => {
 
     var loadMessageFirebase = firebase.database().ref('Messages/' + roomId);
     if (roomId) {
-      console.log('loadMessageListAfter');
       setHookRoomId(roomId);
       waitReceiverRoomChange(roomId, receiver, roomexist);
 
       const callback = async snapshot => {
         var val = snapshot.val();
+        setTempCurTime((await onAxiosGetTime()).data.data);
 
         const MessageInfo = {
           senderId: val.senderId,
@@ -253,24 +255,6 @@ const DmRoom = ({ match }) => {
 
         var saveFirebase = firebase.database().ref();
 
-        // 메세지 저장
-        multiUpdates['Messages/' + hookRoomId + '/' + messageId] = {
-          senderId: userData.uid,
-          message: msg,
-          timeStamp: curTime,
-          fileName: fileName ? fileName : null,
-          url: url ? url : null,
-        };
-
-        multiUpdates['LastMessage/' + hookRoomId] = {
-          senderId: userData.uid,
-          messageId: messageId,
-        };
-
-        saveFirebase.update(multiUpdates);
-
-        multiUpdates = {};
-
         // 유저별 룸 리스트 저장
         multiUpdates['UserRooms/' + userData.uid + '/' + hookReceiver.uid] = {
           roomId: hookRoomId,
@@ -286,6 +270,24 @@ const DmRoom = ({ match }) => {
           lastMessage: url ? '다운로드' : msg,
           timeStamp: curTime,
           read: false,
+        };
+
+        saveFirebase.update(multiUpdates);
+
+        multiUpdates = {};
+
+        // 메세지 저장
+        multiUpdates['Messages/' + hookRoomId + '/' + messageId] = {
+          senderId: userData.uid,
+          message: msg,
+          timeStamp: curTime,
+          fileName: fileName ? fileName : null,
+          url: url ? url : null,
+        };
+
+        multiUpdates['LastMessage/' + hookRoomId] = {
+          senderId: userData.uid,
+          messageId: messageId,
         };
 
         saveFirebase.update(multiUpdates);
@@ -462,6 +464,7 @@ const DmRoom = ({ match }) => {
                 url={message.url}
                 lastMessageUserId={tempLastMessageUserId}
                 lastTimeStamp={tempLastTimeStamp}
+                curTime={tempCurTime}
               />
             );
           })}
