@@ -70,6 +70,7 @@ const DmRoomList = () => {
       setRoomList(prevState =>
         prevState.filter(room => room.roomId !== val.roomId),
       );
+
       setRoomList(prevState => [...prevState, val]);
     };
 
@@ -80,10 +81,10 @@ const DmRoomList = () => {
     <>
       <div>
         {roomList.length !== 0 ? (
-          roomList.map((room, index) => {
+          roomList.reverse().map((room, index) => {
             return (
               <Room
-                key={index}
+                key={room.roomId}
                 roomId={room.roomId}
                 receiverId={room.receiverId}
                 lastMessage={room.lastMessage}
