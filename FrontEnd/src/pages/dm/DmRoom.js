@@ -110,7 +110,7 @@ const DmRoom = ({ match }) => {
     }
   };
 
-  const waitReceiverRoomChange = (roomId, receiver) => {
+  const waitReceiverRoomChange = (roomId, receiver, roomexist) => {
     const callback = snapshot => {
       if (snapshot.val().read === true) {
         firebase
@@ -133,10 +133,12 @@ const DmRoom = ({ match }) => {
       }
     };
 
-    firebase
-      .database()
-      .ref('UserRooms/' + receiver.uid + '/' + userData.uid)
-      .once('value', callback);
+    if (roomexist) {
+      firebase
+        .database()
+        .ref('UserRooms/' + receiver.uid + '/' + userData.uid)
+        .once('value', callback);
+    }
 
     firebase
       .database()
@@ -159,7 +161,7 @@ const DmRoom = ({ match }) => {
         if (snapshot.val()) {
           roomInfo.roomId = snapshot.val().roomId;
           roomInfo.roomTitle = snapshot.val().roomTitle;
-          loadMessageList(roomInfo.roomId, receiver);
+          loadMessageList(roomInfo.roomId, receiver, true);
         } else {
           roomInfo.roomId =
             MAKEID_CHAR + sender.uid + MAKEID_CHAR + receiver.uid;
@@ -172,14 +174,14 @@ const DmRoom = ({ match }) => {
   /**
    * 메세지 로드
    */
-  const loadMessageList = async (roomId, receiver) => {
+  const loadMessageList = async (roomId, receiver, roomexist) => {
     console.log('loadMessageList');
 
     var loadMessageFirebase = firebase.database().ref('Messages/' + roomId);
     if (roomId) {
       console.log('loadMessageListAfter');
       setHookRoomId(roomId);
-      waitReceiverRoomChange(roomId, receiver);
+      waitReceiverRoomChange(roomId, receiver, roomexist);
 
       const callback = async snapshot => {
         var val = snapshot.val();
