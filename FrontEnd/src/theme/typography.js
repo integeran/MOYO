@@ -72,12 +72,11 @@ export default {
   button: {
     fontWeight: '700',
     fontFamily: 'Nanum Gothic, sans-serif',
-    fontWeight: '700',
   },
   caption: {
     fontFamily: 'Nanum Gothic, sans-serif',
     fontWeight: '700',
-    letterSpacing: '0.2rem',
+    letterSpacing: '0.03rem',
   },
   overline: {
     fontFamily: 'Nanum Gothic, sans-serif',

@@ -53,6 +53,10 @@ const ScheduleContents = ({ tripSchedule, tripCompanion }) => {
     carousrl.current.setDimensions();
   };
 
+  const getScheduleTitle = () => {
+    return moment.momentDateDayWithoutYear() + ', 오늘의 여행';
+  };
+
   const TripScheduleItem = ({ item }) => (
     <HeaderDiv>
       <img alt="innerImg" src={TempImage} onLoad={_handleLoadImage} />
@@ -67,7 +71,7 @@ const ScheduleContents = ({ tripSchedule, tripCompanion }) => {
   return (
     <>
       <Typography variant="h6" style={{ padding: '0.5rem' }}>
-        {moment.momentDateDayWithoutYear()}, 오늘의 여행
+        {getScheduleTitle()}
       </Typography>
       <Grid container direction="column" wrap="nowrap">
         <Grid item>
@@ -75,7 +79,7 @@ const ScheduleContents = ({ tripSchedule, tripCompanion }) => {
             ref={carousrl}
             autoplay
             autoplayInterval={6000}
-            wrapAround="true"
+            wrapAround={true}
             defaultControlsConfig={{
               pagingDotsStyle: {
                 fill: 'white',
@@ -85,7 +89,7 @@ const ScheduleContents = ({ tripSchedule, tripCompanion }) => {
             renderCenterRightControls={() => null}
           >
             {tripSchedule.map(item => (
-              <TripScheduleItem item={item} />
+              <TripScheduleItem key={item.slistId} item={item} />
             ))}
           </Carousel>
         </Grid>
