@@ -16,15 +16,6 @@ const HrDiv = styled.div`
   justify-content: center;
 `;
 
-const ScrollGrid = styled(Grid)`
-  flex: 1;
-  position: relative;
-  overflow-y: scroll;
-  ::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
 const MoreAccompanyManage = () => {
   const history = useHistory();
   const userData = useSelector(state => state.auth.userData);
@@ -93,44 +84,21 @@ const MoreAccompanyManage = () => {
     </Grid>
   );
 
-  const AccompanyPaper = ({ item }) => (
-    <Paper variant="outlined" onClick={() => handleModifyDetail(item)}>
-      <Grid container>
-        <Grid item xs={8}>
-          <Typography variant="h6">{item.title}</Typography>
-        </Grid>
-        <Grid item container xs={4} direction="column">
-          <Grid item>
-            {item.nation}/{item.city}
-          </Grid>
-          <Grid item>{item.type}</Grid>
-        </Grid>
-      </Grid>
-      <Grid container>
-        <Grid item xs={7}>
-          {moment.momentDate(item.startDate)}~{moment.momentDate(item.endDate)}
-        </Grid>
-        <Grid item xs={5}>
-          {moment.momentDate(item.updateDate)}
-        </Grid>
-      </Grid>
-    </Paper>
-  );
-
   return (
     <>
       <BaseAppBar
-        text="내 동행 관리"
+        text="내 동행 글"
         leftType="icon"
         leftIcon={<ArrowBackIosIcon />}
         leftClick={handleLeftClick}
       />
-      <TextBar text="진행중인 동행 글" />
-      <MoreAccompanyListSet boardData={curList} />
+      <TextBar text="진행 중인 동행 글" />
+      <MoreAccompanyListSet
+        boardData={curList}
+        handleClick={handleModifyDetail}
+      />
       <TextBar text="종료된 동행 글" />
-      {prevList.map(item => (
-        <AccompanyPaper key={item.acBoardId} item={item} />
-      ))}
+      <MoreAccompanyListSet boardData={prevList} />
     </>
   );
 };
