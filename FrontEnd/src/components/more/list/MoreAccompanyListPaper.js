@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import Paper from '@material-ui/core/Paper';
 import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
@@ -32,7 +33,7 @@ const AccompanyListPaper = ({ boardInfo, onClick }) => {
     <DivStyled onClick={onClick}>
       <Paper elevation={0} style={{ borderRadius: '1rem' }}>
         <Grid container direction="column">
-          <Grid item container>
+          <Grid item container style={{ margin: '0' }}>
             <CenterGrid item xs={2}>
               <Typography
                 variant="body2"
@@ -51,23 +52,39 @@ const AccompanyListPaper = ({ boardInfo, onClick }) => {
           </Grid>
 
           <Grid item container style={{ paddingBottom: '0.5rem' }}>
-            <Grid item xs={5}>
+            <Grid item>
               <Typography
                 variant="body2"
                 align="left"
                 style={{ padding: '0 1rem' }}
               >
-                {boardInfo.nickname}
+                {boardInfo.nation} / {boardInfo.city}
               </Typography>
             </Grid>
-            <Grid item xs={7}>
-              <Typography
-                variant="body2"
-                align="left"
-                style={{ paddingRight: '1rem' }}
-              >
-                {boardInfo.startDate}~{boardInfo.endDate}
-              </Typography>
+            <Grid item container style={{ marginTop: '0.5rem' }}>
+              <Grid item xs={7}>
+                <Typography
+                  variant="body2"
+                  align="left"
+                  style={{ padding: '0 1rem' }}
+                >
+                  {moment(boardInfo.startDate).format('YYYY.MM.DD')}~
+                  {moment(boardInfo.endDate).format('YYYY.MM.DD')}
+                </Typography>
+              </Grid>
+              <Grid item xs={5}>
+                <Typography
+                  variant="body2"
+                  align="left"
+                  style={{
+                    padding: '0 1rem',
+                    textAlign: 'right',
+                    fontSize: '0.8rem',
+                  }}
+                >
+                  {moment(boardInfo.updateDate).fromNow()} 수정
+                </Typography>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
