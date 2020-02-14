@@ -179,7 +179,7 @@ const CommunityCommentList = ({ cmId, userData }) => {
                 color="primary"
                 onClick={() => handleEditClick(comment.cmCommentId)}
               >
-                등록
+                수정
               </Button>
             ) : null}
           </div>
