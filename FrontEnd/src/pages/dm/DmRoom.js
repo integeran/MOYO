@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axios from '../../api/axios';
 import * as firebase from 'firebase';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import moment from 'moment';
 
 import Message from '../../components/dm/Message';
@@ -36,6 +36,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const DmRoom = ({ match }) => {
+  const history = useHistory();
+
   const MAKEID_CHAR = useSelector(state => state.Dm.MAKEID_CHAR);
   const DATETIME_CHAR = useSelector(state => state.Dm.DATETIME_CHAR);
   const userData = useSelector(state => state.auth.userData);
@@ -202,7 +204,10 @@ const DmRoom = ({ match }) => {
           list.scrollTop = list.scrollHeight;
         }
 
-        if (val.senderId !== userData.uid) {
+        if (
+          val.senderId !== userData.uid &&
+          history.location.pathname.indexOf('dmroom/') > 0
+        ) {
           firebase
             .database()
             .ref('UserRooms/' + userData.uid + '/' + receiver.uid)
