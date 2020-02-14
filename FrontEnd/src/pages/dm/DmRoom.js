@@ -21,6 +21,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Grid from '@material-ui/core/Grid';
 import InputBase from '@material-ui/core/InputBase';
+import AddAccompanyModal from '../../components/dm/AddAccompanyModal';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -45,10 +46,21 @@ const DmRoom = ({ match }) => {
   const [hookRoomId, setHookRoomId] = useState('');
   const [ivalue, setIvalue] = useState('');
   const [uploadModal, setUploadModal] = useState(false);
+  const [addAccompanyModal, setAddAccompanyModal] = useState(false);
+  const [receiverRead, setReceiverRead] = useState(false);
 
   const onChangeIvalue = useCallback(e => {
     setIvalue(e.target.value);
   }, []);
+
+  const openAddModal = () => {
+    setAnchorEl(null);
+    setAddAccompanyModal(true);
+  };
+
+  const closeAddModal = () => {
+    setAddAccompanyModal(false);
+  };
 
   const openModal = () => {
     setUploadModal(true);
@@ -63,7 +75,6 @@ const DmRoom = ({ match }) => {
   const open = Boolean(anchorEl);
 
   useEffect(() => {
-    console.log('onInit');
     onInit();
   }, []);
 
@@ -89,11 +100,48 @@ const DmRoom = ({ match }) => {
         alert('익명사용자 에러 발생', error);
       });
 
+    var temp = document.getElementById('chatInput');
+    temp.focus();
+
     if (match.params.receiverId) {
       const axiosUserData = await onAxiosGetUser(match.params.receiverId);
       setHookReceiver(axiosUserData.data.data);
       loadRoom(userData, axiosUserData.data.data);
     }
+  };
+
+  const waitReceiverRoomChange = (roomId, receiver) => {
+    const callback = snapshot => {
+      if (snapshot.val().read === true) {
+        firebase
+          .database()
+          .ref('LastMessage/' + roomId)
+          .once('value')
+          .then(snapshot1 => {
+            if (snapshot1.val().senderId === userData.uid) {
+              setReceiverRead(true);
+              var list = document.getElementById('messageList');
+              if (list) {
+                list.scrollTop = list.scrollHeight;
+              }
+            } else {
+              setReceiverRead(false);
+            }
+          });
+      } else {
+        setReceiverRead(false);
+      }
+    };
+
+    firebase
+      .database()
+      .ref('UserRooms/' + receiver.uid + '/' + userData.uid)
+      .once('value', callback);
+
+    firebase
+      .database()
+      .ref('UserRooms/' + receiver.uid)
+      .on('child_changed', callback);
   };
 
   /*
@@ -107,16 +155,16 @@ const DmRoom = ({ match }) => {
     firebase
       .database()
       .ref('UserRooms/' + sender.uid + '/' + receiver.uid)
-      .on('value', snapshot => {
+      .once('value', snapshot => {
         if (snapshot.val()) {
           roomInfo.roomId = snapshot.val().roomId;
           roomInfo.roomTitle = snapshot.val().roomTitle;
-          loadMessageList(roomInfo.roomId);
+          loadMessageList(roomInfo.roomId, receiver);
         } else {
           roomInfo.roomId =
             MAKEID_CHAR + sender.uid + MAKEID_CHAR + receiver.uid;
           roomInfo.roomTitle = sender.nickname;
-          loadMessageList(roomInfo.roomId);
+          loadMessageList(roomInfo.roomId, receiver);
         }
       });
   };
@@ -124,14 +172,14 @@ const DmRoom = ({ match }) => {
   /**
    * 메세지 로드
    */
-  const loadMessageList = async roomId => {
+  const loadMessageList = async (roomId, receiver) => {
     console.log('loadMessageList');
 
     var loadMessageFirebase = firebase.database().ref('Messages/' + roomId);
     if (roomId) {
       console.log('loadMessageListAfter');
       setHookRoomId(roomId);
-      setMessageList([]);
+      waitReceiverRoomChange(roomId, receiver);
 
       const callback = async snapshot => {
         var val = snapshot.val();
@@ -146,7 +194,30 @@ const DmRoom = ({ match }) => {
 
         setMessageList(prevState => [...prevState, MessageInfo]);
         var list = document.getElementById('messageList');
-        list.scrollTop = list.scrollHeight;
+        if (list) {
+          list.scrollTop = list.scrollHeight;
+        }
+
+        if (val.senderId !== userData.uid) {
+          firebase
+            .database()
+            .ref('UserRooms/' + userData.uid + '/' + receiver.uid)
+            .once('value')
+            .then(snapshot => {
+              if (snapshot.val().read === false) {
+                firebase
+                  .database()
+                  .ref('UserRooms/' + userData.uid + '/' + receiver.uid)
+                  .update({
+                    roomId: snapshot.val().roomId,
+                    receiverId: snapshot.val().receiverId,
+                    lastMessage: snapshot.val().lastMessage,
+                    timeStamp: snapshot.val().timeStamp,
+                    read: true,
+                  });
+              }
+            });
+        }
       };
 
       loadMessageFirebase
@@ -178,36 +249,58 @@ const DmRoom = ({ match }) => {
           DATETIME_CHAR +
           moment(curTime).format('YYYYMMDDhhmmssSSS');
 
-        var curTimeStamp = moment(curTime).format('YYYY/MM/DD LT');
         var saveFirebase = firebase.database().ref();
 
         // 메세지 저장
         multiUpdates['Messages/' + hookRoomId + '/' + messageId] = {
           senderId: userData.uid,
           message: msg,
-          timeStamp: curTimeStamp,
+          timeStamp: curTime,
           fileName: fileName ? fileName : null,
           url: url ? url : null,
         };
+
+        multiUpdates['LastMessage/' + hookRoomId] = {
+          senderId: userData.uid,
+          messageId: messageId,
+        };
+
+        saveFirebase.update(multiUpdates);
+
+        multiUpdates = {};
 
         // 유저별 룸 리스트 저장
         multiUpdates['UserRooms/' + userData.uid + '/' + hookReceiver.uid] = {
           roomId: hookRoomId,
           receiverId: hookReceiver.uid,
           lastMessage: url ? '다운로드' : msg,
-          timeStamp: curTimeStamp,
+          timeStamp: curTime,
+          read: true,
         };
 
         multiUpdates['UserRooms/' + hookReceiver.uid + '/' + userData.uid] = {
           roomId: hookRoomId,
           receiverId: userData.uid,
           lastMessage: url ? '다운로드' : msg,
-          timeStamp: curTimeStamp,
+          timeStamp: curTime,
+          read: false,
         };
 
-        saveFirebase.update(multiUpdates).then(() => {
-          var list = document.getElementById('messageList');
-          list.scrollTop = list.scrollHeight;
+        saveFirebase.update(multiUpdates);
+        var temp = document.getElementById('chatInput');
+        temp.focus();
+
+        var triggerFirebase = firebase
+          .database()
+          .ref(
+            'ListRoomTrigger/' +
+              hookReceiver.uid +
+              '/' +
+              moment(curTime).format('YYYYMMDDhhmmssSSS'),
+          );
+
+        triggerFirebase.set({
+          trigger: true,
         });
       }
     }
@@ -301,11 +394,6 @@ const DmRoom = ({ match }) => {
   var lastMessageUserId = '';
   var lastTimeStamp = '';
 
-  const testChange = () => {
-    var list = document.getElementById('messageList');
-    list.scrollTop = list.scrollHeight;
-  };
-
   return (
     <>
       <div
@@ -344,7 +432,7 @@ const DmRoom = ({ match }) => {
                   open={open}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={handleClose}>Profile</MenuItem>
+                  <MenuItem onClick={openAddModal}>동행추가</MenuItem>
                   <MenuItem onClick={handleClose}>My account</MenuItem>
                 </Menu>
               </div>
@@ -352,6 +440,11 @@ const DmRoom = ({ match }) => {
           </AppBar>
         </div>
         <UploadModal isOpen={uploadModal} close={closeModal} />
+        <AddAccompanyModal
+          isOpen={addAccompanyModal}
+          close={closeAddModal}
+          receiver={hookReceiver}
+        />
 
         <div
           id="messageList"
@@ -359,12 +452,7 @@ const DmRoom = ({ match }) => {
             width: '100%',
             height: '100%',
             overflow: 'auto',
-            backgroundColor: 'white',
           }}
-          onChange={testChange}
-          onRateChange={testChange}
-          onVolumeChangeCapture={testChange}
-          onDurationChange={testChange}
         >
           {messageList.map((message, index) => {
             var tempLastMessageUserId = lastMessageUserId;
@@ -386,11 +474,21 @@ const DmRoom = ({ match }) => {
               />
             );
           })}
+
+          {receiverRead && (
+            <Typography
+              variant="caption"
+              style={{ float: 'right', marginRight: '2%', marginTop: '-2%' }}
+            >
+              읽음
+            </Typography>
+          )}
         </div>
 
         <div
           id="chatdiv"
           style={{
+            marginTop: '1%',
             marginBottom: '5%',
             border: '1px solid #bdbdbd',
             borderRadius: '20px',
@@ -408,6 +506,7 @@ const DmRoom = ({ match }) => {
                   borderRadius: '75px',
                   backgroundColor: '#4fc3f7',
                 }}
+                onClick={onAttachButton}
               >
                 <AttachFileIcon
                   style={{
@@ -415,7 +514,6 @@ const DmRoom = ({ match }) => {
                     marginLeft: '10%',
                     color: 'white',
                   }}
-                  onClick={onAttachButton}
                 />
               </div>
             </Grid>
@@ -424,6 +522,7 @@ const DmRoom = ({ match }) => {
 
             <Grid item xs={7}>
               <InputBase
+                id="chatInput"
                 onChange={onChangeIvalue}
                 value={ivalue}
                 onKeyPress={onEnterKey}
@@ -440,6 +539,7 @@ const DmRoom = ({ match }) => {
                   borderRadius: '75px',
                   backgroundColor: '#4fc3f7',
                 }}
+                onClick={loadMessage}
               >
                 <TelegramIcon
                   style={{
@@ -447,7 +547,6 @@ const DmRoom = ({ match }) => {
                     marginLeft: '10%',
                     color: 'white',
                   }}
-                  onClick={loadMessage}
                 />
               </div>
             </Grid>

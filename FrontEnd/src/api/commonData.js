@@ -72,8 +72,8 @@ export const getAgeList = (useNone = false) => {
 // 성별
 export const getGenderList = (useNone = false) => {
   let res = [
-    { value: 'M', name: '여자' },
-    { value: 'F', name: '남자' },
+    { value: 'M', name: '남자' },
+    { value: 'F', name: '여자' },
   ];
   if (useNone) {
     res.unshift({ value: 'N', name: '무관' });
@@ -88,8 +88,8 @@ export const getTypeList = async (useNone = false) => {
   if (res && res.data && res.data.data) {
     result = res.data.data;
   }
-  if (useNone) {
-    result.unshift({ tTypeId: 0, name: '무관' });
+  if (!useNone) {
+    result = result.filter(item => item.tTypeId !== 0);
   }
   return result.map(item => {
     return { ttypeId: String(item.ttypeId), name: item.name };

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import moment from 'moment';
 
 import FileMessage from './FileMessage';
 
@@ -47,23 +48,25 @@ const Message = ({
           {url ? (
             <FileMessage url={url} fileName={fileName} timeStamp={timeStamp} />
           ) : (
-            <Typography
-              variant="subtitle1"
-              style={{
-                backgroundColor: '#e0e0e0',
-                borderRadius: '8px',
-                textAlign: 'left',
-                paddingLeft: message.length >= 13 ? '3%' : '',
-              }}
-            >
-              {message.length < 13 && (
-                <span style={{ color: '#e6dbdb' }}>1</span>
-              )}
-              {message}
-              {message.length < 13 && (
-                <span style={{ color: '#e6dbdb' }}>1</span>
-              )}
-            </Typography>
+            <div>
+              <Typography
+                variant="subtitle1"
+                style={{
+                  backgroundColor: '#e0e0e0',
+                  borderRadius: '8px',
+                  textAlign: 'left',
+                  paddingLeft: message.length >= 13 ? '3%' : '',
+                }}
+              >
+                {message.length < 13 && (
+                  <span style={{ color: '#e6dbdb' }}>1</span>
+                )}
+                {message}
+                {message.length < 13 && (
+                  <span style={{ color: '#e6dbdb' }}>1</span>
+                )}
+              </Typography>
+            </div>
             // 가라를 쓰고 싶지않지만.. 이것이 최선이다 !
           )}
         </div>
@@ -72,7 +75,11 @@ const Message = ({
   };
 
   const showProfile = () => {
-    if (senderId !== lastMessageUserId || timeStamp !== lastTimeStamp) {
+    if (
+      senderId !== lastMessageUserId ||
+      moment(timeStamp).format('YYYY/MM/DD LT') !==
+        moment(lastTimeStamp).format('YYYY/MM/DD LT')
+    ) {
       return (
         <Grid item xs={1} style={{ paddingRight: '1%' }}>
           <Avatar
@@ -89,9 +96,12 @@ const Message = ({
 
   return (
     <>
-      {timeStamp !== lastTimeStamp && (
+      {moment(timeStamp).format('YYYY/MM/DD LT') !==
+        moment(lastTimeStamp).format('YYYY/MM/DD LT') && (
         <div style={{ textAlign: 'center' }}>
-          <Typography variant="caption">{timeStamp}</Typography>
+          <Typography variant="caption">
+            {moment(timeStamp).format('YYYY/MM/DD LT')}
+          </Typography>
         </div>
       )}
 

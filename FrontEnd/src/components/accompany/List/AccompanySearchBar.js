@@ -12,8 +12,7 @@ const useStyles = makeStyles(theme => ({
     padding: '2px 4px',
     display: 'flex',
     alignItems: 'center',
-    width: '90%',
-    background: '#EEEEEE',
+    width: '85%',
   },
   input: {
     marginLeft: theme.spacing(1),
@@ -45,7 +44,7 @@ const AccompanySearchBar = ({ onClick }) => {
           className={classes.input}
           value={text}
           onChange={onChange}
-          placeholder="검색어를 입력해주세요!"
+          placeholder="검색어를 입력해주세요."
         />
         <Divider className={classes.divider} orientation="vertical" />
         <IconButton

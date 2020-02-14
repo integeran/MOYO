@@ -46,28 +46,17 @@ const PlanDaily = () => {
       >
         <Grid item container justify="space-between">
           <Grid item className={classes.center} xs={6}>
-            <Typography variant="h6">{selectedDate.split('T')[0]}</Typography>
-          </Grid>
-          <Grid item className={classes.center} xs={6}>
             {isCompanion && <Typography variant="h6">오늘의 동행!</Typography>}
           </Grid>
         </Grid>
         {isCompanion && (
           <Grid item>
-            <Companion />
+            <Companion setIsCompanion={setIsCompanion} />
           </Grid>
         )}
         {/* <Grid item>
           <Divider variant="fullWidth" />
         </Grid> */}
-        <Grid itme container justify="space-between">
-          <Grid item>
-            <Typography variant="overline">MEMO</Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="overline">저장</Typography>
-          </Grid>
-        </Grid>
         <Grid item>
           <Memo />
         </Grid>
