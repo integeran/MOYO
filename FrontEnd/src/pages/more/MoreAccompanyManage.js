@@ -7,12 +7,22 @@ import { Grid, Typography, Divider, Paper } from '@material-ui/core';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import BaseAppBar from '../../components/common/BaseAppBar';
 import styled from 'styled-components';
+import MoreAccompanyListSet from '../../components/more/list/MoreAccompanyListSet';
 
 const HrDiv = styled.div`
   flex-grow: 1;
   align-items: center;
   display: flex;
   justify-content: center;
+`;
+
+const ScrollGrid = styled(Grid)`
+  flex: 1;
+  position: relative;
+  overflow-y: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const MoreAccompanyManage = () => {
@@ -116,9 +126,7 @@ const MoreAccompanyManage = () => {
         leftClick={handleLeftClick}
       />
       <TextBar text="진행중인 동행 글" />
-      {curList.map(item => (
-        <AccompanyPaper key={item.acBoardId} item={item} />
-      ))}
+      <MoreAccompanyListSet boardData={curList} />
       <TextBar text="종료된 동행 글" />
       {prevList.map(item => (
         <AccompanyPaper key={item.acBoardId} item={item} />

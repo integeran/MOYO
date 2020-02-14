@@ -23,8 +23,14 @@ const CustomKeyboardDatePicker = styled(KeyboardDatePicker)`
 `;
 
 const CustomTextField = styled(TextField)`
-  & > div > div {
-    padding-bottom: 0.3rem !important;
+  & > label {
+    font-size: 0.8rem;
+  }
+  & > div {
+    font-size: 0.8rem;
+    & > div {
+      padding-bottom: 0.3rem !important;
+    }
   }
 `;
 
