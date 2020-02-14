@@ -289,19 +289,6 @@ const DmRoom = ({ match }) => {
         saveFirebase.update(multiUpdates);
         var temp = document.getElementById('chatInput');
         temp.focus();
-
-        var triggerFirebase = firebase
-          .database()
-          .ref(
-            'ListRoomTrigger/' +
-              hookReceiver.uid +
-              '/' +
-              moment(curTime).format('YYYYMMDDhhmmssSSS'),
-          );
-
-        triggerFirebase.set({
-          trigger: true,
-        });
       }
     }
   };
@@ -433,7 +420,9 @@ const DmRoom = ({ match }) => {
                   onClose={handleClose}
                 >
                   <MenuItem onClick={openAddModal}>동행추가</MenuItem>
-                  <MenuItem onClick={handleClose}>My account</MenuItem>
+                  <MenuItem onClick={handleClose}>
+                    {hookReceiver.nickname}의 프로필
+                  </MenuItem>
                 </Menu>
               </div>
             </Toolbar>
