@@ -16,12 +16,13 @@ import {
   Avatar,
   Paper,
   Grid,
+  FormControlLabel,
 } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
+import MoyoColor from '../../api/moyoColor';
 
 const InnerContainerGrid = styled(Grid)`
   width: 85%;
-  flex: 1;
-  min-height: 0;
   margin: 0 auto !important;
   margin-top: 1rem !important;
   margin-bottom: 1rem !important;
@@ -51,6 +52,20 @@ const StyledDivider = styled(Divider)`
   margin-bottom: 0.8rem !important;
   background-color: black !important;
 `;
+
+const CustomFormControlLabel = styled(FormControlLabel)`
+  & > .MuiTypography-body1 {
+    font-size: 0.7rem;
+    text-align: left;
+    margin-bottom: -0.5rem;
+  }
+`;
+
+// const CustomAlert = styled(Alert)`
+//   & > div {
+//     color: black;
+//   }
+// `;
 
 const AccompanyListDetail = () => {
   const history = useHistory();
@@ -132,11 +147,21 @@ const AccompanyListDetail = () => {
       return <></>;
     } else {
       return (
-        <Typography variant="h6" align="center">
-          {boardData.validDate
-            ? '마감된 동행 글입니다.'
-            : '기간이 지난 동행 글입니다.'}
-        </Typography>
+        <Grid item style={{ width: '100%' }}>
+          {boardData.validDate ? (
+            <Alert variant="filled" severity="success">
+              마감된 동행 글입니다.
+            </Alert>
+          ) : (
+            <Alert
+              variant="filled"
+              severity="warning"
+              style={{ color: 'black', fontWeight: '700' }}
+            >
+              기간이 지난 동행 글입니다.
+            </Alert>
+          )}
+        </Grid>
       );
     }
   };
@@ -157,18 +182,24 @@ const AccompanyListDetail = () => {
       fetchSaveToggle();
     };
     return (
-      <Grid item container>
-        <Grid item xs={isModify ? 7 : 12}>
+      <Grid item container alignItems="flex-end">
+        <Grid item xs={isModify ? 8 : 12}>
           <Typography variant="subtitle1">{boardData.nickname}</Typography>
         </Grid>
         {isModify && (
-          <Grid item xs={5}>
-            마감
-            <Switch
-              checked={boardData.deadlineToggle === 'y'}
-              onChange={handleChangeToggle}
-              disable={String(!boardData.validDate)}
-            ></Switch>
+          <Grid item xs={4} alignContent="right">
+            <CustomFormControlLabel
+              value="top"
+              control={
+                <Switch
+                  checked={boardData.deadlineToggle === 'y'}
+                  onChange={handleChangeToggle}
+                  disable={String(!boardData.validDate)}
+                />
+              }
+              label="마감하기"
+              labelPlacement="top"
+            />
           </Grid>
         )}
       </Grid>
@@ -188,8 +219,17 @@ const AccompanyListDetail = () => {
         rightClick={isModify ? handleModifyAccompany : handleMoveChat}
         style={{ flexGrow: '0' }}
       />
+      <Grid
+        item
+        style={{
+          width: '85%',
+          margin: '0 auto',
+          marginTop: '1rem',
+        }}
+      >
+        {isModify && <ModifyStateContainer />}
+      </Grid>
 
-      {isModify && <ModifyStateContainer />}
       <InnerContainerGrid item>
         <Grid container direction="column" justify="flex-start">
           <Grid item style={{ padding: '0.7rem 1rem 0.2rem 1rem' }}>
