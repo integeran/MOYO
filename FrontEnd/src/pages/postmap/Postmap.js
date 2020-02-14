@@ -67,7 +67,12 @@ const Postmap = () => {
     dispatch(getPostListAction(res.data.data));
 
     const TOP = 3;
-    var tempList = res.data.data;
+    var tempList = [];
+
+    for (let i = 0; i < res.data.data.length; i++) {
+      tempList.push(res.data.data[i]);
+    }
+
     tempList.sort(function(a, b) {
       return b.likes - a.likes;
     });
