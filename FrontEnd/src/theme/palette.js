@@ -20,7 +20,7 @@ export default {
   success: {
     contrastText: white,
     dark: colors.green[900],
-    main: colors.green[600],
+    main: moyocolor.moyo_biscay_2,
     light: colors.green[400],
   },
   info: {
@@ -28,10 +28,10 @@ export default {
     main: moyocolor.moyo_blue_3,
   },
   warning: {
-    contrastText: white,
-    dark: colors.orange[900],
-    main: colors.orange[600],
-    light: colors.orange[400],
+    contrastText: black,
+    dark: colors.yellow[900],
+    main: colors.yellow[600],
+    light: colors.yellow[400],
   },
   error: {
     contrastText: white,
