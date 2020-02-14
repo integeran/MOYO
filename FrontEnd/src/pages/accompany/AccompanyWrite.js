@@ -42,10 +42,15 @@ const CustomInputField = styled(TextField)`
 `;
 
 const CustomExpansionPanel = styled(ExpansionPanel)`
+  margin: 0 !important;
   & > div {
+    margin: 0;
     padding-left: 1rem;
     & > div {
-      margin: 0;
+      margin: 0 !important;
+    }
+    & > div > div > div > div {
+      padding: 0 !important;
     }
   }
 `;
@@ -125,7 +130,7 @@ const AccompanyWrite = () => {
   const handleSubmitClick = () => {
     const fetchBoard = async () => {
       const boardData = {
-        acBoardId: modifyBoard.acBoardId || 0,
+        acBoardId: isModify ? modifyBoard.acBoardId : 0,
         nid: nation,
         cid: city,
         contents: content,
