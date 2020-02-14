@@ -25,7 +25,7 @@ const DmRoomList = () => {
 
     firebase.database().goOnline();
 
-    waitRoomListTrigger(userData);
+    loadRoomList(userData);
   };
 
   /**
@@ -35,11 +35,16 @@ const DmRoomList = () => {
     /**
      * loadRoomList에서 데이터를 받아왔을 때
      */
-    var loadRoomFirebase = firebase.database().ref('UserRooms/' + sender.uid);
+    addLoadRoomList(sender);
+    changeLoadRoomList(sender);
+  };
+
+  const addLoadRoomList = sender => {
+    var addLoadRoomFirebase = firebase
+      .database()
+      .ref('UserRooms/' + sender.uid);
     const callback = snapshot => {
       var val = snapshot.val();
-
-      console.log(val);
 
       var RoomInfo = {
         roomId: val.roomId,
@@ -52,25 +57,23 @@ const DmRoomList = () => {
       setRoomList(prevState => [...prevState, RoomInfo]);
     };
 
-    loadRoomFirebase.orderByChild('timeStamp').on('child_added', callback); // 메세지를 받을 때 마다 목록을 갱신시키기 위해 once메소드가 아닌 on메소드 사용
+    addLoadRoomFirebase.orderByChild('timeStamp').on('child_added', callback); // 메세지를 받을 때 마다 목록을 갱신시키기 위해 once메소드가 아닌 on메소드 사용
   };
 
-  const waitRoomListTrigger = sender => {
-    console.log('waitRoomListTrigger');
-    var roomListTriggerFirebase = firebase
+  const changeLoadRoomList = sender => {
+    var changeLoadRoomListFirebase = firebase
       .database()
-      .ref('ListRoomTrigger/' + sender.uid);
+      .ref('UserRooms/' + sender.uid);
 
     const callback = snapshot => {
-      setRoomList([]);
-      loadRoomList(sender);
-      firebase
-        .database()
-        .ref('ListRoomTrigger/' + sender.uid)
-        .remove();
+      var val = snapshot.val();
+      setRoomList(prevState =>
+        prevState.filter(room => room.roomId !== val.roomId),
+      );
+      setRoomList(prevState => [...prevState, val]);
     };
 
-    roomListTriggerFirebase.on('value', callback);
+    changeLoadRoomListFirebase.on('child_changed', callback);
   };
 
   return (
@@ -91,14 +94,18 @@ const DmRoomList = () => {
           })
         ) : (
           <Grid container justify="center">
-            <Avatar
-              alt="데이터 존재 하지 않음"
-              src="https://jjalbang.today/jj1XC.gif"
-              style={{ width: '50%', height: '50%' }}
-            />
-            <Typography>
-              <b>데이터가 존재하지 않습니다.</b>
-            </Typography>
+            <div>
+              <Typography style={{ textAlign: 'center', marginTop: '20%' }}>
+                <b>데이터가 존재하지 않습니다.</b>
+              </Typography>
+            </div>
+            <div style={{ padding: '10%' }}>
+              <Avatar
+                alt="데이터 존재 하지 않음"
+                src="https://jjalbang.today/jj1XC.gif"
+                style={{ width: '100%', height: '100%', textAlign: 'center' }}
+              />
+            </div>
           </Grid>
         )}
       </div>
