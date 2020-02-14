@@ -1,5 +1,4 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import MoreAccompanyListPaper from './MoreAccompanyListPaper';
 import styled from 'styled-components';
 
@@ -11,24 +10,14 @@ const ListComponent = styled.div`
   margin-bottom: 6rem;
 `;
 
-const AccompanyListSet = ({ boardData }) => {
-  const history = useHistory();
-  const handleBoardClick = board => {
-    history.push({
-      pathname: '/accompany/accList/' + board.acBoardId,
-      state: {
-        prevpath: history.location.pathname,
-        board: board,
-      },
-    });
-  };
+const AccompanyListSet = ({ boardData, handleClick }) => {
   return (
     <ListComponent>
       {boardData.map(board => (
         <MoreAccompanyListPaper
           key={board.acBoardId}
           boardInfo={board}
-          onClick={() => handleBoardClick(board)}
+          onClick={() => handleClick(board)}
         />
       ))}
     </ListComponent>
