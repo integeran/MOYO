@@ -14,19 +14,25 @@ import {
   Divider,
   Typography,
   Avatar,
-  Container,
   Paper,
   Grid,
 } from '@material-ui/core';
 
 const InnerContainerGrid = styled(Grid)`
   width: 85%;
-  flex-grow: 1;
+  flex: 1;
+  min-height: 0;
   margin: 0 auto !important;
   margin-top: 1rem !important;
   margin-bottom: 1rem !important;
   background-color: white;
   border-radius: 1rem;
+`;
+const ContentsGrid = styled(Grid)`
+  padding: 1rem !important;
+  background-color: white;
+  border-radius: 1rem;
+  margin-bottom: 1rem !important;
 `;
 
 const CenterGrid = styled(Grid)`
@@ -245,15 +251,13 @@ const AccompanyListDetail = () => {
 
         <StyledDivider variant="middle" />
 
-        <Grid item style={{ marginTop: '1rem', marginBottom: '1rem' }}>
-          <Container>
-            <Paper elevation={0}>
-              <Typography variant="body2" style={{ whiteSpace: 'pre-line' }}>
-                {boardData.contents}
-              </Typography>
-            </Paper>
-          </Container>
-        </Grid>
+        <ContentsGrid item>
+          <Paper elevation={0}>
+            <Typography variant="body2" style={{ whiteSpace: 'pre-line' }}>
+              {boardData.contents}
+            </Typography>
+          </Paper>
+        </ContentsGrid>
 
         {isModify && (
           <Grid style={{ padding: '0 1rem' }}>
