@@ -17,6 +17,7 @@ const Message = ({
   url,
   lastMessageUserId,
   lastTimeStamp,
+  curTime,
 }) => {
   const userData = useSelector(state => state.auth.userData);
 
@@ -86,18 +87,23 @@ const Message = ({
   };
 
   return (
-    <>
-      {moment(timeStamp).format('YYYY/MM/DD LT') !==
-        moment(lastTimeStamp).format('YYYY/MM/DD LT') && (
-        <div style={{ textAlign: 'center' }}>
-          <Typography variant="caption">
-            {moment(timeStamp).format('YYYY/MM/DD LT')}
-          </Typography>
-        </div>
-      )}
+    curTime && (
+      <>
+        {moment(timeStamp).format('YYYY/MM/DD LT') !==
+          moment(lastTimeStamp).format('YYYY/MM/DD LT') && (
+          <div style={{ textAlign: 'center' }}>
+            <Typography variant="caption">
+              {moment(timeStamp).format('YYYY/MM/DD') ===
+              moment(curTime).format('YYYY/MM/DD')
+                ? moment(timeStamp).format('LT')
+                : moment(timeStamp).format('YYYY/MM/DD')}
+            </Typography>
+          </div>
+        )}
 
-      {senderId === userData.uid ? showRightMessage() : showLeftMessage()}
-    </>
+        {senderId === userData.uid ? showRightMessage() : showLeftMessage()}
+      </>
+    )
   );
 };
 
