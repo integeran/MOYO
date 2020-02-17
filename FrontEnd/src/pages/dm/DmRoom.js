@@ -7,6 +7,7 @@ import moment from 'moment';
 
 import Message from '../../components/dm/Message';
 import UploadModal from '../../components/dm/UploadModal';
+import ProgressModal from '../../components/common/ProgressModal';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -51,6 +52,7 @@ const DmRoom = ({ match }) => {
   const [addAccompanyModal, setAddAccompanyModal] = useState(false);
   const [receiverRead, setReceiverRead] = useState(false);
   const [tempCurTime, setTempCurTime] = useState('');
+  const [openProgress, setOpenProgress] = useState(false);
 
   const onChangeIvalue = useCallback(e => {
     setIvalue(e.target.value);
@@ -558,6 +560,7 @@ const DmRoom = ({ match }) => {
             onChange={onAttachFile}
           ></input>
         </div>
+        <ProgressModal openProgress={openProgress} />
       </div>
     </>
   );
