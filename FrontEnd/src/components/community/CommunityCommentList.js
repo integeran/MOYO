@@ -166,7 +166,7 @@ const CommunityCommentList = ({ cmId, userData }) => {
 
   return (
     <>
-      <form autoComplete="off">
+      <div>
         <Grid container style={{ marginBottom: '0.7rem' }}>
           <Grid item xs={10}>
             <StyledTextField
@@ -187,7 +187,7 @@ const CommunityCommentList = ({ cmId, userData }) => {
             </FullSizeButton>
           </Grid>
         </Grid>
-      </form>
+      </div>
 
       {comments.map(comment => (
         <CommentContainer container>

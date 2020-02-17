@@ -235,7 +235,7 @@ const Profile = props => {
     const reg = /(.*?)\.(jpg|jpeg|png|gif)$/;
     if (!imageFile) {
       setOpenDialog(false);
-    } else if (imageFile.name.match(reg)) {
+    } else if (imageFile.name.toLowerCase().match(reg)) {
       const imgData = await postImageRequest();
       setTempImageName(imgData.data.data.imageName);
       setTempUserImage(imgData.data.data.image);
