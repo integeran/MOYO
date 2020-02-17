@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import React, { useCallback, useState, useEffect } from 'react';
-=======
-import React, { useCallback } from 'react';
->>>>>>> 6d66877775680ba4b423f9182a96f1881f087a4f
 import BaseAppBar from '../../components/common/BaseAppBar';
 import { InputLabel } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
