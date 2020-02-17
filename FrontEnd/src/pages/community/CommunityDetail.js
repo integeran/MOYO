@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import community, {
+import {
   changeCmId,
   changeTitle,
   changeContents,
@@ -78,6 +78,7 @@ const CommunityDetail = () => {
           leftClick={handleBackClick}
         />
       </Grid>
+
       <InnerContainerGrid item container direction="column">
         <Grid item style={{ margin: '0.5rem 0 0.3rem' }}>
           <Typography
@@ -93,12 +94,17 @@ const CommunityDetail = () => {
         <Grid item style={{ margin: '0.5rem 0.3rem 0' }}>
           <Typography variant="body2">{communityData.nickname}</Typography>
         </Grid>
+
         <BlackDivider />
+
         <Grid item style={{ margin: '0.4rem' }}>
           {communityData.contents}
         </Grid>
+
         <BlackDivider />
+
         <CommunityCommentList cmId={communityData.cmId} userData={userData} />
+
         {userData.uid === communityData.uid ? (
           <Typography
             onClick={() => {
@@ -118,12 +124,12 @@ const CommunityDetail = () => {
             수정하기
           </Typography>
         ) : (
-          <div></div>
+          <></>
         )}
         {userData.uid === communityData.uid ? (
           <Typography onClick={handleDeleteClick}>삭제하기</Typography>
         ) : (
-          <div></div>
+          <></>
         )}
       </InnerContainerGrid>
     </Grid>
