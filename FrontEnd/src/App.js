@@ -26,6 +26,7 @@ import CommunityList from './pages/community/CommunityList';
 import CommunityDetail from './pages/community/CommunityDetail';
 import CommunityWrite from './pages/community/CommunityWrite';
 import PersonalGame from './pages/game/PersonalGame';
+import ProgressModal from './components/common/ProgressModal';
 
 import { changeBool } from './modules/auth';
 
@@ -112,6 +113,7 @@ const App = () => {
             <Route path="/personalgame" component={PersonalGame} />
           </>
         )}
+        <ProgressModal />
       </StyledContainer>
       {!(location.pathname === '/' || location.pathname === '/profile') && (
         <CategoryNav />

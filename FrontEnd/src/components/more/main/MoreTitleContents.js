@@ -87,7 +87,6 @@ const HeaderContents = () => {
             <Grid item style={{ paddingTop: '0rem' }}>
               <TitleTypo
                 variant="h5"
-                color="white"
                 style={{ padding: '0rem', letterSpacing: '-0.05rem' }}
               >
                 안녕하세요 {userData.nickname}님!
