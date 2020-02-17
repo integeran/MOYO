@@ -1,30 +1,37 @@
 import React from 'react';
-import { Snackbar, IconButton, CloseIcon } from '@material-ui/core';
+import { Snackbar, IconButton } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 
-const SnackBar = ({ contents }) => {
-  const [open, setOpen] = React.useState(false);
+/*
+  1. 쓰려는 페이지에 정의
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const handleSnackBarOpen = () => {  setSnackbarOpen(true);  };
+  const handleSnackBarClose = () => {  setSnackbarOpen(false);  };
 
-  const handleClick = () => {
-    setOpen(true);
-  };
+  2. return 안에 SnackBar 컴포넌트 명시
+  <SnackBar
+    open={snackbarOpen}
+    contents="수정되었습니다."
+    onClose={handleSnackBarClose}
+  ></SnackBar>
 
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+  3. 기존 수정을 실행한 버튼 onClick={handleSnackBarOpen}
 
-    setOpen(false);
+*/
+const SnackBar = ({ open, contents, onClose }) => {
+  const handleClose = () => {
+    onClose(false);
   };
 
   return (
-    <div>
+    <>
       <Snackbar
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'left',
+          horizontal: 'center',
         }}
         open={open}
-        autoHideDuration={6000}
+        autoHideDuration={4000}
         onClose={handleClose}
         message={contents}
         action={
@@ -39,8 +46,9 @@ const SnackBar = ({ contents }) => {
             </IconButton>
           </React.Fragment>
         }
+        style={{ bottom: '4rem' }}
       />
-    </div>
+    </>
   );
 };
 export default SnackBar;
