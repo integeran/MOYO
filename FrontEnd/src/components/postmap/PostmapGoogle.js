@@ -101,9 +101,6 @@ const PostmapGoogle = props => {
           zoom={13}
           style={mapStyles}
           initialCenter={{ lat: pos.latitude, lng: pos.longitude }}
-          onClick={() => {
-            console.log('mapClick');
-          }}
           mapTypeControl={false}
           streetViewControl={false}
           fullscreenControl={false}

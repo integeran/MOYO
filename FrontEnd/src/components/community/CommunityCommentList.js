@@ -48,15 +48,10 @@ const CommunityCommentList = ({ cmId, userData }) => {
     comments => dispatch(changeComments(comments)),
     [dispatch],
   );
-  const onChangeEditCallback = useCallback(
+  const onChangeEdit = useCallback(
     cmCommentId => dispatch(changeEdit(cmCommentId)),
     [dispatch],
   );
-
-  const onChangeEdit = comment => {
-    onChangeEditCallback(comment.cmCommentId);
-    setEditComment(comment.contents);
-  };
 
   const getCommentList = async () => {
     try {
@@ -129,19 +124,17 @@ const CommunityCommentList = ({ cmId, userData }) => {
   };
 
   const handleEditClick = async cmCommentId => {
-    if (editComment.trim()) {
-      const commentData = {
-        cmCommentId: cmCommentId,
-        uid: userData.uid,
-        contents: editComment,
-      };
-      const fetchEditComment = async () => {
-        await putComment(commentData);
-        getComments();
-      };
-      onChangeEditCallback(cmCommentId);
-      fetchEditComment();
-    }
+    const commentData = {
+      cmCommentId: cmCommentId,
+      uid: userData.uid,
+      contents: editComment,
+    };
+    const fetchEditComment = async () => {
+      await putComment(commentData);
+      getComments();
+    };
+    onChangeEdit(cmCommentId);
+    fetchEditComment();
   };
 
   const handleEditCancelClick = cmCommentId => {
