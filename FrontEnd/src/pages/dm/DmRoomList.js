@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import * as firebase from 'firebase';
 
 import Room from '../../components/dm/Room';
+import ProgressModal from '../../components/common/ProgressModal';
 
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
@@ -12,9 +13,13 @@ const DmRoomList = () => {
   const userData = useSelector(state => state.auth.userData);
 
   const [roomList, setRoomList] = useState([]);
+  const [openProgress, setOpenProgress] = useState(true);
 
   useEffect(() => {
     onInit();
+    setTimeout(() => {
+      setOpenProgress(false);
+    }, 1500);
   }, []);
 
   /**
@@ -109,6 +114,7 @@ const DmRoomList = () => {
             </div>
           </Grid>
         )}
+        <ProgressModal openProgress={openProgress} />
       </div>
     </>
   );
