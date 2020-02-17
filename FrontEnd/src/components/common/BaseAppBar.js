@@ -22,35 +22,43 @@ const StyledAppBar = styled(({ ...other }) => <AppBar {...other} />)`
   }
 `;
 
-const ItemContainer = ({ type, icon, text, onClick }) => {
+const ItemContainer = ({ icon, text, onClick, style }) => {
   return (
     <>
-      {icon && type === 'icon' && (
-        <IconButton color="inherit" onClick={onClick}>
+      {icon ? (
+        <IconButton color="inherit" onClick={onClick} style={style}>
           {icon}
         </IconButton>
-      )}
-      {!icon && (text || type === 'text') && (
-        <Button color="inherit" onClick={onClick}>
+      ) : !icon && text ? (
+        <Button color="inherit" onClick={onClick} style={style}>
           <Typography variant="subtitle1">{text}</Typography>
         </Button>
-      )}
+      ) : null}
     </>
   );
 };
 
 const BaseAppBar = ({
   text,
-  align = 'center',
+
   leftIcon,
   leftText,
-  leftType = 'text',
   leftClick,
+
   rightIcon,
   rightText,
-  rightType = 'text',
   rightClick,
+
+  leftExtraIcon,
+  leftExtraText,
+  leftExtraClick,
+
+  rightExtraIcon,
+  rightExtraText,
+  rightExtraClick,
 }) => {
+  const isExtraSize = () =>
+    leftExtraIcon || leftExtraText || rightExtraIcon || rightExtraText;
   return (
     <StyledAppBar
       color="inherit"
@@ -60,21 +68,38 @@ const BaseAppBar = ({
     >
       <Toolbar disableGutters={true}>
         <CenterGrid item xs={2}>
-          <ItemContainer
-            type={leftType}
-            icon={leftIcon}
-            text={leftText}
-            onClick={leftClick}
-          />
+          <ItemContainer icon={leftIcon} text={leftText} onClick={leftClick} />
         </CenterGrid>
-        <Grid item xs={8}>
-          <Typography variant="h6" align={align}>
+        {isExtraSize() ? (
+          <CenterGrid item xs={2} justify="flex-start">
+            <ItemContainer
+              style={{ padding: '12px 12px 12px 0' }}
+              icon={leftExtraIcon}
+              text={leftExtraText}
+              onClick={leftExtraClick}
+            />
+          </CenterGrid>
+        ) : null}
+
+        <Grid item xs={isExtraSize() ? 4 : 8}>
+          <Typography variant="h6" align="center">
             {text}
           </Typography>
         </Grid>
+
+        {isExtraSize() ? (
+          <CenterGrid item container xs={2} justify="flex-end">
+            <ItemContainer
+              style={{ padding: '12px 0 12px 12px' }}
+              icon={rightExtraIcon}
+              text={rightExtraText}
+              onClick={rightExtraClick}
+            />
+          </CenterGrid>
+        ) : null}
+
         <CenterGrid item xs={2}>
           <ItemContainer
-            type={rightType}
             icon={rightIcon}
             text={rightText}
             onClick={rightClick}

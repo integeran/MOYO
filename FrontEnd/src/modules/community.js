@@ -18,7 +18,7 @@ const initialState = {
   cmId: 0,
   title: '',
   contents: '',
-  cmTypeId: 1,
+  cmTypeId: '',
 };
 
 const community = handleActions(

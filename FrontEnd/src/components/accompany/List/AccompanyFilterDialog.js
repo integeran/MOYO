@@ -16,6 +16,19 @@ import {
 } from '@material-ui/core';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
+import styled from 'styled-components';
+
+const FilterFormLabel = styled(FormLabel)`
+  font-size: 1.1rem !important;
+  color: black !important;
+  font-weight: 700 !important;
+`;
+
+const FilterFormControl = styled(FormControl)`
+  & + & {
+    margin-top: 1rem;
+  }
+`;
 
 const AccompanyFilterDialog = ({
   filterGender,
@@ -30,11 +43,11 @@ const AccompanyFilterDialog = ({
 }) => {
   const getAgeLabel = age => age + '대' + (age === '50' ? '+' : '');
   return (
-    <Dialog open={open} maxWidth="md" fullWidth onClose={handleClose}>
+    <Dialog open={open} maxWidth="lg" fullWidth onClose={handleClose}>
       <DialogTitle>필터링</DialogTitle>
       <DialogContent>
-        <FormControl fullWidth>
-          <FormLabel>성별</FormLabel>
+        <FilterFormControl fullWidth>
+          <FilterFormLabel>성별</FilterFormLabel>
           <RadioGroup
             name="gender"
             value={filterGender}
@@ -45,10 +58,10 @@ const AccompanyFilterDialog = ({
             <FormControlLabel value="M" control={<Radio />} label="남성" />
             <FormControlLabel value="F" control={<Radio />} label="여성" />
           </RadioGroup>
-        </FormControl>
+        </FilterFormControl>
 
-        <FormControl fullWidth>
-          <FormLabel>나이</FormLabel>
+        <FilterFormControl fullWidth>
+          <FilterFormLabel>나이</FilterFormLabel>
           <FormGroup row>
             {Object.keys(filterAge).map(age => (
               <FormControlLabel
@@ -65,10 +78,10 @@ const AccompanyFilterDialog = ({
               />
             ))}
           </FormGroup>
-        </FormControl>
+        </FilterFormControl>
 
-        <FormControl fullWidth>
-          <FormLabel>여행타입</FormLabel>
+        <FilterFormControl fullWidth>
+          <FilterFormLabel>여행타입</FilterFormLabel>
           <FormGroup row>
             {Object.keys(filterType).map(type => (
               <FormControlLabel
@@ -85,13 +98,13 @@ const AccompanyFilterDialog = ({
               />
             ))}
           </FormGroup>
-        </FormControl>
+        </FilterFormControl>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary">
+        <Button onClick={handleClose} color="secondary">
           취소
         </Button>
-        <Button onClick={handleSubmit} color="primary">
+        <Button onClick={handleSubmit} color="secondary">
           적용
         </Button>
       </DialogActions>
