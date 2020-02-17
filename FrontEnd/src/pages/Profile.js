@@ -20,6 +20,7 @@ import {
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
 
 const Profile = props => {
   const jwtDecode = require('jwt-decode');
@@ -290,7 +291,6 @@ const Profile = props => {
           <BaseAppBar
             style={{ flexGrow: '0' }}
             text={isMe ? '프로필 편집' : `${userNickname}님의 프로필`}
-            leftType="icon"
             leftIcon={<ArrowBackIosIcon onClick={handleBackIcon} />}
           />
         )}
@@ -306,6 +306,13 @@ const Profile = props => {
             margin: '0px',
           }}
         >
+          <Grid item>
+            <SportsEsportsIcon
+              onClick={() => {
+                history.push('/PersonalGame');
+              }}
+            />
+          </Grid>
           <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
             {isMe ? (
               <Badge

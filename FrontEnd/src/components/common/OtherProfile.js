@@ -82,7 +82,6 @@ const OtherProfile = props => {
       <BaseAppBar
         style={{ flexGrow: '0' }}
         text={`${nickname}님의 프로필`}
-        leftType="icon"
         leftIcon={<ArrowBackIosIcon onClick={handleClose} />}
       />
       <Grid
@@ -94,7 +93,6 @@ const OtherProfile = props => {
           width: 'inherit',
           margin: '0px',
           flexGrow: '1',
-          margin: '0px',
         }}
       >
         <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
