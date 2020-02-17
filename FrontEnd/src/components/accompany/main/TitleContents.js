@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Typography } from '@material-ui/core';
-import MoyoIcon from '../../../assets/img/MOYO_logo_white.svg';
+import MoyoIcon from '../../../assets/img/MOYOLogoWhite.svg';
 import styled from 'styled-components';
 
 const TitleContainer = styled(Grid)`

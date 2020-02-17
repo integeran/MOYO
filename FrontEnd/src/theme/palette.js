@@ -9,33 +9,29 @@ export default {
   white,
   primary: {
     contrastText: white,
-    dark: colors.indigo[900],
-    main: moyocolor.moyo_biscay_3,
-    light: colors.indigo[100],
+    main: moyocolor.moyo_green_1,
   },
   secondary: {
     contrastText: white,
     dark: colors.blue[900],
-    main: colors.blue['A400'],
+    main: moyocolor.moyo_biscay_2,
     light: colors.blue['A400'],
   },
   success: {
     contrastText: white,
     dark: colors.green[900],
-    main: colors.green[600],
+    main: moyocolor.moyo_biscay_2,
     light: colors.green[400],
   },
   info: {
     contrastText: white,
-    dark: colors.blue[900],
-    main: colors.blue[600],
-    light: colors.blue[400],
+    main: moyocolor.moyo_blue_3,
   },
   warning: {
-    contrastText: white,
-    dark: colors.orange[900],
-    main: colors.orange[600],
-    light: colors.orange[400],
+    contrastText: black,
+    dark: colors.yellow[900],
+    main: colors.yellow[600],
+    light: colors.yellow[400],
   },
   error: {
     contrastText: white,
@@ -45,7 +41,7 @@ export default {
   },
   text: {
     primary: black,
-    secondary: black,
+    secondary: moyocolor.moyo_green_3,
     link: black,
   },
   background: {

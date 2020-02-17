@@ -52,7 +52,12 @@ const BaseAppBar = ({
   rightClick,
 }) => {
   return (
-    <StyledAppBar color="inherit" elevation={0} position="sticky">
+    <StyledAppBar
+      color="inherit"
+      elevation={0}
+      position="sticky"
+      color="primary"
+    >
       <Toolbar disableGutters={true}>
         <CenterGrid item xs={2}>
           <ItemContainer

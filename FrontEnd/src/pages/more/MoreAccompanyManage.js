@@ -3,17 +3,10 @@ import { useHistory } from 'react-router';
 import { useSelector } from 'react-redux';
 import axios from '../../api/axios';
 import moment from '../../api/moment';
-import { Grid, Typography, Divider, Paper } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import BaseAppBar from '../../components/common/BaseAppBar';
-import styled from 'styled-components';
-
-const HrDiv = styled.div`
-  flex-grow: 1;
-  align-items: center;
-  display: flex;
-  justify-content: center;
-`;
+import MoreAccompanyListSet from '../../components/more/list/MoreAccompanyListSet';
 
 const MoreAccompanyManage = () => {
   const history = useHistory();
@@ -72,57 +65,26 @@ const MoreAccompanyManage = () => {
     history.goBack();
   };
 
-  const TextBar = ({ text }) => (
-    <Grid container>
-      <div style={{ flexGrow: '0' }}>
-        <Typography variant="body1">{text}</Typography>
-      </div>
-      <HrDiv>
-        <Divider style={{ width: '90%' }} />
-      </HrDiv>
-    </Grid>
-  );
-
-  const AccompanyPaper = ({ item }) => (
-    <Paper variant="outlined" onClick={() => handleModifyDetail(item)}>
-      <Grid container>
-        <Grid item xs={8}>
-          <Typography variant="h6">{item.title}</Typography>
-        </Grid>
-        <Grid item container xs={4} direction="column">
-          <Grid item>
-            {item.nation}/{item.city}
-          </Grid>
-          <Grid item>{item.type}</Grid>
-        </Grid>
-      </Grid>
-      <Grid container>
-        <Grid item xs={7}>
-          {moment.momentDate(item.startDate)}~{moment.momentDate(item.endDate)}
-        </Grid>
-        <Grid item xs={5}>
-          {moment.momentDate(item.updateDate)}
-        </Grid>
-      </Grid>
-    </Paper>
-  );
-
   return (
     <>
       <BaseAppBar
-        text="내 동행 관리"
+        text="내 동행 글"
         leftType="icon"
         leftIcon={<ArrowBackIosIcon />}
         leftClick={handleLeftClick}
       />
-      <TextBar text="진행중인 동행 글" />
-      {curList.map(item => (
-        <AccompanyPaper key={item.acBoardId} item={item} />
-      ))}
-      <TextBar text="종료된 동행 글" />
-      {prevList.map(item => (
-        <AccompanyPaper key={item.acBoardId} item={item} />
-      ))}
+      <Grid container style={{ marginTop: '0.8rem' }}>
+        <MoreAccompanyListSet
+          title="진행 중인 동행 글"
+          boardData={curList}
+          handleClick={handleModifyDetail}
+        />
+        <MoreAccompanyListSet
+          title="종료된 동행 글"
+          boardData={prevList}
+          handleClick={handleModifyDetail}
+        />
+      </Grid>
     </>
   );
 };
