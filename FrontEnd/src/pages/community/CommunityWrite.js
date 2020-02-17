@@ -1,5 +1,6 @@
-import React, { useCallback} from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import BaseAppBar from '../../components/common/BaseAppBar';
+import { InputLabel } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
@@ -22,9 +23,9 @@ const CommunityWrite = () => {
     contents: community.contents,
   }));
   const userData = useSelector(state => state.auth.userData, []);
+  const [communityTypeList, setCommunityTypeList] = useState([]);
   const history = useHistory();
   const dispatch = useDispatch();
-  const communityTypeList = history.location.state.communityTypeList;
   const onChangeTitle = useCallback(title => dispatch(changeTitle(title)), [
     dispatch,
   ]);
@@ -67,11 +68,15 @@ const CommunityWrite = () => {
       title: title,
       contents: contents,
     };
-    const fetchCommunity = async () => {
-      await postCommunity(communityData);
-      history.push('/community/');
-    };
-    fetchCommunity();
+    if (cmTypeId && title.trim() && contents.trim()) {
+      const fetchCommunity = async () => {
+        await postCommunity(communityData);
+        history.push('/community/');
+      };
+      fetchCommunity();
+    } else {
+      alert('아앜');
+    }
   };
   const handlePutClick = async () => {
     const communityData = {
@@ -81,12 +86,35 @@ const CommunityWrite = () => {
       title: title,
       contents: contents,
     };
-    const fetchPutCommunity = async () => {
-      await putCommunity(communityData);
-      history.push('/community/');
-    };
-    fetchPutCommunity();
+    if (cmTypeId && title.trim() && contents.trim()) {
+      const fetchPutCommunity = async () => {
+        await putCommunity(communityData);
+        history.push('/community/');
+      };
+      fetchPutCommunity();
+    } else {
+      alert('아앜');
+    }
   };
+
+  const getCommunityTypeList = async () => {
+    try {
+      return await axios.get('community/selectCommunityType', {
+        headers: { userToken: userData.userToken },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchCommunityTypeList = async () => {
+      const result = await getCommunityTypeList();
+      setCommunityTypeList(result.data.data);
+    };
+    fetchCommunityTypeList();
+  }, []);
+
   return (
     <div>
       <BaseAppBar
@@ -102,7 +130,6 @@ const CommunityWrite = () => {
             : handleSubmitClick
         }
       />
-      <h1>커뮤니티 글쓰기 구현 중입니다.</h1>
       <form autoComplete="off">
         <Select
           id="typeSelect"
@@ -112,6 +139,9 @@ const CommunityWrite = () => {
           value={cmTypeId}
           onChange={handleChangeType}
         >
+          <MenuItem value="">
+            <em>타입을 선택해주세요</em>
+          </MenuItem>
           {communityTypeList.map(item => (
             <MenuItem key={item.cmTypeId} value={item.cmTypeId}>
               {item.name}
