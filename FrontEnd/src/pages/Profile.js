@@ -291,7 +291,6 @@ const Profile = props => {
           <BaseAppBar
             style={{ flexGrow: '0' }}
             text={isMe ? '프로필 편집' : `${userNickname}님의 프로필`}
-            leftType="icon"
             leftIcon={<ArrowBackIosIcon onClick={handleBackIcon} />}
           />
         )}
