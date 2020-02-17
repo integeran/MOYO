@@ -4,6 +4,7 @@ import { useHistory } from 'react-router';
 import PersonalMain from '../../components/game/PersonalMain';
 import PersonalResultModal from '../../components/game/PersonalResultModal';
 import PersonalRoundModal from '../../components/game/PersonalRoundModal';
+import ProgressModal from '../../components/common/ProgressModal';
 
 const PersonalGame = () => {
   var startRound = 16;
@@ -14,6 +15,7 @@ const PersonalGame = () => {
   const [randomList, setRandomList] = useState([]);
   const [resultMessage, setResultMessage] = useState('');
   const [openRound, setOpenRound] = useState(true);
+  const [openProgress, setOpenProgress] = useState(true);
 
   const resultNames = [
     '신라',
@@ -38,6 +40,7 @@ const PersonalGame = () => {
 
   useEffect(() => {
     setRandom();
+    setOpenProgress(false);
   }, []);
 
   const setRandom = () => {
@@ -101,15 +104,19 @@ const PersonalGame = () => {
         bottomindex={randomList[subRound * 2 + 1]}
         onClickImage={onClickImage}
       />
+
       <PersonalResultModal
         closeResult={closeResult}
         resultMessage={resultMessage}
       />
+
       <PersonalRoundModal
         openRound={openRound}
         closeRound={closeRound}
         round={round}
       />
+
+      <ProgressModal openProgress={openProgress} />
     </div>
   );
 };
