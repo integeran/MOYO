@@ -51,7 +51,7 @@ const CategoryNav = () => {
     <BottomNavigation
       value={select}
       onChange={handleNavChange}
-      // showLabels={true}
+      style={{zIndex:"9999"}}
     >
       <StyledBottomNavigationAction
         ref={refAccompany}
