@@ -33,14 +33,11 @@ const communityComment = handleActions(
       }),
     [CHANGE_EDIT]: (state, { payload: cmCommentId }) =>
       produce(state, draft => {
+        console.log('hello', draft.comments);
         const comment = draft.comments.find(
           comment => comment.cmCommentId === cmCommentId,
         );
-        if (comment.edit) {
-          comment.edit = false;
-        } else {
-          comment.edit = true;
-        }
+        comment.edit = !comment.edit;
       }),
   },
   initialState,
