@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import ChatIcon from '@material-ui/icons/Chat';
 import BorderColorIcon from '@material-ui/icons/BorderColor';
+import DeleteIcon from '@material-ui/icons/Delete';
 import axios from '../../api/axios';
+import moment from '../../api/moment';
 import styled from 'styled-components';
 import BaseAppBar from '../../components/common/BaseAppBar';
 import { navigationSelect } from '../../modules/baseNavigation';
@@ -16,12 +17,12 @@ import {
   Avatar,
   Paper,
   Grid,
+  FormControlLabel,
 } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 
 const InnerContainerGrid = styled(Grid)`
   width: 85%;
-  flex: 1;
-  min-height: 0;
   margin: 0 auto !important;
   margin-top: 1rem !important;
   margin-bottom: 1rem !important;
@@ -52,12 +53,24 @@ const StyledDivider = styled(Divider)`
   background-color: black !important;
 `;
 
+const CustomFormControlLabel = styled(FormControlLabel)`
+  & > .MuiTypography-body1 {
+    font-size: 0.7rem;
+    text-align: left;
+    margin-bottom: -0.5rem;
+  }
+`;
+
 const AccompanyListDetail = () => {
   const history = useHistory();
   const dispatch = useDispatch();
+  const userData = useSelector(state => state.auth.userData);
   const [boardData, setBoardData] = useState(history.location.state.board);
-  const isModify =
-    history.location.pathname.indexOf('more') > -1 ? true : false;
+  const [isModify, setIsModify] = useState(false);
+
+  useEffect(() => {
+    setIsModify(history.location.state.board.uid === userData.uid);
+  }, []);
 
   const convertAgeToStr = age => {
     age = Number(age);
@@ -132,11 +145,21 @@ const AccompanyListDetail = () => {
       return <></>;
     } else {
       return (
-        <Typography variant="h6" align="center">
-          {boardData.validDate
-            ? '마감된 동행 글입니다.'
-            : '기간이 지난 동행 글입니다.'}
-        </Typography>
+        <Grid item style={{ width: '100%' }}>
+          {boardData.validDate ? (
+            <Alert variant="filled" severity="success">
+              마감된 동행 글입니다.
+            </Alert>
+          ) : (
+            <Alert
+              variant="filled"
+              severity="warning"
+              style={{ color: 'black', fontWeight: '700' }}
+            >
+              기간이 지난 동행 글입니다.
+            </Alert>
+          )}
+        </Grid>
       );
     }
   };
@@ -157,18 +180,24 @@ const AccompanyListDetail = () => {
       fetchSaveToggle();
     };
     return (
-      <Grid item container>
-        <Grid item xs={isModify ? 7 : 12}>
+      <Grid item container alignItems="flex-end">
+        <Grid item xs={isModify ? 8 : 12}>
           <Typography variant="subtitle1">{boardData.nickname}</Typography>
         </Grid>
         {isModify && (
-          <Grid item xs={5}>
-            마감
-            <Switch
-              checked={boardData.deadlineToggle === 'y'}
-              onChange={handleChangeToggle}
-              disable={String(!boardData.validDate)}
-            ></Switch>
+          <Grid item xs={4} alignContent="right">
+            <CustomFormControlLabel
+              value="top"
+              control={
+                <Switch
+                  checked={boardData.deadlineToggle === 'y'}
+                  onChange={handleChangeToggle}
+                  disable={String(!boardData.validDate)}
+                />
+              }
+              label="마감하기"
+              labelPlacement="top"
+            />
           </Grid>
         )}
       </Grid>
@@ -179,17 +208,25 @@ const AccompanyListDetail = () => {
     <Grid container direction="column" style={{ height: '100%' }}>
       <BaseAppBar
         text="상세보기"
-        align="left"
-        leftType="icon"
         leftIcon={<ArrowBackIosIcon />}
         leftClick={handleGoBack}
-        rightType="icon"
-        rightIcon={isModify ? <BorderColorIcon /> : <ChatIcon />}
-        rightClick={isModify ? handleModifyAccompany : handleMoveChat}
+        rightIcon={isModify ? <BorderColorIcon /> : null}
+        rightClick={isModify ? handleModifyAccompany : null}
+        rightExtraIcon={isModify ? <DeleteIcon /> : null}
+        rightExtraClick={isModify ? handleDeleteClick : null}
         style={{ flexGrow: '0' }}
       />
+      <Grid
+        item
+        style={{
+          width: '85%',
+          margin: '0 auto',
+          marginTop: '1rem',
+        }}
+      >
+        {isModify && <ModifyStateContainer />}
+      </Grid>
 
-      {isModify && <ModifyStateContainer />}
       <InnerContainerGrid item>
         <Grid container direction="column" justify="flex-start">
           <Grid item style={{ padding: '0.7rem 1rem 0.2rem 1rem' }}>
@@ -220,7 +257,8 @@ const AccompanyListDetail = () => {
               </Grid>
               <Grid item>
                 <Typography variant="body2">
-                  {boardData.startDate} ~ {boardData.endDate}
+                  {moment.convertDate(boardData.startDate)} ~{' '}
+                  {moment.convertDate(boardData.endDate)}
                 </Typography>
               </Grid>
             </Grid>
@@ -258,20 +296,19 @@ const AccompanyListDetail = () => {
             </Typography>
           </Paper>
         </ContentsGrid>
-
-        {isModify && (
-          <Grid style={{ padding: '0 1rem' }}>
-            <Button
-              fullWidth={true}
-              variant="contained"
-              color="error"
-              onClick={handleDeleteClick}
-            >
-              삭제
-            </Button>
-          </Grid>
-        )}
       </InnerContainerGrid>
+      {!isModify ? (
+        <Grid item style={{ width: '85%', margin: '0 auto' }}>
+          <Button
+            fullWidth
+            variant="contained"
+            color="secondary"
+            onClick={handleMoveChat}
+          >
+            DM 보내기
+          </Button>
+        </Grid>
+      ) : null}
     </Grid>
   );
 };

@@ -33,8 +33,10 @@ const PostmapGoogle = props => {
 
       getPosition().then(async position => {
         var myposition = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
+          // latitude: position.coords.latitude,
+          // longitude: position.coords.longitude,
+          latitude: 45.4020244,
+          longitude: 4.164724,
         };
 
         dispatch(getPosAction(myposition));
@@ -101,9 +103,6 @@ const PostmapGoogle = props => {
           zoom={13}
           style={mapStyles}
           initialCenter={{ lat: pos.latitude, lng: pos.longitude }}
-          onClick={() => {
-            console.log('mapClick');
-          }}
           mapTypeControl={false}
           streetViewControl={false}
           fullscreenControl={false}
