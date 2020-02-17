@@ -14,10 +14,27 @@ import {
   Divider,
   Typography,
   Avatar,
-  Container,
   Paper,
   Grid,
+  FormControlLabel,
 } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
+import MoyoColor from '../../api/moyoColor';
+
+const InnerContainerGrid = styled(Grid)`
+  width: 85%;
+  margin: 0 auto !important;
+  margin-top: 1rem !important;
+  margin-bottom: 1rem !important;
+  background-color: white;
+  border-radius: 1rem;
+`;
+const ContentsGrid = styled(Grid)`
+  padding: 1rem !important;
+  background-color: white;
+  border-radius: 1rem;
+  margin-bottom: 1rem !important;
+`;
 
 const CenterGrid = styled(Grid)`
   display: flex;
@@ -26,14 +43,29 @@ const CenterGrid = styled(Grid)`
 `;
 
 const StyledAvatar = styled(Avatar)`
-  min-width: 5rem;
-  min-height: 5rem;
+  min-width: 3.5rem;
+  min-height: 3.5rem;
 `;
 
 const StyledDivider = styled(Divider)`
-  margin-top: 1rem !important;
-  margin-bottom: 1rem !important;
+  margin-top: 0.8rem !important;
+  margin-bottom: 0.8rem !important;
+  background-color: black !important;
 `;
+
+const CustomFormControlLabel = styled(FormControlLabel)`
+  & > .MuiTypography-body1 {
+    font-size: 0.7rem;
+    text-align: left;
+    margin-bottom: -0.5rem;
+  }
+`;
+
+// const CustomAlert = styled(Alert)`
+//   & > div {
+//     color: black;
+//   }
+// `;
 
 const AccompanyListDetail = () => {
   const history = useHistory();
@@ -105,7 +137,9 @@ const AccompanyListDetail = () => {
     });
   };
   const handleDeleteClick = async () => {
-    await deleteBoard().then(history.goBack());
+    await deleteBoard().then(() => {
+      history.goBack();
+    });
   };
 
   const ModifyStateContainer = () => {
@@ -113,11 +147,21 @@ const AccompanyListDetail = () => {
       return <></>;
     } else {
       return (
-        <Typography variant="h6" align="center">
-          {boardData.validDate
-            ? '마감된 동행 글입니다.'
-            : '기간이 지난 동행 글입니다.'}
-        </Typography>
+        <Grid item style={{ width: '100%' }}>
+          {boardData.validDate ? (
+            <Alert variant="filled" severity="success">
+              마감된 동행 글입니다.
+            </Alert>
+          ) : (
+            <Alert
+              variant="filled"
+              severity="warning"
+              style={{ color: 'black', fontWeight: '700' }}
+            >
+              기간이 지난 동행 글입니다.
+            </Alert>
+          )}
+        </Grid>
       );
     }
   };
@@ -138,18 +182,24 @@ const AccompanyListDetail = () => {
       fetchSaveToggle();
     };
     return (
-      <Grid item container>
-        <Grid item xs={7}>
-          <Typography variant="h6">{boardData.nickname}</Typography>
+      <Grid item container alignItems="flex-end">
+        <Grid item xs={isModify ? 8 : 12}>
+          <Typography variant="subtitle1">{boardData.nickname}</Typography>
         </Grid>
         {isModify && (
-          <Grid item xs={5}>
-            마감
-            <Switch
-              checked={boardData.deadlineToggle === 'y'}
-              onChange={handleChangeToggle}
-              disable={String(!boardData.validDate)}
-            ></Switch>
+          <Grid item xs={4} alignContent="right">
+            <CustomFormControlLabel
+              value="top"
+              control={
+                <Switch
+                  checked={boardData.deadlineToggle === 'y'}
+                  onChange={handleChangeToggle}
+                  disable={String(!boardData.validDate)}
+                />
+              }
+              label="마감하기"
+              labelPlacement="top"
+            />
           </Grid>
         )}
       </Grid>
@@ -157,9 +207,9 @@ const AccompanyListDetail = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
+    <Grid container direction="column" style={{ height: '100%' }}>
       <BaseAppBar
-        text={boardData.title}
+        text="상세보기"
         align="left"
         leftType="icon"
         leftIcon={<ArrowBackIosIcon />}
@@ -167,92 +217,102 @@ const AccompanyListDetail = () => {
         rightType="icon"
         rightIcon={isModify ? <BorderColorIcon /> : <ChatIcon />}
         rightClick={isModify ? handleModifyAccompany : handleMoveChat}
+        style={{ flexGrow: '0' }}
       />
-      {isModify && <ModifyStateContainer />}
-      <Grid container direction="column" justify="flex-start">
-        <Grid item container>
-          <CenterGrid item xs={4}>
-            <StyledAvatar src={boardData.image} />
-          </CenterGrid>
-          <Grid item container direction="column" xs={8}>
-            <NameContainer />
-            <Grid item>
-              <Typography variant="body1" color="textSecondary">
-                성별: {convertGenderToStr(boardData.gender)} / 연령:{' '}
-                {convertAgeToStr(boardData.age)}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="body1" color="textSecondary">
-                여행일자: {boardData.startDate} ~ {boardData.endDate}
-              </Typography>
-            </Grid>
-          </Grid>
-        </Grid>
+      <Grid
+        item
+        style={{
+          width: '85%',
+          margin: '0 auto',
+          marginTop: '1rem',
+        }}
+      >
+        {isModify && <ModifyStateContainer />}
       </Grid>
-      <StyledDivider variant="middle" light={true} />
-      <Grid container direction="column" justify="flex-start">
-        <Grid item container direction="column">
-          <Grid item>
-            <Typography variant="subtitle1" style={{ marginLeft: '2rem' }}>
-              이런 사람이면 더 좋겠어요!
+
+      <InnerContainerGrid item>
+        <Grid container direction="column" justify="flex-start">
+          <Grid item style={{ padding: '0.7rem 1rem 0.2rem 1rem' }}>
+            <Typography variant="subtitle2" color="secondary">
+              {boardData.type}
             </Typography>
           </Grid>
-          <Grid item>
-            <Typography variant="body1" style={{ marginLeft: '3rem' }}>
-              - 연령대: {convertWantAge(boardData.wantAge)}
-            </Typography>
+          <Grid item style={{ padding: '0 1rem 0.5rem 1rem' }}>
+            <Typography variant="h5">{boardData.title}</Typography>
           </Grid>
-          <Grid item>
-            <Typography variant="body1" style={{ marginLeft: '3rem' }}>
-              - 성별 : {convertGenderToStr(boardData.wantGender)}
-            </Typography>
-          </Grid>
-        </Grid>
-      </Grid>
-      <StyledDivider variant="middle" light={true} />
-      <Grid item container>
-        <Grid item xs={4}>
-          <Typography variant="body2" align="center">
-            {boardData.nation}/{boardData.city}
-          </Typography>
-        </Grid>
-        <Grid item xs={4}>
-          <Typography variant="body2" align="center">
-            {boardData.startDate}
-          </Typography>
-        </Grid>
-        <Grid item xs={4}>
-          <Typography variant="body2" align="center">
-            타입: {boardData.type}
-          </Typography>
-        </Grid>
-      </Grid>
-      <Grid item style={{ marginTop: '1rem', marginBottom: '1rem' }}>
-        <Container>
-          <Paper variant="outlined">
-            <Typography
-              variant="body2"
-              style={{ margin: '1rem', whiteSpace: 'pre-line' }}
+          <Grid item container style={{ padding: '0 1rem' }}>
+            <CenterGrid item xs={3}>
+              <StyledAvatar src={boardData.image} />
+            </CenterGrid>
+            <Grid
+              item
+              container
+              direction="column"
+              xs={9}
+              style={{ paddingLeft: '0.5rem' }}
             >
+              <NameContainer />
+              <Grid item>
+                <Typography variant="body2">
+                  {convertGenderToStr(boardData.gender)} /{' '}
+                  {convertAgeToStr(boardData.age)}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="body2">
+                  {boardData.startDate} ~ {boardData.endDate}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+
+        <StyledDivider variant="middle" />
+
+        <Grid container direction="column" justify="flex-start">
+          <Grid item container direction="column">
+            <Grid item>
+              <Typography variant="subtitle2" style={{ paddingLeft: '1rem' }}>
+                이런 사람이면 더 좋겠어요!
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="body2" style={{ marginLeft: '1.5rem' }}>
+                - 연령대: {convertWantAge(boardData.wantAge)}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="body2" style={{ marginLeft: '1.5rem' }}>
+                - 성별 : {convertGenderToStr(boardData.wantGender)}
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+
+        <StyledDivider variant="middle" />
+
+        <ContentsGrid item>
+          <Paper elevation={0}>
+            <Typography variant="body2" style={{ whiteSpace: 'pre-line' }}>
               {boardData.contents}
             </Typography>
           </Paper>
-        </Container>
-      </Grid>
-      {isModify && (
-        <Grid style={{ padding: '0 1rem' }}>
-          <Button
-            fullWidth={true}
-            variant="contained"
-            color="secondary"
-            onClick={handleDeleteClick}
-          >
-            삭제
-          </Button>
-        </Grid>
-      )}
-    </div>
+        </ContentsGrid>
+
+        {isModify && (
+          <Grid style={{ padding: '0 1rem' }}>
+            <Button
+              fullWidth={true}
+              variant="contained"
+              color="error"
+              onClick={handleDeleteClick}
+            >
+              삭제
+            </Button>
+          </Grid>
+        )}
+      </InnerContainerGrid>
+    </Grid>
   );
 };
 

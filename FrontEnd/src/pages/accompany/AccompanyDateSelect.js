@@ -10,7 +10,7 @@ import { useHistory } from 'react-router';
 import moment from 'moment';
 
 const HeaderTypo = styled(Typography)`
-  padding: 2rem;
+  padding: 1rem 2rem;
   flex: 0 1 auto;
 `;
 
@@ -31,11 +31,11 @@ const CalendarStyled = styled(Calendar)`
   }
   .react-calendar__tile:disabled {
     background: inherit;
-    color: #eeeeee;
+    color: #cccccc;
   }
   .react-calendar__navigation button[disabled] {
     background: inherit;
-    color: #eeeeee;
+    color: #cccccc;
   }
 `;
 
@@ -74,8 +74,8 @@ const AccompanyDateSelect = () => {
     <Grid
       container
       direction="column"
-      justify="space-between"
-      style={{ height: 'inherit' }}
+      justify="space-around"
+      style={{ height: 'inherit', backgroundColor: 'white' }}
     >
       <Grid item>
         <HeaderTypo variant="h4">언제 동행을 찾고싶나요?</HeaderTypo>
@@ -92,7 +92,7 @@ const AccompanyDateSelect = () => {
         <ButtonContainer>
           <Button
             variant="contained"
-            color="primary"
+            color="secondary"
             fullWidth
             disabled={date === null}
             onClick={HandleClick}

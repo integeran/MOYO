@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import community, {
+import {
   changeCmId,
   changeTitle,
   changeContents,
@@ -9,9 +9,26 @@ import CommunityCommentList from '../../components/community/CommunityCommentLis
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import axios from '../../api/axios';
-import Typography from '@material-ui/core/Typography';
+import { Grid, Typography, Divider } from '@material-ui/core';
 import BaseAppBar from '../../components/common/BaseAppBar';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import styled from 'styled-components';
+import MoyoColor from '../../api/moyoColor';
+
+const InnerContainerGrid = styled(Grid)`
+  width: 85% !important;
+  margin: 0 auto !important;
+  margin-top: 1rem !important;
+  margin-bottom: 1rem !important;
+  background-color: white;
+  border-radius: 1rem;
+  padding: 0 1rem;
+`;
+
+const BlackDivider = styled(Divider)`
+  background-color: black !important;
+  margin: 0.6rem 0 !important;
+`;
 
 const CommunityDetail = () => {
   const history = useHistory();
@@ -51,51 +68,71 @@ const CommunityDetail = () => {
   };
 
   return (
-    <div>
-      <BaseAppBar
-        text={communityData.title}
-        align="left"
-        leftIcon={<ArrowBackIosIcon />}
-        leftType="icon"
-        leftClick={handleBackClick}
-      />
-      {communityData.communityType}
-      <br />
-      {communityData.title}
-      <br />
-      {communityData.nickname}
-      <hr />
-      {communityData.contents}
-      <hr />
-      <CommunityCommentList cmId={communityData.cmId} userData={userData} />
-      <hr />
-      {userData.uid === communityData.uid ? (
-        <Typography
-          onClick={() => {
-            history.push({
-              pathname: '/community/write/',
-              state: {
-                prevpath: history.location.pathname,
-                communityPutCheck: true,
-              },
-            });
-            onChangeCmId(communityData.cmId);
-            onChangeTitle(communityData.title);
-            onChangeContents(communityData.contents);
-            onChangeType(communityData.cmTypeId);
-          }}
-        >
-          수정하기
-        </Typography>
-      ) : (
-        <div></div>
-      )}
-      {userData.uid === communityData.uid ? (
-        <Typography onClick={handleDeleteClick}>삭제하기</Typography>
-      ) : (
-        <div></div>
-      )}
-    </div>
+    <Grid container direction="column">
+      <Grid item>
+        <BaseAppBar
+          text="상세보기"
+          align="left"
+          leftIcon={<ArrowBackIosIcon />}
+          leftType="icon"
+          leftClick={handleBackClick}
+        />
+      </Grid>
+
+      <InnerContainerGrid item container direction="column">
+        <Grid item style={{ margin: '0.5rem 0 0.3rem' }}>
+          <Typography
+            variant="subtitle1"
+            style={{ color: MoyoColor.moyo_biscay_3 }}
+          >
+            {communityData.communityType}
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography variant="h5">{communityData.title}</Typography>
+        </Grid>
+        <Grid item style={{ margin: '0.5rem 0.3rem 0' }}>
+          <Typography variant="body2">{communityData.nickname}</Typography>
+        </Grid>
+
+        <BlackDivider />
+
+        <Grid item style={{ margin: '0.4rem' }}>
+          {communityData.contents}
+        </Grid>
+
+        <BlackDivider />
+
+        <CommunityCommentList cmId={communityData.cmId} userData={userData} />
+
+        {userData.uid === communityData.uid ? (
+          <Typography
+            onClick={() => {
+              history.push({
+                pathname: '/community/write/',
+                state: {
+                  prevpath: history.location.pathname,
+                  communityPutCheck: true,
+                },
+              });
+              onChangeCmId(communityData.cmId);
+              onChangeTitle(communityData.title);
+              onChangeContents(communityData.contents);
+              onChangeType(communityData.cmTypeId);
+            }}
+          >
+            수정하기
+          </Typography>
+        ) : (
+          <></>
+        )}
+        {userData.uid === communityData.uid ? (
+          <Typography onClick={handleDeleteClick}>삭제하기</Typography>
+        ) : (
+          <></>
+        )}
+      </InnerContainerGrid>
+    </Grid>
   );
 };
 

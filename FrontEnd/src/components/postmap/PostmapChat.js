@@ -54,7 +54,7 @@ const PostmapChat = memo(({ listFetch }) => {
   const saveChat = async () => {
     if (timer > 0) {
       alert(timer + '초 만큼 대기시간이 남아있습니다.');
-    } else {
+    } else if (chatText !== '') {
       const res1 = await insertPost(pos);
       if (res1) {
         listFetch(pos);

@@ -17,6 +17,7 @@ const Message = ({
   url,
   lastMessageUserId,
   lastTimeStamp,
+  curTime,
 }) => {
   const userData = useSelector(state => state.auth.userData);
 
@@ -40,34 +41,25 @@ const Message = ({
   const showMessage = check => {
     return (
       <Grid item xs={7} style={{ padding: '1%' }}>
-        <div
-          style={{
-            float: check ? 'right' : 'left',
-          }}
-        >
+        <div>
           {url ? (
             <FileMessage url={url} fileName={fileName} timeStamp={timeStamp} />
           ) : (
             <div>
               <Typography
-                variant="subtitle1"
+                variant="body1"
                 style={{
                   backgroundColor: '#e0e0e0',
                   borderRadius: '8px',
                   textAlign: 'left',
-                  paddingLeft: message.length >= 13 ? '3%' : '',
+                  paddingLeft: '3%',
+                  paddingRight: '3%',
+                  float: check ? 'right' : 'left',
                 }}
               >
-                {message.length < 13 && (
-                  <span style={{ color: '#e6dbdb' }}>1</span>
-                )}
                 {message}
-                {message.length < 13 && (
-                  <span style={{ color: '#e6dbdb' }}>1</span>
-                )}
               </Typography>
             </div>
-            // 가라를 쓰고 싶지않지만.. 이것이 최선이다 !
           )}
         </div>
       </Grid>
@@ -95,18 +87,23 @@ const Message = ({
   };
 
   return (
-    <>
-      {moment(timeStamp).format('YYYY/MM/DD LT') !==
-        moment(lastTimeStamp).format('YYYY/MM/DD LT') && (
-        <div style={{ textAlign: 'center' }}>
-          <Typography variant="caption">
-            {moment(timeStamp).format('YYYY/MM/DD LT')}
-          </Typography>
-        </div>
-      )}
+    curTime && (
+      <>
+        {moment(timeStamp).format('YYYY/MM/DD LT') !==
+          moment(lastTimeStamp).format('YYYY/MM/DD LT') && (
+          <div style={{ textAlign: 'center' }}>
+            <Typography variant="caption">
+              {moment(timeStamp).format('YYYY/MM/DD') ===
+              moment(curTime).format('YYYY/MM/DD')
+                ? moment(timeStamp).format('LT')
+                : moment(timeStamp).format('YYYY/MM/DD')}
+            </Typography>
+          </div>
+        )}
 
-      {senderId === userData.uid ? showRightMessage() : showLeftMessage()}
-    </>
+        {senderId === userData.uid ? showRightMessage() : showLeftMessage()}
+      </>
+    )
   );
 };
 

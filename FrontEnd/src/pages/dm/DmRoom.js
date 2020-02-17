@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axios from '../../api/axios';
 import * as firebase from 'firebase';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import moment from 'moment';
 
 import Message from '../../components/dm/Message';
@@ -36,6 +36,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const DmRoom = ({ match }) => {
+  const history = useHistory();
+
   const MAKEID_CHAR = useSelector(state => state.Dm.MAKEID_CHAR);
   const DATETIME_CHAR = useSelector(state => state.Dm.DATETIME_CHAR);
   const userData = useSelector(state => state.auth.userData);
@@ -48,6 +50,7 @@ const DmRoom = ({ match }) => {
   const [uploadModal, setUploadModal] = useState(false);
   const [addAccompanyModal, setAddAccompanyModal] = useState(false);
   const [receiverRead, setReceiverRead] = useState(false);
+  const [tempCurTime, setTempCurTime] = useState('');
 
   const onChangeIvalue = useCallback(e => {
     setIvalue(e.target.value);
@@ -110,7 +113,8 @@ const DmRoom = ({ match }) => {
     }
   };
 
-  const waitReceiverRoomChange = (roomId, receiver) => {
+  const waitReceiverRoomChange = (roomId, receiver, roomexist) => {
+    console.log('waitReceiverRoomChange');
     const callback = snapshot => {
       if (snapshot.val().read === true) {
         firebase
@@ -133,10 +137,12 @@ const DmRoom = ({ match }) => {
       }
     };
 
-    firebase
-      .database()
-      .ref('UserRooms/' + receiver.uid + '/' + userData.uid)
-      .once('value', callback);
+    if (roomexist) {
+      firebase
+        .database()
+        .ref('UserRooms/' + receiver.uid + '/' + userData.uid)
+        .once('value', callback);
+    }
 
     firebase
       .database()
@@ -159,7 +165,7 @@ const DmRoom = ({ match }) => {
         if (snapshot.val()) {
           roomInfo.roomId = snapshot.val().roomId;
           roomInfo.roomTitle = snapshot.val().roomTitle;
-          loadMessageList(roomInfo.roomId, receiver);
+          loadMessageList(roomInfo.roomId, receiver, true);
         } else {
           roomInfo.roomId =
             MAKEID_CHAR + sender.uid + MAKEID_CHAR + receiver.uid;
@@ -172,17 +178,17 @@ const DmRoom = ({ match }) => {
   /**
    * 메세지 로드
    */
-  const loadMessageList = async (roomId, receiver) => {
+  const loadMessageList = async (roomId, receiver, roomexist) => {
     console.log('loadMessageList');
 
     var loadMessageFirebase = firebase.database().ref('Messages/' + roomId);
     if (roomId) {
-      console.log('loadMessageListAfter');
       setHookRoomId(roomId);
-      waitReceiverRoomChange(roomId, receiver);
+      waitReceiverRoomChange(roomId, receiver, roomexist);
 
       const callback = async snapshot => {
         var val = snapshot.val();
+        setTempCurTime((await onAxiosGetTime()).data.data);
 
         const MessageInfo = {
           senderId: val.senderId,
@@ -198,7 +204,10 @@ const DmRoom = ({ match }) => {
           list.scrollTop = list.scrollHeight;
         }
 
-        if (val.senderId !== userData.uid) {
+        if (
+          val.senderId !== userData.uid &&
+          history.location.pathname.indexOf('dmroom/') > 0
+        ) {
           firebase
             .database()
             .ref('UserRooms/' + userData.uid + '/' + receiver.uid)
@@ -251,24 +260,6 @@ const DmRoom = ({ match }) => {
 
         var saveFirebase = firebase.database().ref();
 
-        // 메세지 저장
-        multiUpdates['Messages/' + hookRoomId + '/' + messageId] = {
-          senderId: userData.uid,
-          message: msg,
-          timeStamp: curTime,
-          fileName: fileName ? fileName : null,
-          url: url ? url : null,
-        };
-
-        multiUpdates['LastMessage/' + hookRoomId] = {
-          senderId: userData.uid,
-          messageId: messageId,
-        };
-
-        saveFirebase.update(multiUpdates);
-
-        multiUpdates = {};
-
         // 유저별 룸 리스트 저장
         multiUpdates['UserRooms/' + userData.uid + '/' + hookReceiver.uid] = {
           roomId: hookRoomId,
@@ -287,21 +278,26 @@ const DmRoom = ({ match }) => {
         };
 
         saveFirebase.update(multiUpdates);
+
+        multiUpdates = {};
+
+        // 메세지 저장
+        multiUpdates['Messages/' + hookRoomId + '/' + messageId] = {
+          senderId: userData.uid,
+          message: msg,
+          timeStamp: curTime,
+          fileName: fileName ? fileName : null,
+          url: url ? url : null,
+        };
+
+        multiUpdates['LastMessage/' + hookRoomId] = {
+          senderId: userData.uid,
+          messageId: messageId,
+        };
+
+        saveFirebase.update(multiUpdates);
         var temp = document.getElementById('chatInput');
         temp.focus();
-
-        var triggerFirebase = firebase
-          .database()
-          .ref(
-            'ListRoomTrigger/' +
-              hookReceiver.uid +
-              '/' +
-              moment(curTime).format('YYYYMMDDhhmmssSSS'),
-          );
-
-        triggerFirebase.set({
-          trigger: true,
-        });
       }
     }
   };
@@ -433,7 +429,9 @@ const DmRoom = ({ match }) => {
                   onClose={handleClose}
                 >
                   <MenuItem onClick={openAddModal}>동행추가</MenuItem>
-                  <MenuItem onClick={handleClose}>My account</MenuItem>
+                  <MenuItem onClick={handleClose}>
+                    {hookReceiver.nickname}의 프로필
+                  </MenuItem>
                 </Menu>
               </div>
             </Toolbar>
@@ -471,6 +469,7 @@ const DmRoom = ({ match }) => {
                 url={message.url}
                 lastMessageUserId={tempLastMessageUserId}
                 lastTimeStamp={tempLastTimeStamp}
+                curTime={tempCurTime}
               />
             );
           })}

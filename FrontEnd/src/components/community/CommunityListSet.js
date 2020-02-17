@@ -14,15 +14,15 @@ const CommunityListSet = ({ communityData }) => {
     });
   };
   return (
-    <div>
+    <>
       {communityData.map(community => (
         <CommunityListPaper
           key={community.cmId}
           communityInfo={community}
-          onClick={() => handleCommunityClick(community)}
+          handleClick={() => handleCommunityClick(community)}
         />
       ))}
-    </div>
+    </>
   );
 };
 
