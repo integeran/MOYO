@@ -6,7 +6,6 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import BaseAppBar from '../../components/common/BaseAppBar';
 import { Typography, Grid } from '@material-ui/core';
 import { navigationSelect } from '../../modules/baseNavigation';
-import NewbieGuide from '../../components/accompany/main/NewbieGuide';
 
 const MoreSettings = () => {
   const history = useHistory();
@@ -38,7 +37,6 @@ const MoreSettings = () => {
           text="설정"
           leftIcon={<ArrowBackIosIcon onClick={handleBackIcon} />}
         />
-        <NewbieGuide />
         <Grid
           item
           style={{

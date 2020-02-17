@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { AutoRotatingCarousel } from 'material-auto-rotating-carousel';
 import { Slide } from 'material-auto-rotating-carousel';
-import GuideMain from '../../../assets/img/GuideMain.png';
-import GuideAccompanyList from '../../../assets/img/GuideAccompanyList.png';
-import GuideAccompanyDetail from '../../../assets/img/GuideAccompanyDetail.png';
-import GuideAccompanyWrite from '../../../assets/img/GuideAccompanyWrite.png';
-import GuideMore from '../../../assets/img/GuideMore.png';
+import GuideMain from '../assets/img/GuideMain.png';
+import GuideAccompanyList from '../assets/img/GuideAccompanyList.png';
+import GuideAccompanyDetail from '../assets/img/GuideAccompanyDetail.png';
+import GuideAccompanyWrite from '../assets/img/GuideAccompanyWrite.png';
+import GuideMore from '../assets/img/GuideMore.png';
 
 const NewbieGuide = () => {
   const { red, blue, green } = require('@material-ui/core/colors');
