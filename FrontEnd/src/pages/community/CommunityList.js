@@ -119,7 +119,7 @@ const CommunityList = () => {
     onChangeCmId(null);
     onChangeTitle('');
     onChangeContents('');
-    onChangeType(1);
+    onChangeType('');
     history.push({
       pathname: '/community/write',
       state: {

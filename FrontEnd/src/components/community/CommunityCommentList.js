@@ -48,10 +48,15 @@ const CommunityCommentList = ({ cmId, userData }) => {
     comments => dispatch(changeComments(comments)),
     [dispatch],
   );
-  const onChangeEdit = useCallback(
+  const onChangeEditCallback = useCallback(
     cmCommentId => dispatch(changeEdit(cmCommentId)),
     [dispatch],
   );
+
+  const onChangeEdit = comment => {
+    onChangeEditCallback(comment.cmCommentId);
+    setEditComment(comment.contents);
+  };
 
   const getCommentList = async () => {
     try {
@@ -114,10 +119,11 @@ const CommunityCommentList = ({ cmId, userData }) => {
       uid: userData.uid,
       contents: writtenComment,
     };
-    if (writtenComment.trim() && writtenComment !== '댓글을 작성해주세요') {
+    if (writtenComment.trim()) {
       const fetchComment = async () => {
         await postComment(commentData);
         getComments();
+        setWrittenComment('');
       };
       fetchComment();
     }
@@ -129,16 +135,18 @@ const CommunityCommentList = ({ cmId, userData }) => {
       uid: userData.uid,
       contents: editComment,
     };
-    const fetchEditComment = async () => {
-      await putComment(commentData);
-      getComments();
-    };
-    onChangeEdit(cmCommentId);
-    fetchEditComment();
+    if (editComment.trim()) {
+      const fetchEditComment = async () => {
+        await putComment(commentData);
+        getComments();
+      };
+      onChangeEditCallback(cmCommentId);
+      fetchEditComment();
+    }
   };
 
-  const handleEditCancelClick = cmCommentId => {
-    onChangeEdit(cmCommentId);
+  const handleEditCancelClick = comment => {
+    onChangeEdit(comment);
   };
 
   const handleDeleteClick = async cmCommentId => {
@@ -206,10 +214,7 @@ const CommunityCommentList = ({ cmId, userData }) => {
                   >
                     <Typography variant="caption">삭제</Typography>
                   </ButtonGrid>
-                  <ButtonGrid
-                    item
-                    onClick={() => onChangeEdit(comment.cmCommentId)}
-                  >
+                  <ButtonGrid item onClick={() => onChangeEdit(comment)}>
                     <Typography variant="caption">수정</Typography>
                   </ButtonGrid>
                 </>
@@ -239,7 +244,7 @@ const CommunityCommentList = ({ cmId, userData }) => {
                 <FullSizeButton
                   variant="contained"
                   color="secondary"
-                  onClick={() => handleEditCancelClick(comment.cmCommentId)}
+                  onClick={() => handleEditCancelClick(comment)}
                 >
                   취소
                 </FullSizeButton>
