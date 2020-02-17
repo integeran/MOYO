@@ -72,9 +72,7 @@ const CommunityDetail = () => {
       <Grid item>
         <BaseAppBar
           text="상세보기"
-          align="left"
           leftIcon={<ArrowBackIosIcon />}
-          leftType="icon"
           leftClick={handleBackClick}
         />
       </Grid>
