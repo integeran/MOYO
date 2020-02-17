@@ -28,11 +28,9 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
   },
   paper: {
-    width: 300,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
+    width: '80%',
+    backgroundColor: '#F2F5F8',
+    padding: '5%',
   },
 }));
 
@@ -132,7 +130,10 @@ const AddAccompanyModal = ({ isOpen, close, receiver }) => {
                 <Grid container>
                   <Grid item xs={6}>
                     <Button
-                      style={{ backgroundColor: '#284BB5', color: 'white' }}
+                      style={{
+                        backgroundColor: '#45BFA9',
+                        color: 'white',
+                      }}
                       onClick={addAccompany}
                     >
                       확인
@@ -140,7 +141,7 @@ const AddAccompanyModal = ({ isOpen, close, receiver }) => {
                   </Grid>
                   <Grid item xs={6}>
                     <Button
-                      style={{ backgroundColor: '#284BB5', color: 'white' }}
+                      style={{ backgroundColor: '#45BFA9', color: 'white' }}
                       onClick={close}
                     >
                       취소

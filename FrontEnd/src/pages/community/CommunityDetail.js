@@ -24,7 +24,6 @@ const InnerContainerGrid = styled(Grid)`
   border-radius: 1rem;
   padding: 0 1rem;
 `;
-
 const BlackDivider = styled(Divider)`
   background-color: black !important;
   margin: 0.6rem 0 !important;
