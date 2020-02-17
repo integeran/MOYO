@@ -128,7 +128,7 @@ const CommunityWrite = () => {
             : handleSubmitClick
         }
       />
-      <form autoComplete="off">
+      <div>
         <Select
           id="typeSelect"
           select
@@ -169,7 +169,7 @@ const CommunityWrite = () => {
           onChange={handleChangeContents}
           variant="outlined"
         />
-      </form>
+      </div>
     </div>
   );
 };
