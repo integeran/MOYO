@@ -1,20 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import * as firebase from 'firebase';
 
 import Room from '../../components/dm/Room';
+import { openModalAction, closeModalAction } from '../../modules/progressModal';
 
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
 const DmRoomList = () => {
+  const dispatch = useDispatch();
+
   const userData = useSelector(state => state.auth.userData);
 
   const [roomList, setRoomList] = useState([]);
 
   useEffect(() => {
+    dispatch(openModalAction());
     onInit();
+    setTimeout(() => {
+      dispatch(closeModalAction());
+    }, 1500);
   }, []);
 
   /**

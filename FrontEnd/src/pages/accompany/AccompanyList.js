@@ -67,6 +67,11 @@ const FloatingFab = styled(Fab)`
   bottom: 12%;
 `;
 
+const UnderlineTypo = styled(Typography)`
+  text-decoration-line: underline;
+  text-underline-position: under;
+`;
+
 const AccompanyList = () => {
   let history = useHistory();
   const dispatch = useDispatch();
@@ -230,13 +235,9 @@ const AccompanyList = () => {
             <ArrowBackIosIcon fontSize="small" />
           </IconButton>
           <StyledDiv onClick={handleDateSelect}>
-            <Typography
-              variant="subtitle1"
-              align="center"
-              style={{ fontWeight: '700' }}
-            >
+            <UnderlineTypo variant="subtitle1" align="center">
               {convertDate(accDate)}
-            </Typography>
+            </UnderlineTypo>
           </StyledDiv>
           <IconButton color="inherit" onClick={handleNextDayClick}>
             <ArrowForwardIosIcon fontSize="small" />

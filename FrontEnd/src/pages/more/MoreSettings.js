@@ -35,7 +35,6 @@ const MoreSettings = () => {
       >
         <BaseAppBar
           text="설정"
-          leftType="icon"
           leftIcon={<ArrowBackIosIcon onClick={handleBackIcon} />}
         />
         <Grid

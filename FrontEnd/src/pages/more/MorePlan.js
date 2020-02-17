@@ -141,7 +141,6 @@ const MorePlan = () => {
     <div>
       <BaseAppBar
         text="일정 관리"
-        leftType="icon"
         leftIcon={<ArrowBackIosIcon onClick={handleBackIcon} />}
       />
       <Grid
