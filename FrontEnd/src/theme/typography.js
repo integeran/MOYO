@@ -80,5 +80,6 @@ export default {
   },
   overline: {
     fontFamily: 'Nanum Gothic, sans-serif',
+    letterSpacing: '0.03rem',
   },
 };

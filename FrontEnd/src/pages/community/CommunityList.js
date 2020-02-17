@@ -10,9 +10,36 @@ import { useHistory } from 'react-router';
 import axios from '../../api/axios';
 import CommunityListSet from '../../components/community/CommunityListSet';
 import AccompanySearchBar from '../../components/accompany/List/AccompanySearchBar';
-import Typography from '@material-ui/core/Typography';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import { Tabs, Tab, Fab, Grid } from '@material-ui/core/';
+import moyoColor from '../../api/moyoColor';
+import CreateIcon from '@material-ui/icons/Create';
+import styled from 'styled-components';
+
+const HeaderTabs = styled(Tabs)`
+  .MuiTabs-indicator {
+    background-color: white;
+  }
+  & span {
+    color: white;
+  }
+`;
+
+const FloatingFab = styled(Fab)`
+  position: fixed !important;
+  right: 6%;
+  bottom: 12%;
+`;
+
+const CommunityContainer = styled(Grid)`
+  width: 85%;
+  margin: 0 auto !important;
+  flex: 1;
+  overflow: auto;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  min-height: 0;
+`;
 
 const CommunityList = () => {
   let history = useHistory();
@@ -22,6 +49,7 @@ const CommunityList = () => {
   const [communityTypeList, setCommunityTypeList] = useState([]);
   const [communityType, setCommunityType] = useState(0);
   const [searchWord, setSearchWord] = useState('');
+
   const onChangeCmId = useCallback(cmId => dispatch(changeCmId(cmId)), [
     dispatch,
   ]);
@@ -47,20 +75,6 @@ const CommunityList = () => {
     }
   };
 
-  useEffect(() => {
-    const getCommunity = async () => {
-      const result = await getCommunityList();
-      console.log(result);
-      const resData = result.data.data.map(item => {
-        return {
-          ...item,
-        };
-      });
-      setCommunityData(resData);
-    };
-    getCommunity();
-  }, [communityType, searchWord]);
-
   const getCommunityTypeList = async () => {
     try {
       return await axios.get('community/selectCommunityType', {
@@ -75,14 +89,25 @@ const CommunityList = () => {
     const fetchCommunityTypeList = async () => {
       const result = await getCommunityTypeList();
       result.data.data.unshift({ cmTypeId: 0, name: '전체' });
-      console.log(result);
       setCommunityTypeList(result.data.data);
     };
     fetchCommunityTypeList();
   }, []);
 
+  useEffect(() => {
+    const getCommunity = async () => {
+      const result = await getCommunityList();
+      const resData = result.data.data.map(item => {
+        return {
+          ...item,
+        };
+      });
+      setCommunityData(resData);
+    };
+    getCommunity();
+  }, [communityType, searchWord]);
+
   const handleTabChange = async cmTypeId => {
-    console.log(cmTypeId);
     setCommunityType(cmTypeId);
   };
 
@@ -90,44 +115,55 @@ const CommunityList = () => {
     setSearchWord(text);
   };
 
+  const handleCommunityWriteClick = () => {
+    onChangeCmId(null);
+    onChangeTitle('');
+    onChangeContents('');
+    onChangeType(1);
+    history.push({
+      pathname: '/community/write',
+      state: {
+        prevpath: history.location.pathname,
+        communityPutCheck: false,
+        communityTypeList: communityTypeList,
+      },
+    });
+  };
+
   return (
     <>
-      <Tabs
-        value={communityType}
-        indicatorColor="primary"
-        textColor="primary"
-        aria-label="disabled tabs example"
-        variant="scrollable"
-        scrollButtons="auto"
+      <Grid container direction="column" style={{ height: '100%' }}>
+        <Grid item style={{ width: '100%' }}>
+          <HeaderTabs
+            value={communityType}
+            variant="scrollable"
+            scrollButtons="auto"
+            style={{ backgroundColor: moyoColor.moyo_green_1 }}
+          >
+            {communityTypeList.map(type => (
+              <Tab
+                key={type.cmTypeId}
+                label={type.name}
+                onClick={() => handleTabChange(type.cmTypeId)}
+              />
+            ))}
+          </HeaderTabs>
+        </Grid>
+        <Grid item style={{ marginTop: '0.7rem', marginBottom: '0.7rem' }}>
+          <AccompanySearchBar onClick={handleSearchClick} />
+        </Grid>
+        <CommunityContainer item>
+          <CommunityListSet communityData={communityData} />
+        </CommunityContainer>
+      </Grid>
+      <FloatingFab
+        variant="extended"
+        color="secondary"
+        aria-label="filter"
+        onClick={handleCommunityWriteClick}
       >
-        {communityTypeList.map(type => (
-          <Tab
-            label={type.name}
-            onClick={() => handleTabChange(type.cmTypeId)}
-          />
-        ))}
-      </Tabs>
-      <AccompanySearchBar onClick={handleSearchClick} />
-      <CommunityListSet communityData={communityData} />
-
-      <Typography
-        onClick={() => {
-          history.push({
-            pathname: '/community/write',
-            state: {
-              prevpath: history.location.pathname,
-              communityPutCheck: false,
-              communityTypeList: communityTypeList,
-            },
-          });
-          onChangeCmId(null);
-          onChangeTitle('');
-          onChangeContents('');
-          onChangeType(1);
-        }}
-      >
-        글쓰기
-      </Typography>
+        <CreateIcon />
+      </FloatingFab>
     </>
   );
 };

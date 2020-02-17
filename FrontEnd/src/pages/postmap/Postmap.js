@@ -12,6 +12,7 @@ import PostmapGoogle from '../../components/postmap/PostmapGoogle';
 import PostmapChat from '../../components/postmap/PostmapChat';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
+import { typography } from '@material-ui/system';
 
 const Postmap = () => {
   const dispatch = useDispatch();
@@ -122,10 +123,78 @@ const Postmap = () => {
       <div style={{ padding: '4%' }}>
         <PostmapGoogle listFetch={listFetch} />
         <PostmapChat listFetch={listFetch} />
-        <div id="chatList">
-          <div id="chatListTop">
-            <div>
-              {postListTop.map((chat, index) => {
+        {postListTop.size > 0 ? (
+          <div id="chatList">
+            <div id="chatListTop">
+              <div>
+                {postListTop.map((chat, index) => {
+                  return (
+                    <div>
+                      <Grid
+                        container
+                        alignItems="center"
+                        style={{ padding: '2%' }}
+                      >
+                        <Grid
+                          item
+                          xs={10}
+                          onClick={async () => {
+                            dispatch(getInfoWindow(chat));
+
+                            listFetch(pos);
+                          }}
+                        >
+                          <Grid container direction="column">
+                            <Grid item xs={6} style={{ maxWidth: '100%' }}>
+                              <Typography>{chat.contents}</Typography>
+                            </Grid>
+                            <Typography variant="caption">
+                              {calcTime(chat.registerDate)}
+                            </Typography>
+                            <Grid
+                              item
+                              xs={6}
+                              style={{ maxWidth: '100%' }}
+                            ></Grid>
+                          </Grid>
+                        </Grid>
+                        <Grid
+                          item
+                          xs={2}
+                          onClick={async () => {
+                            const res = await likePost(chat.pmId);
+                            if (res) {
+                              listFetch(pos);
+                            }
+                          }}
+                        >
+                          <Typography style={{ float: 'right' }}>
+                            x{chat.likes}
+                          </Typography>
+                          {chat.pmLikeId !== 0 ? (
+                            <FavoriteIcon
+                              style={{
+                                float: 'right',
+                                cursor: 'pointer',
+                                color: 'red',
+                              }}
+                            />
+                          ) : (
+                            <FavoriteBorderIcon
+                              style={{ float: 'right', cursor: 'pointer' }}
+                            />
+                          )}
+                        </Grid>
+                      </Grid>
+                      <Divider />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div id="chatListBottom" style={{ overflow: 'auto' }}>
+              {postListExceptTop.map((chat, index) => {
                 return (
                   <>
                     <Grid
@@ -152,16 +221,7 @@ const Postmap = () => {
                           <Grid item xs={6} style={{ maxWidth: '100%' }}></Grid>
                         </Grid>
                       </Grid>
-                      <Grid
-                        item
-                        xs={2}
-                        onClick={async () => {
-                          const res = await likePost(chat.pmId);
-                          if (res) {
-                            listFetch(pos);
-                          }
-                        }}
-                      >
+                      <Grid item xs={2}>
                         <Typography style={{ float: 'right' }}>
                           x{chat.likes}
                         </Typography>
@@ -172,10 +232,22 @@ const Postmap = () => {
                               cursor: 'pointer',
                               color: 'red',
                             }}
+                            onClick={async () => {
+                              const res = await likePost(chat.pmId);
+                              if (res) {
+                                listFetch(pos);
+                              }
+                            }}
                           />
                         ) : (
                           <FavoriteBorderIcon
                             style={{ float: 'right', cursor: 'pointer' }}
+                            onClick={async () => {
+                              const res = await likePost(chat.pmId);
+                              if (res) {
+                                listFetch(pos);
+                              }
+                            }}
                           />
                         )}
                       </Grid>
@@ -186,68 +258,9 @@ const Postmap = () => {
               })}
             </div>
           </div>
-
-          <div id="chatListBottom" style={{ overflow: 'auto' }}>
-            {postListExceptTop.map((chat, index) => {
-              return (
-                <>
-                  <Grid container alignItems="center" style={{ padding: '2%' }}>
-                    <Grid
-                      item
-                      xs={10}
-                      onClick={async () => {
-                        dispatch(getInfoWindow(chat));
-
-                        listFetch(pos);
-                      }}
-                    >
-                      <Grid container direction="column">
-                        <Grid item xs={6} style={{ maxWidth: '100%' }}>
-                          <Typography>{chat.contents}</Typography>
-                        </Grid>
-                        <Typography variant="caption">
-                          {calcTime(chat.registerDate)}
-                        </Typography>
-                        <Grid item xs={6} style={{ maxWidth: '100%' }}></Grid>
-                      </Grid>
-                    </Grid>
-                    <Grid item xs={2}>
-                      <Typography style={{ float: 'right' }}>
-                        x{chat.likes}
-                      </Typography>
-                      {chat.pmLikeId !== 0 ? (
-                        <FavoriteIcon
-                          style={{
-                            float: 'right',
-                            cursor: 'pointer',
-                            color: 'red',
-                          }}
-                          onClick={async () => {
-                            const res = await likePost(chat.pmId);
-                            if (res) {
-                              listFetch(pos);
-                            }
-                          }}
-                        />
-                      ) : (
-                        <FavoriteBorderIcon
-                          style={{ float: 'right', cursor: 'pointer' }}
-                          onClick={async () => {
-                            const res = await likePost(chat.pmId);
-                            if (res) {
-                              listFetch(pos);
-                            }
-                          }}
-                        />
-                      )}
-                    </Grid>
-                  </Grid>
-                  <Divider />
-                </>
-              );
-            })}
-          </div>
-        </div>
+        ) : (
+          <Typography>데이터가 없습니다</Typography>
+        )}
       </div>
     </>
   );

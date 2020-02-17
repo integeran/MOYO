@@ -55,7 +55,6 @@ const FileMessage = ({ fileName, url, timeStamp }) => {
           >
             <VerticalAlignBottomIcon
               onClick={fileDownload}
-              color="primary"
               style={{ width: '100%', height: '50%' }}
             />
           </Grid>
