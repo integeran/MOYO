@@ -80,7 +80,9 @@ const Postmap = () => {
 
     var listTop = [];
     for (var i = 0; i < TOP; i++) {
-      listTop.push(tempList[i]);
+      if (tempList[i]) {
+        listTop.push(tempList[i]);
+      }
     }
 
     setPostListTop(listTop);
@@ -123,8 +125,9 @@ const Postmap = () => {
       <div style={{ padding: '4%' }}>
         <PostmapGoogle listFetch={listFetch} />
         <PostmapChat listFetch={listFetch} />
-        {postListTop.size > 0 ? (
+        {postListTop.length > 0 ? (
           <div id="chatList">
+            <>{console.log(postListTop)}</>
             <div id="chatListTop">
               <div>
                 {postListTop.map((chat, index) => {

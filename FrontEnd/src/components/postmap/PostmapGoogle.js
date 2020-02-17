@@ -35,8 +35,8 @@ const PostmapGoogle = props => {
         var myposition = {
           // latitude: position.coords.latitude,
           // longitude: position.coords.longitude,
-          latitude: 41.4020244,
-          longitude: 2.164724,
+          latitude: 45.4020244,
+          longitude: 4.164724,
         };
 
         dispatch(getPosAction(myposition));
