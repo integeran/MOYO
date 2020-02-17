@@ -4,6 +4,7 @@ import { useHistory } from 'react-router';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ChatIcon from '@material-ui/icons/Chat';
 import BorderColorIcon from '@material-ui/icons/BorderColor';
+import DeleteIcon from '@material-ui/icons/Delete';
 import axios from '../../api/axios';
 import styled from 'styled-components';
 import BaseAppBar from '../../components/common/BaseAppBar';
@@ -19,7 +20,6 @@ import {
   FormControlLabel,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import MoyoColor from '../../api/moyoColor';
 
 const InnerContainerGrid = styled(Grid)`
   width: 85%;
@@ -210,13 +210,12 @@ const AccompanyListDetail = () => {
     <Grid container direction="column" style={{ height: '100%' }}>
       <BaseAppBar
         text="상세보기"
-        align="left"
-        leftType="icon"
         leftIcon={<ArrowBackIosIcon />}
         leftClick={handleGoBack}
-        rightType="icon"
         rightIcon={isModify ? <BorderColorIcon /> : <ChatIcon />}
         rightClick={isModify ? handleModifyAccompany : handleMoveChat}
+        rightExtraIcon={isModify ? <DeleteIcon /> : null}
+        rightExtraClick={isModify ? handleDeleteClick : null}
         style={{ flexGrow: '0' }}
       />
       <Grid
@@ -298,19 +297,6 @@ const AccompanyListDetail = () => {
             </Typography>
           </Paper>
         </ContentsGrid>
-
-        {isModify && (
-          <Grid style={{ padding: '0 1rem' }}>
-            <Button
-              fullWidth={true}
-              variant="contained"
-              color="error"
-              onClick={handleDeleteClick}
-            >
-              삭제
-            </Button>
-          </Grid>
-        )}
       </InnerContainerGrid>
     </Grid>
   );

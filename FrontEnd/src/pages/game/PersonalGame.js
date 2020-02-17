@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
+import { useDispatch } from 'react-redux';
+
+import { openModalAction, closeModalAction } from '../../modules/progressModal';
 
 import PersonalMain from '../../components/game/PersonalMain';
 import PersonalResultModal from '../../components/game/PersonalResultModal';
 import PersonalRoundModal from '../../components/game/PersonalRoundModal';
-import ProgressModal from '../../components/common/ProgressModal';
 
 const PersonalGame = () => {
   var startRound = 16;
+
+  const dispatch = useDispatch();
 
   const [round, setRound] = useState(startRound);
   const [subRound, setSubRound] = useState(0); // 계속 증가
@@ -15,7 +19,6 @@ const PersonalGame = () => {
   const [randomList, setRandomList] = useState([]);
   const [resultMessage, setResultMessage] = useState('');
   const [openRound, setOpenRound] = useState(true);
-  const [openProgress, setOpenProgress] = useState(true);
 
   const resultNames = [
     '신라',
@@ -39,8 +42,9 @@ const PersonalGame = () => {
   const history = useHistory();
 
   useEffect(() => {
+    dispatch(openModalAction());
     setRandom();
-    setOpenProgress(false);
+    dispatch(closeModalAction());
   }, []);
 
   const setRandom = () => {
@@ -115,8 +119,6 @@ const PersonalGame = () => {
         closeRound={closeRound}
         round={round}
       />
-
-      <ProgressModal openProgress={openProgress} />
     </div>
   );
 };

@@ -69,7 +69,6 @@ const MoreAccompanyManage = () => {
     <>
       <BaseAppBar
         text="내 동행 글"
-        leftType="icon"
         leftIcon={<ArrowBackIosIcon />}
         leftClick={handleLeftClick}
       />
