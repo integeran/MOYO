@@ -40,11 +40,9 @@ const CategoryNav = () => {
   const handleDMClick = () => {
     history.push('/dmroomlist');
   };
-
   const handleAccompanyClick = () => {
     history.push('/accompany');
   };
-
   const handleCommunityClick = () => {
     history.push('/community');
   };
