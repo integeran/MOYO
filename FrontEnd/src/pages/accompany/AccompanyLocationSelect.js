@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import moyoColor from '../../api/moyoColor';
 import {
   List,
   ListItem,

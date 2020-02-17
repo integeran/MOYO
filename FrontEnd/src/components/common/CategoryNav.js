@@ -40,11 +40,9 @@ const CategoryNav = () => {
   const handleDMClick = () => {
     history.push('/dmroomlist');
   };
-
   const handleAccompanyClick = () => {
     history.push('/accompany');
   };
-
   const handleCommunityClick = () => {
     history.push('/community');
   };
@@ -53,7 +51,7 @@ const CategoryNav = () => {
     <BottomNavigation
       value={select}
       onChange={handleNavChange}
-      // showLabels={true}
+      style={{zIndex:"9999"}}
     >
       <StyledBottomNavigationAction
         ref={refAccompany}

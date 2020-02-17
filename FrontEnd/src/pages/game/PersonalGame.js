@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
+import { useDispatch } from 'react-redux';
+
+import { openModalAction, closeModalAction } from '../../modules/progressModal';
 
 import PersonalMain from '../../components/game/PersonalMain';
 import PersonalResultModal from '../../components/game/PersonalResultModal';
@@ -7,6 +10,8 @@ import PersonalRoundModal from '../../components/game/PersonalRoundModal';
 
 const PersonalGame = () => {
   var startRound = 16;
+
+  const dispatch = useDispatch();
 
   const [round, setRound] = useState(startRound);
   const [subRound, setSubRound] = useState(0); // 계속 증가
@@ -37,7 +42,9 @@ const PersonalGame = () => {
   const history = useHistory();
 
   useEffect(() => {
+    dispatch(openModalAction());
     setRandom();
+    dispatch(closeModalAction());
   }, []);
 
   const setRandom = () => {
@@ -101,10 +108,12 @@ const PersonalGame = () => {
         bottomindex={randomList[subRound * 2 + 1]}
         onClickImage={onClickImage}
       />
+
       <PersonalResultModal
         closeResult={closeResult}
         resultMessage={resultMessage}
       />
+
       <PersonalRoundModal
         openRound={openRound}
         closeRound={closeRound}

@@ -1,31 +1,62 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useHistory } from 'react-router';
 import { changeComments, changeEdit } from '../../modules/communityComment';
 import axios from '../../api/axios';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import Fab from '@material-ui/core/Fab';
-import EditIcon from '@material-ui/icons/Edit';
+import { Grid, TextField, Typography, Button, Paper } from '@material-ui/core';
+import styled from 'styled-components';
+
+const FullSizeButton = styled(Button)`
+  width: 100%;
+  height: 100%;
+  padding: 0 !important;
+  min-width: 0 !important;
+`;
+
+const StyledTextField = styled(TextField)`
+  .MuiOutlinedInput-input {
+    padding: 0.7rem 0.5rem;
+  }
+`;
+
+const CommentContainer = styled(Grid)`
+  &:last-child {
+    margin-bottom: 0.8rem;
+  }
+  & + & {
+    margin-top: 0.5rem;
+  }
+`;
+
+const ButtonGrid = styled(Grid)`
+  flex-grow: 1;
+  text-align: center;
+  border-radius: 0.4rem;
+  margin: 0.05rem !important;
+  background-color: #7369ff;
+  color: white;
+`;
 
 const CommunityCommentList = ({ cmId, userData }) => {
-  const history = useHistory();
   const dispatch = useDispatch();
   const { comments } = useSelector(({ communityComment }) => ({
     comments: communityComment.comments,
   }));
-  // const [commentListData, setCommentListData] = useState([]);
-  const [writtenComment, setWrittenComment] = useState('댓글을 작성해주세요');
+
+  const [writtenComment, setWrittenComment] = useState('');
   const [editComment, setEditComment] = useState('');
   const onChangeComments = useCallback(
     comments => dispatch(changeComments(comments)),
     [dispatch],
   );
-  const onChangeEdit = useCallback(
+  const onChangeEditCallback = useCallback(
     cmCommentId => dispatch(changeEdit(cmCommentId)),
     [dispatch],
   );
+
+  const onChangeEdit = comment => {
+    onChangeEditCallback(comment.cmCommentId);
+    setEditComment(comment.contents);
+  };
 
   const getCommentList = async () => {
     try {
@@ -62,21 +93,6 @@ const CommunityCommentList = ({ cmId, userData }) => {
     }
   };
 
-  const handleSubmitClick = async () => {
-    const commentData = {
-      cmId: cmId,
-      uid: userData.uid,
-      contents: writtenComment,
-    };
-    if (writtenComment.trim() && writtenComment !== '댓글을 작성해주세요') {
-      const fetchComment = async () => {
-        await postComment(commentData);
-        getComments();
-      };
-      fetchComment();
-    }
-  };
-
   const putComment = async commentData => {
     try {
       return await axios.put('communityComment/update', commentData, {
@@ -87,20 +103,6 @@ const CommunityCommentList = ({ cmId, userData }) => {
     }
   };
 
-  const handleEditClick = async cmCommentId => {
-    const commentData = {
-      cmCommentId: cmCommentId,
-      uid: userData.uid,
-      contents: editComment,
-    };
-    const fetchEditComment = async () => {
-      await putComment(commentData);
-      getComments();
-    };
-    onChangeEdit(cmCommentId);
-    fetchEditComment();
-  };
-
   const deleteComment = async cmCommentId => {
     try {
       return await axios.delete(`communityComment/delete/${cmCommentId}`, {
@@ -109,6 +111,42 @@ const CommunityCommentList = ({ cmId, userData }) => {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleSubmitClick = async () => {
+    const commentData = {
+      cmId: cmId,
+      uid: userData.uid,
+      contents: writtenComment,
+    };
+    if (writtenComment.trim()) {
+      const fetchComment = async () => {
+        await postComment(commentData);
+        getComments();
+        setWrittenComment('');
+      };
+      fetchComment();
+    }
+  };
+
+  const handleEditClick = async cmCommentId => {
+    const commentData = {
+      cmCommentId: cmCommentId,
+      uid: userData.uid,
+      contents: editComment,
+    };
+    if (editComment.trim()) {
+      const fetchEditComment = async () => {
+        await putComment(commentData);
+        getComments();
+      };
+      onChangeEditCallback(cmCommentId);
+      fetchEditComment();
+    }
+  };
+
+  const handleEditCancelClick = comment => {
+    onChangeEdit(comment);
   };
 
   const handleDeleteClick = async cmCommentId => {
@@ -124,68 +162,98 @@ const CommunityCommentList = ({ cmId, userData }) => {
     setEditComment(e.target.value);
   };
 
+  console.log(comments);
+
   return (
-    <div>
-      <form autoComplete="off">
-        <TextField
-          id="commentInput"
-          value={writtenComment}
-          onClick={() => {
-            setWrittenComment('');
-          }}
-          onChange={handleCommentChange}
-          variant="outlined"
-        />
-        <Button variant="contained" color="primary" onClick={handleSubmitClick}>
-          등록
-        </Button>
-      </form>
+    <>
       <div>
-        {comments.map(comment => (
-          <div>
-            {comment.edit}
-            {comment.nickname} : {comment.contents}
-            {comment.uid === userData.uid ? (
-              <Typography
-                onClick={() => handleDeleteClick(comment.cmCommentId)}
-              >
-                댓글 삭제
-              </Typography>
-            ) : null}
-            {comment.uid === userData.uid ? (
-              <Fab
-                color="secondary"
-                size="small"
-                aria-label="edit"
-                onClick={() => onChangeEdit(comment.cmCommentId)}
-              >
-                <EditIcon />
-              </Fab>
-            ) : null}
-            {comment.edit ? (
-              <TextField
-                id="commentEdit"
-                value={editComment}
-                onClick={() => {
-                  setEditComment('');
-                }}
-                onChange={handleCommentEdit}
-                variant="outlined"
-              />
-            ) : null}
-            {comment.edit ? (
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => handleEditClick(comment.cmCommentId)}
-              >
-                등록
-              </Button>
-            ) : null}
-          </div>
-        ))}
+        <Grid container style={{ marginBottom: '0.7rem' }}>
+          <Grid item xs={10}>
+            <StyledTextField
+              id="commentInput"
+              value={writtenComment}
+              onChange={handleCommentChange}
+              variant="outlined"
+              style={{ width: '97%' }}
+            />
+          </Grid>
+          <Grid item xs={2}>
+            <FullSizeButton
+              variant="contained"
+              color="primary"
+              onClick={handleSubmitClick}
+            >
+              등록
+            </FullSizeButton>
+          </Grid>
+        </Grid>
       </div>
-    </div>
+
+      {comments.map(comment => (
+        <CommentContainer container>
+          {!comment.edit ? (
+            <>
+              <Grid item xs={3} container alignItems="center">
+                <Typography variant="body2" style={{ fontWeight: '700' }}>
+                  {comment.nickname}
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                container
+                alignItems="center"
+                xs={comment.uid === userData.uid ? 6 : 9}
+              >
+                <Typography variant="body2">{comment.contents}</Typography>
+              </Grid>
+              {comment.uid === userData.uid ? (
+                <>
+                  <ButtonGrid
+                    item
+                    onClick={() => handleDeleteClick(comment.cmCommentId)}
+                  >
+                    <Typography variant="caption">삭제</Typography>
+                  </ButtonGrid>
+                  <ButtonGrid item onClick={() => onChangeEdit(comment)}>
+                    <Typography variant="caption">수정</Typography>
+                  </ButtonGrid>
+                </>
+              ) : null}
+            </>
+          ) : (
+            <>
+              <Grid item xs={8} style={{ width: '97%' }}>
+                <StyledTextField
+                  id="commentEdit"
+                  value={editComment}
+                  placeholder="댓글을 입력해주세요"
+                  onChange={handleCommentEdit}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={2} style={{ padding: '0 0 0 0.2rem' }}>
+                <FullSizeButton
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => handleEditClick(comment.cmCommentId)}
+                >
+                  수정
+                </FullSizeButton>
+              </Grid>
+              <Grid item xs={2} style={{ padding: '0 0 0 0.2rem' }}>
+                <FullSizeButton
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => handleEditCancelClick(comment)}
+                >
+                  취소
+                </FullSizeButton>
+              </Grid>
+            </>
+          )}
+        </CommentContainer>
+      ))}
+    </>
   );
 };
 
