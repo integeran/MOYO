@@ -115,6 +115,7 @@ const App = () => {
             <Route path="/personalgame" component={PersonalGame} />
           </>
         )}
+        <ProgressModal />
       </StyledContainer>
       {!(
         location.pathname === '/' ||
