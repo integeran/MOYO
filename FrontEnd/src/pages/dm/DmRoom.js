@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from '../../api/axios';
 import * as firebase from 'firebase';
 import { Link, useHistory } from 'react-router-dom';
@@ -8,13 +8,11 @@ import moment from 'moment';
 import Message from '../../components/dm/Message';
 import UploadModal from '../../components/dm/UploadModal';
 import { openModalAction, closeModalAction } from '../../modules/progressModal';
+import { goProfileBlockAction, goProfileUnBlockAction } from '../../modules/Dm';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import PetsIcon from '@material-ui/icons/Pets';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
 import TelegramIcon from '@material-ui/icons/Telegram';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
@@ -38,6 +36,7 @@ const useStyles = makeStyles(theme => ({
 
 const DmRoom = ({ match }) => {
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const MAKEID_CHAR = useSelector(state => state.Dm.MAKEID_CHAR);
   const DATETIME_CHAR = useSelector(state => state.Dm.DATETIME_CHAR);
@@ -58,12 +57,13 @@ const DmRoom = ({ match }) => {
   }, []);
 
   const openAddModal = () => {
-    setAnchorEl(null);
     setAddAccompanyModal(true);
+    dispatch(goProfileBlockAction());
   };
 
   const closeAddModal = () => {
     setAddAccompanyModal(false);
+    dispatch(goProfileUnBlockAction());
   };
 
   const openModal = () => {
@@ -75,8 +75,6 @@ const DmRoom = ({ match }) => {
   };
 
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
 
   useEffect(() => {
     onInit();
@@ -303,14 +301,6 @@ const DmRoom = ({ match }) => {
     }
   };
 
-  const handleMenu = event => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   const loadMessage = () => {
     saveMessages(ivalue);
     setIvalue('');
@@ -411,29 +401,9 @@ const DmRoom = ({ match }) => {
                 {title}
               </Typography>
               <div>
-                <IconButton onClick={handleMenu} color="inherit">
-                  <PetsIcon />
+                <IconButton onClick={openAddModal} color="inherit">
+                  <Typography variant="subtitle2">동행추가</Typography>
                 </IconButton>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={open}
-                  onClose={handleClose}
-                >
-                  <MenuItem onClick={openAddModal}>동행추가</MenuItem>
-                  <MenuItem onClick={handleClose}>
-                    {hookReceiver.nickname}의 프로필
-                  </MenuItem>
-                </Menu>
               </div>
             </Toolbar>
           </AppBar>
