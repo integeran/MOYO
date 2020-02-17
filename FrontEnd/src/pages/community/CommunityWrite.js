@@ -1,6 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import BaseAppBar from '../../components/common/BaseAppBar';
-import { InputLabel } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
@@ -61,6 +60,7 @@ const CommunityWrite = () => {
       console.error(error);
     }
   };
+
   const handleSubmitClick = async () => {
     const communityData = {
       uId: userData.uid,
