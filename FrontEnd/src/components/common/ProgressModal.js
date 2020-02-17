@@ -4,6 +4,7 @@ import Modal from '@material-ui/core/Modal';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Fade from '@material-ui/core/Fade';
 import { Typography } from '@material-ui/core';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -37,7 +38,9 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const ProgressModal = ({ openProgress }) => {
+const ProgressModal = () => {
+  const openProgress = useSelector(state => state.progressModal.progressModal);
+
   const [showFade, setShowFade] = useState(true);
 
   const classes = useStyles();

@@ -12,6 +12,7 @@ import community from './community';
 import communityComment from './communityComment';
 import postmap from './postmap';
 import baseNavigation from './baseNavigation';
+import progressModal from './progressModal';
 
 const rootReducer = combineReducers({
   auth,
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   communityComment,
   postmap,
   baseNavigation,
+  progressModal,
 });
 
 export default rootReducer;
