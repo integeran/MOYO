@@ -37,7 +37,6 @@ const MoreCommunity = () => {
     <div>
       <BaseAppBar
         text="내 커뮤니티 글"
-        leftType="icon"
         leftIcon={<ArrowBackIosIcon onClick={handleBackIcon} />}
       />
       <CommunityListSet communityData={myCommunityData} />
