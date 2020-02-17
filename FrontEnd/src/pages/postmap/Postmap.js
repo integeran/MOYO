@@ -259,7 +259,7 @@ const Postmap = () => {
             </div>
           </div>
         ) : (
-          <Typography>데이터가 없습니다</Typography>
+          <Typography>주변 포스트맵이 없네요? 등록해보시겠어요?</Typography>
         )}
       </div>
     </>
