@@ -29,15 +29,10 @@
 	</select>
 	
 	<insert id="insertPostmap" parameterType="postmap">
-		insert into postmap(contents, latitude, longitude, register_id)
-		values(#{contents}, #{latitude}, #{longitude}, #{registerId})
+		insert into postmap(contents, latitude, longitude, register_id, register_date)
+		values(#{contents}, #{latitude}, #{longitude}, #{registerId}, #{registerDate})
 	</insert>
-	
-	<update id="updatePostmap" parameterType="postmap" >
-		update postmap set contents = #{contents}, latitude = #{latitude}, longitude = #{longitude},
-		register_id = #{registerId} where pm_id = #{pmId}
-	</update>
-	
+
 	<delete id="deletePostmap" parameterType="int">
 		delete from postmap where pm_id =  #{pmId}
 	</delete>
