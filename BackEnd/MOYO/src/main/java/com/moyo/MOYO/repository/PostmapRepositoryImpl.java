@@ -93,13 +93,6 @@ public class PostmapRepositoryImpl implements PostmapRepository{
 
 	@Override
 	@Transactional
-	public int updatePostmap(Postmap postmap) {
-		log.trace("PostmapRepository - updatePostmap : ",postmap);
-		return session.update(ns+ "updatePostmap",postmap);
-	}
-
-	@Override
-	@Transactional
 	public int deletePostmap(int pmId) {
 		log.trace("PostmapRepository - deletePostmap : ",pmId);
 		return session.delete(ns+ "deletePostmap",pmId);

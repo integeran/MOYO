@@ -1,5 +1,7 @@
 package com.moyo.MOYO.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,6 +53,8 @@ public class CommunityCommentRestController {
 	@PostMapping("/communityComment/create")
 	public ResponseEntity<Map<String, Object>> create(@RequestBody CommunityComment communityComment) {
 		try {
+			SimpleDateFormat sdf = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+			communityComment.setRegisterDate(sdf.format(new Date()));
 			log.trace("CommunityCommentRestController - create");
 			return response(cCommentService.create(communityComment), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
@@ -71,6 +75,8 @@ public class CommunityCommentRestController {
 	@PutMapping("/communityComment/update")
 	public ResponseEntity<Map<String, Object>> update(@RequestBody CommunityComment communityComment) {
 		try {
+			SimpleDateFormat sdf = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+			communityComment.setUpdateDate(sdf.format(new Date()));
 			log.trace("CommunityCommentRestController - update");
 			return response(cCommentService.update(communityComment), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
