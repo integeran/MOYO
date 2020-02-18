@@ -53,11 +53,10 @@ const Message = ({
               <Typography
                 variant="body1"
                 style={{
-                  backgroundColor: '#e0e0e0',
-                  borderRadius: '8px',
+                  backgroundColor: 'white',
+                  borderRadius: '0.8rem',
                   textAlign: 'left',
-                  paddingLeft: '3%',
-                  paddingRight: '3%',
+                  padding: '0.3rem 0.5rem',
                   float: check ? 'right' : 'left',
                 }}
               >
