@@ -55,7 +55,8 @@ const PostmapChat = memo(({ listFetch }) => {
       );
     } else if (chatText !== '') {
       setWaitEnter(false);
-      var timer = 5;
+      dispatch(openSnackBarAction('포스트맵이 등록되었습니다.'));
+      var timer = 2;
 
       const res1 = await insertPost(pos);
 
