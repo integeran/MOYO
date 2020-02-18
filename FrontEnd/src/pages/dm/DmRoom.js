@@ -11,15 +11,31 @@ import { openModalAction, closeModalAction } from '../../modules/progressModal';
 import { goProfileBlockAction, goProfileUnBlockAction } from '../../modules/Dm';
 import { navigationSelect } from '../../modules/baseNavigation';
 
-import Typography from '@material-ui/core/Typography';
 import TelegramIcon from '@material-ui/icons/Telegram';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Grid from '@material-ui/core/Grid';
-import InputBase from '@material-ui/core/InputBase';
+import { IconButton, Grid, TextField, Typography } from '@material-ui/core';
 import AddAccompanyModal from '../../components/dm/AddAccompanyModal';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+
+import BaseAppBar from '../../components/common/BaseAppBar';
+import styled from 'styled-components';
+
+const CustomIconButton = styled(IconButton)`
+  background-color: #4fc3f7 !important;
+  padding: 0.3rem !important;
+  & > span > svg {
+    color: white;
+  }
+`;
+
+const MessageTextField = styled(TextField)`
+  & > div {
+    border-radius: 1rem !important;
+    & > input {
+      padding: 0.5rem 0.8rem !important;
+    }
+  }
+`;
 
 const DmRoom = ({ match }) => {
   const history = useHistory();
@@ -311,12 +327,6 @@ const DmRoom = ({ match }) => {
     setIvalue('');
   };
 
-  const onEnterKey = e => {
-    if (e.key === 'Enter') {
-      loadMessage();
-    }
-  };
-
   const onAttachButton = () => {
     var attachButton = document.getElementById('attachfile');
     attachButton.click();
@@ -387,166 +397,106 @@ const DmRoom = ({ match }) => {
   var lastTimeStamp = '';
 
   return (
-    <>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        width: 'inherit',
+        height: 'inherit',
+      }}
+    >
+      <BaseAppBar
+        text={title}
+        leftIcon={<ArrowBackIosIcon />}
+        leftClick={() => {
+          dispatch(navigationSelect('accompany'));
+          history.goBack();
+        }}
+        rightText="동행"
+        rightClick={openAddModal}
+      />
+      <UploadModal isOpen={uploadModal} close={closeModal} />
+      <AddAccompanyModal
+        isOpen={addAccompanyModal}
+        close={closeAddModal}
+        receiver={hookReceiver}
+      />
+
       <div
+        id="messageList"
         style={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: 'inherit',
-          height: 'inherit',
+          width: '100%',
+          height: '100%',
+          overflow: 'auto',
+          marginTop: '1%',
         }}
       >
-        <div>
-          <AppBar position="static" style={{ backgroundColor: '#4fdbc2' }}>
-            <Toolbar style={{ padding: '0%' }}>
-              <Grid container alignItems="center" justify="center">
-                <Grid
-                  item
-                  xs={2}
-                  onClick={() => {
-                    history.go(-1);
-                    dispatch(navigationSelect('accompany'));
-                  }}
-                  style={{ textAlign: 'center' }}
-                >
-                  <ArrowBackIosIcon style={{ color: 'white' }} />
-                </Grid>
-                <Grid item xs={8} style={{ textAlign: 'center' }}>
-                  <Typography variant="h6">{title}</Typography>
-                </Grid>
-                <Grid item xs={2}>
-                  <Typography variant="suhbtitle1" onClick={openAddModal}>
-                    동행추가
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Toolbar>
-          </AppBar>
-        </div>
-        <UploadModal isOpen={uploadModal} close={closeModal} />
-        <AddAccompanyModal
-          isOpen={addAccompanyModal}
-          close={closeAddModal}
-          receiver={hookReceiver}
-        />
+        {messageList.map((message, index) => {
+          var tempLastMessageUserId = lastMessageUserId;
+          var tempLastTimeStamp = lastTimeStamp;
+          lastMessageUserId = message.senderId;
+          lastTimeStamp = message.timeStamp;
 
-        <div
-          id="messageList"
-          style={{
-            width: '100%',
-            height: '100%',
-            overflow: 'auto',
-            marginTop: '1%',
-          }}
-        >
-          {messageList.map((message, index) => {
-            var tempLastMessageUserId = lastMessageUserId;
-            var tempLastTimeStamp = lastTimeStamp;
-            lastMessageUserId = message.senderId;
-            lastTimeStamp = message.timeStamp;
+          return (
+            <Message
+              key={index}
+              senderId={message.senderId}
+              image={hookReceiver.image}
+              message={message.message}
+              timeStamp={message.timeStamp}
+              fileName={message.fileName}
+              url={message.url}
+              lastMessageUserId={tempLastMessageUserId}
+              lastTimeStamp={tempLastTimeStamp}
+              curTime={tempCurTime}
+            />
+          );
+        })}
 
-            return (
-              <Message
-                key={index}
-                senderId={message.senderId}
-                image={hookReceiver.image}
-                message={message.message}
-                timeStamp={message.timeStamp}
-                fileName={message.fileName}
-                url={message.url}
-                lastMessageUserId={tempLastMessageUserId}
-                lastTimeStamp={tempLastTimeStamp}
-                curTime={tempCurTime}
-              />
-            );
-          })}
-
-          {receiverRead && (
-            <Typography
-              variant="caption"
-              style={{ float: 'right', marginRight: '2%', marginTop: '-2%' }}
-            >
-              읽음
-            </Typography>
-          )}
-        </div>
-
-        <div
-          id="chatdiv"
-          style={{
-            marginTop: '1%',
-            marginBottom: '1%',
-            border: '1px solid #bdbdbd',
-            borderRadius: '20px',
-          }}
-        >
-          <Grid
-            container
-            style={{ width: '100%' }}
-            justify="center"
-            alignItems="center"
+        {receiverRead && (
+          <Typography
+            variant="caption"
+            style={{ float: 'right', marginRight: '2%', marginTop: '-2%' }}
           >
-            <Grid item xs={1} style={{ marginLeft: '1%' }}>
-              <div
-                style={{
-                  borderRadius: '75px',
-                  backgroundColor: '#4fc3f7',
-                }}
-                onClick={onAttachButton}
-              >
-                <AttachFileIcon
-                  style={{
-                    cursor: 'pointer',
-                    marginLeft: '10%',
-                    color: 'white',
-                  }}
-                />
-              </div>
-            </Grid>
-
-            <Grid item xs={1}></Grid>
-
-            <Grid item xs={7}>
-              <InputBase
-                id="chatInput"
-                onChange={onChangeIvalue}
-                value={ivalue}
-                onKeyPress={onEnterKey}
-                fullWidth
-                style={{ marginTop: '5px' }}
-              />
-            </Grid>
-
-            <Grid item xs={1}></Grid>
-
-            <Grid item xs={1}>
-              <div
-                style={{
-                  borderRadius: '75px',
-                  backgroundColor: '#4fc3f7',
-                }}
-                onClick={loadMessage}
-              >
-                <TelegramIcon
-                  style={{
-                    cursor: 'pointer',
-                    marginLeft: '10%',
-                    color: 'white',
-                  }}
-                />
-              </div>
-            </Grid>
-          </Grid>
-
-          <input
-            type="file"
-            id="attachfile"
-            style={{ display: 'none' }}
-            onChange={onAttachFile}
-          ></input>
-        </div>
+            읽음
+          </Typography>
+        )}
       </div>
-    </>
+
+      <Grid
+        container
+        justify="center"
+        alignItems="center"
+        style={{ padding: '0.5rem 0.3rem' }}
+      >
+        <Grid className="moyo_center_grid" item xs={2}>
+          <CustomIconButton onClick={onAttachButton}>
+            <AttachFileIcon />
+          </CustomIconButton>
+        </Grid>
+        <Grid item xs={8}>
+          <MessageTextField
+            id="chatInput"
+            variant="outlined"
+            onChange={onChangeIvalue}
+            value={ivalue}
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={2} className="moyo_center_grid">
+          <CustomIconButton onClick={loadMessage}>
+            <TelegramIcon />
+          </CustomIconButton>
+        </Grid>
+      </Grid>
+
+      <input
+        type="file"
+        id="attachfile"
+        style={{ display: 'none' }}
+        onChange={onAttachFile}
+      ></input>
+    </div>
   );
 };
 
