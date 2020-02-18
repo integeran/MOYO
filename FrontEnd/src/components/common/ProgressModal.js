@@ -7,6 +7,13 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Fade from '@material-ui/core/Fade';
 import { Typography } from '@material-ui/core';
 
+/*
+  1. open과 close Action을 import한다. 보통 'import { openModalAction, closeModalAction } from '../../modules/progressModal';' 이렇게 import
+  2. dispatch를 설정한다. 보통 const dispatch = useDispatch(); 이렇게 설정
+  3. uesEffect를 통해 페이지 로드가 이루어지기 전 dispatch(openModalAction()); 를 작성
+  4. 모든 페이지 로드가 끝날 시점에 dispatch(closeModalAction()); 을 작성
+*/
+
 const useStyles = makeStyles(theme => ({
   root: {
     height: '100%',
