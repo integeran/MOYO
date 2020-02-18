@@ -13,7 +13,7 @@ const Container = styled.div`
   margin-top: 1rem;
 `;
 
-const MoreCommunity = () => {
+const MoreCommunity = props => {
   const history = useHistory();
   const userData = useSelector(state => state.auth.userData);
   const [myCommunityData, setMyCommunityData] = useState([]);
@@ -47,7 +47,10 @@ const MoreCommunity = () => {
         leftIcon={<ArrowBackIosIcon onClick={handleBackIcon} />}
       />
       <Container>
-        <CommunityListSet communityData={myCommunityData} />
+        <CommunityListSet
+          communityData={myCommunityData}
+          pathname={props.location.pathname}
+        />
       </Container>
     </>
   );

@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router';
 import CommunityListPaper from './CommunityListPaper';
 
-const CommunityListSet = ({ communityData }) => {
+const CommunityListSet = ({ communityData, pathname }) => {
   const history = useHistory();
   const handleCommunityClick = community => {
     history.push({
@@ -10,6 +10,7 @@ const CommunityListSet = ({ communityData }) => {
       state: {
         prevpath: history.location.pathname,
         community: community,
+        pathname: pathname,
       },
     });
   };
