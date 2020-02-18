@@ -1,24 +1,22 @@
 import React, { useState, memo } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from '../../api/axios';
+
+import { openSnackBarAction } from '../../modules/snackBar';
 
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 import NearMeIcon from '@material-ui/icons/NearMe';
-import SnackBar from '../common/SnackBar';
 
 const PostmapChat = memo(({ listFetch }) => {
+  const dispatch = useDispatch();
+
   const userData = useSelector(state => state.auth.userData);
   const pos = useSelector(state => state.postmap.pos);
 
   const [chatText, setChatText] = useState('');
   const [waitEnter, setWaitEnter] = useState(true);
-
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const handleSnackBarClose = () => {
-    setSnackbarOpen(false);
-  };
 
   const onChatText = e => {
     if (e.target.value.length < 30) {
@@ -51,9 +49,9 @@ const PostmapChat = memo(({ listFetch }) => {
 
   const saveChat = async () => {
     if (waitEnter === false) {
-      console.log(snackbarOpen);
-      // console.log(timer);
-      setSnackbarOpen(true);
+      dispatch(
+        openSnackBarAction('쾌적한 포스트맵을 위해 바로 등록하실 수 없습니다.'),
+      );
     } else if (chatText !== '') {
       setWaitEnter(false);
       var timer = 5;
@@ -65,7 +63,6 @@ const PostmapChat = memo(({ listFetch }) => {
         var timerInterval = setInterval(() => {
           if (timer <= 0) {
             setWaitEnter(true);
-            setSnackbarOpen(false);
             clearInterval(timerInterval);
           }
           timer = timer - 1;
@@ -100,11 +97,6 @@ const PostmapChat = memo(({ listFetch }) => {
         </Grid>
         <Grid item xs={2}></Grid>
       </Grid>
-      <SnackBar
-        open={snackbarOpen}
-        contents="쾌적한 포스트맵을 위해 바로 등록하실 수 없습니다."
-        onClose={handleSnackBarClose}
-      ></SnackBar>
     </div>
   );
 });
