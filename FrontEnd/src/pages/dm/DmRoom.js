@@ -2,37 +2,24 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from '../../api/axios';
 import * as firebase from 'firebase';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 
 import Message from '../../components/dm/Message';
 import UploadModal from '../../components/dm/UploadModal';
 import { openModalAction, closeModalAction } from '../../modules/progressModal';
 import { goProfileBlockAction, goProfileUnBlockAction } from '../../modules/Dm';
+import { navigationSelect } from '../../modules/baseNavigation';
 
-import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
 import TelegramIcon from '@material-ui/icons/Telegram';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
-import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Grid from '@material-ui/core/Grid';
 import InputBase from '@material-ui/core/InputBase';
 import AddAccompanyModal from '../../components/dm/AddAccompanyModal';
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-  },
-}));
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
 const DmRoom = ({ match }) => {
   const history = useHistory();
@@ -74,9 +61,8 @@ const DmRoom = ({ match }) => {
     setUploadModal(false);
   };
 
-  const classes = useStyles();
-
   useEffect(() => {
+    dispatch(openModalAction());
     onInit();
   }, []);
 
@@ -181,7 +167,20 @@ const DmRoom = ({ match }) => {
     console.log('loadMessageList');
 
     var loadMessageFirebase = firebase.database().ref('Messages/' + roomId);
+    loadMessageFirebase.off();
     if (roomId) {
+      var count = 0;
+      loadMessageFirebase.once('value', snapshot => {
+        if (snapshot.val()) {
+          if (Object.keys(snapshot.val()).length > 50) {
+            count = 50;
+          } else {
+            count = Object.keys(snapshot.val()).length;
+          }
+        } else {
+          dispatch(closeModalAction());
+        }
+      });
       setHookRoomId(roomId);
       waitReceiverRoomChange(roomId, receiver, roomexist);
 
@@ -198,6 +197,12 @@ const DmRoom = ({ match }) => {
         };
 
         setMessageList(prevState => [...prevState, MessageInfo]);
+        if (count > 1) {
+          count = count - 1;
+        } else {
+          console.log('closeModalAction');
+          dispatch(closeModalAction());
+        }
         var list = document.getElementById('messageList');
         if (list) {
           list.scrollTop = list.scrollHeight;
@@ -295,13 +300,13 @@ const DmRoom = ({ match }) => {
         };
 
         saveFirebase.update(multiUpdates);
-        var temp = document.getElementById('chatInput');
-        temp.focus();
       }
     }
   };
 
   const loadMessage = () => {
+    var temp = document.getElementById('chatInput');
+    temp.focus();
     saveMessages(ivalue);
     setIvalue('');
   };
@@ -392,19 +397,29 @@ const DmRoom = ({ match }) => {
         }}
       >
         <div>
-          <AppBar position="static" style={{ backgroundColor: '#45bfa9' }}>
-            <Toolbar>
-              <Link to="/DmRoomList" style={{ marginRight: '5%' }}>
-                <KeyboardBackspaceIcon style={{ color: 'white' }} />
-              </Link>
-              <Typography variant="h6" className={classes.title}>
-                {title}
-              </Typography>
-              <div>
-                <IconButton onClick={openAddModal} color="inherit">
-                  <Typography variant="subtitle2">동행추가</Typography>
-                </IconButton>
-              </div>
+          <AppBar position="static" style={{ backgroundColor: '#4fdbc2' }}>
+            <Toolbar style={{ padding: '0%' }}>
+              <Grid container alignItems="center" justify="center">
+                <Grid
+                  item
+                  xs={2}
+                  onClick={() => {
+                    history.go(-1);
+                    dispatch(navigationSelect('accompany'));
+                  }}
+                  style={{ textAlign: 'center' }}
+                >
+                  <ArrowBackIosIcon style={{ color: 'white' }} />
+                </Grid>
+                <Grid item xs={8} style={{ textAlign: 'center' }}>
+                  <Typography variant="h6">{title}</Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <Typography variant="suhbtitle1" onClick={openAddModal}>
+                    동행추가
+                  </Typography>
+                </Grid>
+              </Grid>
             </Toolbar>
           </AppBar>
         </div>
@@ -421,6 +436,7 @@ const DmRoom = ({ match }) => {
             width: '100%',
             height: '100%',
             overflow: 'auto',
+            marginTop: '1%',
           }}
         >
           {messageList.map((message, index) => {
@@ -459,7 +475,7 @@ const DmRoom = ({ match }) => {
           id="chatdiv"
           style={{
             marginTop: '1%',
-            marginBottom: '5%',
+            marginBottom: '1%',
             border: '1px solid #bdbdbd',
             borderRadius: '20px',
           }}
