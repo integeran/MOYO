@@ -47,16 +47,11 @@ const MainForm = ({ ...props }) => {
           <FormTypo style={{ letterSpacing: '-0.05rem' }}>제목</FormTypo>
         </Grid>
         <Grid xs={9} item>
-          <input
+          <CustomTextField
             id="titleInput"
+            fullWidth={true}
             value={props.title}
-            fullWidth
             onChange={props.onTitleChange}
-            style={{
-              padding: '0rem',
-              borderStyle: 'none',
-              borderBottom: '0.03rem solid gray',
-            }}
           />
         </Grid>
       </Grid>
@@ -123,7 +118,7 @@ const MainForm = ({ ...props }) => {
             select
             label="나라"
             size="small"
-            fullWidth
+            fullWidth={true}
             value={props.nation}
             onChange={props.onNationChange}
           >
@@ -149,7 +144,7 @@ const MainForm = ({ ...props }) => {
             select
             label="도시"
             size="small"
-            fullWidth
+            fullWidth={true}
             disabled={`${props.nation}` ? false : true}
             value={props.city}
             onChange={props.onCityChange}
