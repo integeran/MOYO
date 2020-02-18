@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import ChatIcon from '@material-ui/icons/Chat';
 import BorderColorIcon from '@material-ui/icons/BorderColor';
 import DeleteIcon from '@material-ui/icons/Delete';
 import axios from '../../api/axios';
+import moment from '../../api/moment';
 import styled from 'styled-components';
 import BaseAppBar from '../../components/common/BaseAppBar';
 import { navigationSelect } from '../../modules/baseNavigation';
@@ -61,18 +61,16 @@ const CustomFormControlLabel = styled(FormControlLabel)`
   }
 `;
 
-// const CustomAlert = styled(Alert)`
-//   & > div {
-//     color: black;
-//   }
-// `;
-
 const AccompanyListDetail = () => {
   const history = useHistory();
   const dispatch = useDispatch();
+  const userData = useSelector(state => state.auth.userData);
   const [boardData, setBoardData] = useState(history.location.state.board);
-  const isModify =
-    history.location.pathname.indexOf('more') > -1 ? true : false;
+  const [isModify, setIsModify] = useState(false);
+
+  useEffect(() => {
+    setIsModify(history.location.state.board.uid === userData.uid);
+  }, []);
 
   const convertAgeToStr = age => {
     age = Number(age);
@@ -212,8 +210,8 @@ const AccompanyListDetail = () => {
         text="상세보기"
         leftIcon={<ArrowBackIosIcon />}
         leftClick={handleGoBack}
-        rightIcon={isModify ? <BorderColorIcon /> : <ChatIcon />}
-        rightClick={isModify ? handleModifyAccompany : handleMoveChat}
+        rightIcon={isModify ? <BorderColorIcon /> : null}
+        rightClick={isModify ? handleModifyAccompany : null}
         rightExtraIcon={isModify ? <DeleteIcon /> : null}
         rightExtraClick={isModify ? handleDeleteClick : null}
         style={{ flexGrow: '0' }}
@@ -259,7 +257,8 @@ const AccompanyListDetail = () => {
               </Grid>
               <Grid item>
                 <Typography variant="body2">
-                  {boardData.startDate} ~ {boardData.endDate}
+                  {moment.convertDate(boardData.startDate)} ~{' '}
+                  {moment.convertDate(boardData.endDate)}
                 </Typography>
               </Grid>
             </Grid>
@@ -298,6 +297,18 @@ const AccompanyListDetail = () => {
           </Paper>
         </ContentsGrid>
       </InnerContainerGrid>
+      {!isModify ? (
+        <Grid item style={{ width: '85%', margin: '0 auto' }}>
+          <Button
+            fullWidth
+            variant="contained"
+            color="secondary"
+            onClick={handleMoveChat}
+          >
+            DM 보내기
+          </Button>
+        </Grid>
+      ) : null}
     </Grid>
   );
 };
