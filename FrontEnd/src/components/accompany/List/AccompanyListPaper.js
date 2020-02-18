@@ -3,6 +3,7 @@ import Paper from '@material-ui/core/Paper';
 import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import moment from '../../../api/moment';
 
 const DivStyled = styled.div`
   flex-grow: 1;
@@ -66,7 +67,8 @@ const AccompanyListPaper = ({ boardInfo, onClick }) => {
                 align="left"
                 style={{ paddingRight: '1rem' }}
               >
-                {boardInfo.startDate}~{boardInfo.endDate}
+                {moment.convertDate(boardInfo.startDate)}~
+                {moment.convertDate(boardInfo.endDate)}
               </Typography>
             </Grid>
           </Grid>

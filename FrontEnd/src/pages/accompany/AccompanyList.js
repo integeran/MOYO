@@ -14,6 +14,8 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import MoyoIcon from '../../assets/icon/icon_moyo_white.svg';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import BorderColorIcon from '@material-ui/icons/BorderColor';
+import meerkatIcon from '../../assets/icon/icon_meerkat.svg';
 
 import {
   accompanyFilterGender,
@@ -70,6 +72,14 @@ const FloatingFab = styled(Fab)`
 const UnderlineTypo = styled(Typography)`
   text-decoration-line: underline;
   text-underline-position: under;
+`;
+
+const NoDataGrid = styled(Grid)`
+  width: 85% !important;
+  height: 90%;
+  margin: 0 auto !important;
+  border-radius: 1rem;
+  background-color: lightgray;
 `;
 
 const AccompanyList = () => {
@@ -140,13 +150,10 @@ const AccompanyList = () => {
   useEffect(() => {
     const getBoards = async () => {
       const result = await getAccompanyBoardList();
-      const resData = result.data.data.map(item => {
-        return {
-          ...item,
-          startDate: moment(item.startDate).format('YYYY-MM-DD'),
-          endDate: moment(item.endDate).format('YYYY-MM-DD'),
-        };
-      });
+      const resData = result.data.data.map(board => ({
+        ...board,
+        validDate: true,
+      }));
       setBoardData(resData);
     };
     getBoards();
@@ -190,6 +197,12 @@ const AccompanyList = () => {
       pathname: '/accompany',
     });
   };
+  const handleAccompanyWriteClick = () => {
+    history.push({
+      pathname: '/accompany/write',
+      state: { prevpath: history.location.pathname },
+    });
+  };
   const handlePreDayClick = () => {
     let preDate = new Date(accDate);
     const nowDate = new Date();
@@ -228,7 +241,11 @@ const AccompanyList = () => {
               <ArrowDropDownIcon style={{ color: 'white' }} />
             </StyledDiv>
           </CenterGrid>
-          <Grid item xs={2}></Grid>
+          <CenterGrid item xs={2}>
+            <IconButton color="inherit" onClick={handleAccompanyWriteClick}>
+              <BorderColorIcon style={{ color: 'white' }} />
+            </IconButton>
+          </CenterGrid>
         </HeaderGrid>
         <CenterGrid item>
           <IconButton color="inherit" onClick={handlePreDayClick}>
@@ -246,8 +263,18 @@ const AccompanyList = () => {
         <Grid item style={{ flex: '0 1 auto', marginBottom: '1rem' }}>
           <AccompanySearchBar onClick={handleSearchClick} />
         </Grid>
+
         <ScrollGrid item>
-          <AccompanyListSet boardData={boardData} />
+          {boardData.length === 0 ? (
+            <NoDataGrid container alignItems="center" justify="center" align>
+              <Grid item>
+                <img src={meerkatIcon} />
+                <Typography variant="h6">등록된 동행이 없어요!</Typography>
+              </Grid>
+            </NoDataGrid>
+          ) : (
+            <AccompanyListSet boardData={boardData} />
+          )}
         </ScrollGrid>
       </MainGrid>
 
