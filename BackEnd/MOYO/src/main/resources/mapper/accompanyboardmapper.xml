@@ -95,6 +95,7 @@
 		  left outer join nation na on ab.n_id = na.n_id
 		  left outer join travel_type tt on ab.t_type_id = tt.t_type_id 
 		 where ab.u_id = #{uId}
+		 order by ab.update_date
 	</select>
 	
 	<update id="updateDeadlineToggle" parameterType="map">
