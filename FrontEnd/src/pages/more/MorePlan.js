@@ -21,6 +21,14 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ChatIcon from '@material-ui/icons/Chat';
 import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
 import Grid from '@material-ui/core/Grid';
+import styled from 'styled-components';
+
+const InnerGrid = styled(Grid)`
+  width: 85%;
+  margin: 0 auto !important;
+  margin-top: 1rem !important;
+  margin-bottom: 1.2rem !important;
+`;
 
 const MorePlan = () => {
   const history = useHistory();
@@ -150,7 +158,7 @@ const MorePlan = () => {
         style={{ margin: '0px' }}
         wrap="nowrap"
       >
-        <Grid item>
+        <InnerGrid item>
           <FullCalendar
             defaultView="dayGridMonth"
             plugins={[dayGridPlugin, interactionPlugin]}
@@ -170,8 +178,8 @@ const MorePlan = () => {
             displayEventTime={false}
             dayRender={data => dayRenderFunction(data)}
           />
-        </Grid>
-        <Grid item>{selectedDate && <Planner />}</Grid>
+        </InnerGrid>
+        <InnerGrid item>{selectedDate && <Planner />}</InnerGrid>
       </Grid>
     </div>
   );
