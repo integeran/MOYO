@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import {
   changeCmId,
   changeTitle,
@@ -11,6 +11,7 @@ import { useHistory } from 'react-router';
 import axios from '../../api/axios';
 import { Grid, Typography, Divider } from '@material-ui/core';
 import BaseAppBar from '../../components/common/BaseAppBar';
+import AlertDialog from '../../components/common/AlertDialog';
 
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import BorderColorIcon from '@material-ui/icons/BorderColor';
@@ -38,8 +39,19 @@ const CommunityDetail = () => {
   const dispatch = useDispatch();
   const userData = useSelector(state => state.auth.userData);
   const communityData = history.location.state.community;
+  const pathname = history.location.state.pathname;
 
-  const isWriter = () => userData.uid === communityData.uid;
+  // AlertDialog
+  const [open, setOpen] = useState(null);
+  const handleDialogClose = () => {
+    setOpen(false);
+  };
+  const handleDialogOpen = () => {
+    setOpen(true);
+  };
+
+  const isWriter = () =>
+    userData.uid === communityData.uid || userData.uid === communityData.uId;
 
   const onChangeCmId = useCallback(cmId => dispatch(changeCmId(cmId)), [
     dispatch,
@@ -67,7 +79,7 @@ const CommunityDetail = () => {
 
   const handleDeleteClick = async () => {
     await deleteCommunity(communityData.cmId);
-    history.push('/community/');
+    history.goBack();
   };
 
   const handleModifyClick = () => {
@@ -76,6 +88,7 @@ const CommunityDetail = () => {
       state: {
         prevpath: history.location.pathname,
         communityPutCheck: true,
+        pathname: pathname,
       },
     });
     onChangeCmId(communityData.cmId);
@@ -85,50 +98,64 @@ const CommunityDetail = () => {
   };
 
   const handleBackClick = () => {
-    history.goBack();
+    if (!isWriter()) {
+      history.goBack();
+    } else {
+      history.push(`${pathname}`);
+    }
   };
 
   return (
-    <Grid container direction="column">
-      <Grid item>
-        <BaseAppBar
-          text="상세보기"
-          leftIcon={<ArrowBackIosIcon />}
-          leftClick={handleBackClick}
-          rightIcon={isWriter() ? <BorderColorIcon /> : null}
-          rightClick={isWriter() ? handleModifyClick : null}
-          rightExtraIcon={isWriter() ? <DeleteIcon /> : null}
-          rightExtraClick={isWriter() ? handleDeleteClick : null}
-        />
+    <>
+      <Grid container direction="column">
+        <Grid item>
+          <BaseAppBar
+            text="상세보기"
+            leftIcon={<ArrowBackIosIcon />}
+            leftClick={handleBackClick}
+            rightIcon={isWriter() ? <BorderColorIcon /> : null}
+            rightClick={isWriter() ? handleModifyClick : null}
+            rightExtraIcon={isWriter() ? <DeleteIcon /> : null}
+            rightExtraClick={isWriter() ? handleDialogOpen : null}
+          />
+        </Grid>
+
+        <InnerContainerGrid item container direction="column">
+          <Grid item style={{ margin: '0.5rem 0 0.3rem' }}>
+            <Typography
+              variant="subtitle1"
+              style={{ color: MoyoColor.moyo_biscay_3 }}
+            >
+              {communityData.communityType}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="h5">{communityData.title}</Typography>
+          </Grid>
+          <Grid item style={{ margin: '0.5rem 0.3rem 0' }}>
+            <Typography variant="body2">{communityData.nickname}</Typography>
+          </Grid>
+
+          <BlackDivider />
+
+          <Grid item style={{ margin: '0.4rem' }}>
+            {communityData.contents}
+          </Grid>
+
+          <BlackDivider />
+
+          <CommunityCommentList cmId={communityData.cmId} userData={userData} />
+        </InnerContainerGrid>
       </Grid>
 
-      <InnerContainerGrid item container direction="column">
-        <Grid item style={{ margin: '0.5rem 0 0.3rem' }}>
-          <Typography
-            variant="subtitle1"
-            style={{ color: MoyoColor.moyo_biscay_3 }}
-          >
-            {communityData.communityType}
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Typography variant="h5">{communityData.title}</Typography>
-        </Grid>
-        <Grid item style={{ margin: '0.5rem 0.3rem 0' }}>
-          <Typography variant="body2">{communityData.nickname}</Typography>
-        </Grid>
-
-        <BlackDivider />
-
-        <Grid item style={{ margin: '0.4rem' }}>
-          {communityData.contents}
-        </Grid>
-
-        <BlackDivider />
-
-        <CommunityCommentList cmId={communityData.cmId} userData={userData} />
-      </InnerContainerGrid>
-    </Grid>
+      <AlertDialog
+        open={open}
+        title="글 삭제"
+        contents="정말 삭제하시겠습니까?"
+        onConfirm={handleDeleteClick}
+        onClose={handleDialogClose}
+      ></AlertDialog>
+    </>
   );
 };
 

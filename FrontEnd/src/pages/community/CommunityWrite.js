@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import axios from '../../api/axios';
 import { Select } from '@material-ui/core';
+import { openSnackBarAction } from '../../modules/snackBar';
 
 const CommunityWrite = () => {
   const { cmId, cmTypeId, title, contents } = useSelector(({ community }) => ({
@@ -25,6 +26,7 @@ const CommunityWrite = () => {
   const [communityTypeList, setCommunityTypeList] = useState([]);
   const history = useHistory();
   const dispatch = useDispatch();
+  const pathname = history.location.state.pathname;
   const onChangeTitle = useCallback(title => dispatch(changeTitle(title)), [
     dispatch,
   ]);
@@ -71,11 +73,16 @@ const CommunityWrite = () => {
     if (cmTypeId && title.trim() && contents.trim()) {
       const fetchCommunity = async () => {
         await postCommunity(communityData);
-        history.push('/community/');
+        history.push('/community');
       };
       fetchCommunity();
+      dispatch(openSnackBarAction('글이 등록되었습니다.'));
     } else {
-      alert('아앜');
+      dispatch(
+        openSnackBarAction(
+          '제목, 내용, 타입이 모두 등록되어야합니다. 확인해주세요.',
+        ),
+      );
     }
   };
   const handlePutClick = async () => {
@@ -89,11 +96,22 @@ const CommunityWrite = () => {
     if (cmTypeId && title.trim() && contents.trim()) {
       const fetchPutCommunity = async () => {
         await putCommunity(communityData);
-        history.push('/community/');
+        history.push({
+          pathname: `/community/communityList/${communityData.cmId}`,
+          state: {
+            community: communityData,
+            pathname: pathname,
+          },
+        });
       };
       fetchPutCommunity();
+      dispatch(openSnackBarAction('글이 수정되었습니다.'));
     } else {
-      alert('아앜');
+      dispatch(
+        openSnackBarAction(
+          '제목, 내용, 타입이 모두 등록되어야합니다. 확인해주세요.',
+        ),
+      );
     }
   };
 
@@ -136,8 +154,9 @@ const CommunityWrite = () => {
           fullWidth
           value={cmTypeId}
           onChange={handleChangeType}
+          displayEmpty
         >
-          <MenuItem value="">
+          <MenuItem value="" disabled>
             <em>타입을 선택해주세요</em>
           </MenuItem>
           {communityTypeList.map(item => (
