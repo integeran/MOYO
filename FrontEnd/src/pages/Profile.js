@@ -34,12 +34,15 @@ const Profile = props => {
 
   const prevPath = props.location.state.prevPath;
   const userSocialId = props.location.state.userSocialId;
+
   let userImage = props.location.state.userProfileImage;
   const [tempUserImage, setTempUserImage] = useState(userImage);
   const [imageFile, setImageFile] = useState('');
   const [tempImageName, setTempImageName] = useState('');
+
   let userNickname = props.location.state.userNickname;
   const [userNicknameOut, setUserNicknameOut] = useState(userNickname);
+
   let userAge = props.location.state.userAgeRange;
   let userAgeRangeFirst = '';
   if (userAge !== undefined && typeof userAge === 'string') {
@@ -48,12 +51,14 @@ const Profile = props => {
     userAgeRangeFirst = String(userAge);
   }
   const [age, setAge] = useState('' || userAgeRangeFirst);
+
   let userGender = props.location.state.userGender;
   let userGenderFirst = '';
   if (userGender !== undefined) {
     userGenderFirst = userGender.charAt(0).toUpperCase();
   }
   const [gender, setGender] = useState('' || userGenderFirst);
+
   const [nickNameError, setNickNameError] = useState(false);
   const [nickNamePlaceHolder, setNickNamePlaceHolder] = useState(
     '닉네임을 입력해주세요!',
@@ -88,6 +93,7 @@ const Profile = props => {
 
   const handleProfileImage = () => {
     setOpenDialog(true);
+    setUserDialogImage(tempUserImage);
   };
 
   const handleCloseDialog = () => {
@@ -234,6 +240,8 @@ const Profile = props => {
   const postImage = async () => {
     const reg = /(.*?)\.(jpg|jpeg|png|gif)$/;
     if (!imageFile) {
+      setTempImageName('');
+      setTempUserImage('');
       setOpenDialog(false);
     } else if (imageFile.name.toLowerCase().match(reg)) {
       const imgData = await postImageRequest();
@@ -243,14 +251,6 @@ const Profile = props => {
     } else {
       alert('jpg, jpeg, png, gif 확장자만 지원합니다!');
     }
-  };
-
-  const deleteImage = async () => {
-    setImageFile('');
-    await postImageRequest();
-    setTempImageName('');
-    setTempUserImage('');
-    setOpenDialog(false);
   };
 
   const [isMe, setIsMe] = useState(true);
@@ -277,6 +277,28 @@ const Profile = props => {
     );
   }
 
+  const [userDialogImage, setUserDialogImage] = useState(userImage);
+
+  const handleChangeImage = file => {
+    let reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = reader.result;
+      if (base64) {
+        console.log(base64);
+        setUserDialogImage(base64);
+      }
+    };
+    if (file) {
+      reader.readAsDataURL(file);
+      setImageFile(file);
+    }
+  };
+
+  const handleChangeDefaultImage = () => {
+    setImageFile('');
+    setUserDialogImage('');
+  };
+
   return (
     <>
       <div
@@ -292,28 +314,33 @@ const Profile = props => {
             style={{ flexGrow: '0' }}
             text={isMe ? '프로필 편집' : `${userNickname}님의 프로필`}
             leftIcon={<ArrowBackIosIcon onClick={handleBackIcon} />}
+            rightIcon={
+              <SportsEsportsIcon
+                onClick={() => {
+                  history.push('/PersonalGame');
+                }}
+              />
+            }
           />
         )}
         <Grid
           container
           direction="column"
           justify="center"
-          spacing={4}
           style={{
             width: 'inherit',
             margin: '0px',
             flexGrow: '1',
-            margin: '0px',
           }}
         >
-          <Grid item>
-            <SportsEsportsIcon
-              onClick={() => {
-                history.push('/PersonalGame');
-              }}
-            />
-          </Grid>
-          <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
+          <Grid
+            item
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginBottom: '1rem',
+            }}
+          >
             {isMe ? (
               <Badge
                 color="primary"
@@ -323,7 +350,7 @@ const Profile = props => {
                 variant="standard"
               >
                 <Avatar
-                  alt="Jeesoo Haa"
+                  alt={userNickname}
                   src={tempUserImage}
                   className={classes.large}
                   onClick={handleProfileImage}
@@ -338,17 +365,16 @@ const Profile = props => {
             )}
           </Grid>
           <Grid item container>
-            <Grid item xs={2} />
+            <Grid item xs={3} />
             <Grid
               item
               container
               direction="column"
               justify="space-between"
-              spacing={3}
-              xs={8}
+              xs={6}
               style={{ margin: '0px' }}
             >
-              <Grid item>
+              <Grid item style={{ marginBottom: '1rem' }}>
                 <TextField
                   error={nickNameError}
                   placeholder={nickNamePlaceHolder}
@@ -367,7 +393,7 @@ const Profile = props => {
                   }}
                 />
               </Grid>
-              <Grid item>
+              <Grid item style={{ marginBottom: '1rem' }}>
                 <TextField
                   error={ageError}
                   id="standard-select-currency"
@@ -390,7 +416,7 @@ const Profile = props => {
                   ))}
                 </TextField>
               </Grid>
-              <Grid item>
+              <Grid item style={{ marginBottom: '1rem' }}>
                 <TextField
                   error={genderError}
                   id="standard-select-currency"
@@ -417,7 +443,7 @@ const Profile = props => {
                 {profileButton}
               </Grid>
             </Grid>
-            <Grid item xs={2} />
+            <Grid item xs={3} />
           </Grid>
         </Grid>
       </div>
@@ -428,18 +454,30 @@ const Profile = props => {
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">사진을 올려주세요!</DialogTitle>
-        <DialogContent>
+        <DialogContent
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Avatar
+            alt={userNickname}
+            src={userDialogImage}
+            className={classes.large}
+            style={{ marginBottom: '1rem' }}
+          />
           <input
             type="file"
             name="file"
-            onChange={e => setImageFile(e.target.files[0])}
+            onChange={e => handleChangeImage(e.target.files[0])}
           ></input>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog} color="primary">
             취소
           </Button>
-          <Button onClick={deleteImage} color="primary">
+          <Button onClick={handleChangeDefaultImage} color="primary">
             기본 이미지
           </Button>
           <Button onClick={postImage} color="primary">
