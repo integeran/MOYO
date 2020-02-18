@@ -1,5 +1,7 @@
 package com.moyo.MOYO.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,6 +79,8 @@ public class ScheduleListRestController {
 	public ResponseEntity<Map<String, Object>> create(@RequestBody ScheduleList scheduleList) {
 		try {
 			log.trace("ScheduleListRestController - create");
+			SimpleDateFormat sdf = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+			scheduleList.setRegisterDate(sdf.format(new Date()));
 			return response(sListService.create(scheduleList), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
@@ -86,9 +90,7 @@ public class ScheduleListRestController {
 	@DeleteMapping("scheduleList/delete/{sListId}")
 	public ResponseEntity<Map<String, Object>> delete(@PathVariable int sListId, @RequestHeader(value="userToken") String userToken) {
 		try {
-			System.out.println(userToken);
 			int uId = jwtService.getUser(userToken).getUId();
-			System.out.println(uId);
 			log.trace("ScheduleListRestController - delete");
 			return response(sListService.delete(sListId, uId), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
@@ -100,6 +102,8 @@ public class ScheduleListRestController {
 	public ResponseEntity<Map<String, Object>> update(@RequestBody ScheduleList scheduleList) {
 		try {
 			log.trace("ScheduleListRestController - update");
+			SimpleDateFormat sdf = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+			scheduleList.setUpdateDate(sdf.format(new Date()));
 			return response(sListService.update(scheduleList), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
