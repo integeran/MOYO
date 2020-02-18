@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Fade from '@material-ui/core/Fade';
 import { Typography } from '@material-ui/core';
-import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -41,16 +42,8 @@ const useStyles = makeStyles(theme => ({
 const ProgressModal = () => {
   const openProgress = useSelector(state => state.progressModal.progressModal);
 
-  const [showFade, setShowFade] = useState(true);
-
   const classes = useStyles();
   const rootRef = React.useRef(null);
-
-  useEffect(() => {
-    setInterval(() => {
-      setShowFade(prevState => !prevState);
-    }, 1000);
-  }, []);
 
   return openProgress ? (
     <div>
@@ -64,7 +57,7 @@ const ProgressModal = () => {
           container={() => rootRef.current}
         >
           <div className={classes.paper}>
-            <Fade in={showFade} timeout={(1500, 1000)}>
+            <Fade in={true} timeout={2500}>
               <div>
                 <Typography style={{ color: '#4A44A6', marginBottom: '10%' }}>
                   Loading ...
