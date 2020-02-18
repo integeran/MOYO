@@ -2,21 +2,26 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import * as firebase from 'firebase';
-
-import Room from '../../components/dm/Room';
+import styled from 'styled-components';
 import { openModalAction, closeModalAction } from '../../modules/progressModal';
 import { navigationSelect } from '../../modules/baseNavigation';
 import MoyoIcon from '../../assets/icon/icon_moyo_white.svg';
 
 import { Grid } from '@material-ui/core';
 
+import Room from '../../components/dm/Room';
 import BaseAppBar from '../../components/common/BaseAppBar';
 import NoDataPage from '../../components/common/NoDataPage';
+
+const ListContainer = styled(Grid)`
+  flex: 1;
+  width: 95%;
+  margin: 0 auto !important;
+`;
 
 const DmRoomList = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-
   const userData = useSelector(state => state.auth.userData);
 
   const [roomList, setRoomList] = useState([]);
@@ -26,11 +31,8 @@ const DmRoomList = () => {
     onInit();
   }, []);
 
-  /**
-   * 초기 실행
-   */
+  // init
   const onInit = async () => {
-    console.log('onInit');
     dispatch(navigationSelect('DM'));
 
     firebase.database().goOnline();
@@ -38,13 +40,8 @@ const DmRoomList = () => {
     loadRoomList(userData);
   };
 
-  /**
-   * 채팅방 목록리스트 호출
-   */
+  //채팅방 목록리스트 호출
   const loadRoomList = sender => {
-    /**
-     * loadRoomList에서 데이터를 받아왔을 때
-     */
     addLoadRoomList(sender);
     changeLoadRoomList(sender);
   };
@@ -125,10 +122,11 @@ const DmRoomList = () => {
           leftClick={handleHomeClick}
         />
       </Grid>
-      <Grid item container style={{ flex: '1' }}>
-        {roomList.length !== 0 ? (
-          roomList.reverse().map(room => {
-            return (
+      <ListContainer item>
+        {roomList.length > 0 ? (
+          roomList
+            .reverse()
+            .map(room => (
               <Room
                 key={room.roomId}
                 roomId={room.roomId}
@@ -137,12 +135,11 @@ const DmRoomList = () => {
                 timeStamp={room.timeStamp}
                 read={room.read}
               ></Room>
-            );
-          })
+            ))
         ) : (
           <NoDataPage text="채팅 내역이 존재하지 않습니다" />
         )}
-      </Grid>
+      </ListContainer>
     </Grid>
   );
 };
