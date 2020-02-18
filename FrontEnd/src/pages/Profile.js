@@ -175,7 +175,7 @@ const Profile = props => {
       localStorage.setItem('token', resData.data.data);
       dispatch(changeBool({ key: 'isLoggedIn', value: true }));
       history.push({
-        pathname: '/accompany',
+        pathname: '/newbieguide',
       });
     } else {
       setUserNicknameOut('');

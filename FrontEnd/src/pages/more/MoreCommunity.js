@@ -5,6 +5,13 @@ import axios from '../../api/axios';
 import BaseAppBar from '../../components/common/BaseAppBar';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import CommunityListSet from '../../components/community/CommunityListSet';
+import styled from 'styled-components';
+
+const Container = styled.div`
+  width: 85%;
+  margin: 0 auto;
+  margin-top: 1rem;
+`;
 
 const MoreCommunity = () => {
   const history = useHistory();
@@ -34,13 +41,15 @@ const MoreCommunity = () => {
   };
 
   return (
-    <div>
+    <>
       <BaseAppBar
         text="내 커뮤니티 글"
         leftIcon={<ArrowBackIosIcon onClick={handleBackIcon} />}
       />
-      <CommunityListSet communityData={myCommunityData} />
-    </div>
+      <Container>
+        <CommunityListSet communityData={myCommunityData} />
+      </Container>
+    </>
   );
 };
 
