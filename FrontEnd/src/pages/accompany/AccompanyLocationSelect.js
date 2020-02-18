@@ -18,7 +18,7 @@ import {
 
 const HeaderTypo = styled(Typography)`
   position: static;
-  padding: 2.5rem 2rem;
+  padding: 1.5rem 2rem 2.5rem 2rem;
   color: white;
   background: linear-gradient(to bottom, #4ac8d9, #4fdbc2);
   background-size: 100% 100%;

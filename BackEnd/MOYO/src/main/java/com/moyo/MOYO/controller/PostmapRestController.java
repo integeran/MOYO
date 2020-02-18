@@ -1,5 +1,7 @@
 package com.moyo.MOYO.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +44,7 @@ public class PostmapRestController {
 			log.trace("PostmapRestController - selectAll : ", latitude,longitude,uId);
 			return response(pService.selectAll(map), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			log.error("PostmapRestController - selectAll : ", latitude,longitude);
+			log.error("PostmapRestController - selectAll");
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
@@ -58,7 +60,7 @@ public class PostmapRestController {
 			log.trace("PostmapRestController - selectTop : ", latitude,longitude,uId);
 			return response(pService.selectTop(map), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			log.error("PostmapRestController - selectTOp : ", latitude,longitude);
+			log.error("PostmapRestController - selectTOp");
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
@@ -74,7 +76,7 @@ public class PostmapRestController {
 			log.trace("PostmapRestController - selectExceptTop : ", latitude,longitude,uId);
 			return response(pService.selectExceptTop(map), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			log.error("PostmapRestController - selectExceptTop : ", latitude,longitude);
+			log.error("PostmapRestController - selectExceptTop");
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
@@ -85,7 +87,7 @@ public class PostmapRestController {
 			log.trace("PostmapRestController - selectOne : ", pmId);
 			return response(pService.selectOne(pmId), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			log.error("PostmapRestController - selectOne : ",pmId);
+			log.error("PostmapRestController - selectOne");
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
@@ -94,20 +96,11 @@ public class PostmapRestController {
 	private ResponseEntity<Map<String, Object>> insertPostmap(@RequestBody Postmap postmap) {
 		try {
 			log.trace("PostmapRestController - insertPostmap : ", postmap);
+			SimpleDateFormat sdf = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+			postmap.setRegisterDate(sdf.format(new Date()));
 			return response(pService.insertPostmap(postmap), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			log.error("PostmapRestController - insertPostmap : ",postmap);
-			return response(e.getMessage(), HttpStatus.CONFLICT, false);
-		}
-	}
-	
-	@PutMapping("postmap/updatePostmap")
-	private ResponseEntity<Map<String, Object>> updatePostmap(@RequestBody Postmap postmap) {
-		try {
-			log.trace("PostmapRestController - updatePostmap : ", postmap);
-			return response(pService.updatePostmap(postmap), HttpStatus.OK, true);
-		} catch (RuntimeException e) {
-			log.error("PostmapRestController - updatePostmap : ",postmap);
+			log.error("PostmapRestController - insertPostmap");
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}

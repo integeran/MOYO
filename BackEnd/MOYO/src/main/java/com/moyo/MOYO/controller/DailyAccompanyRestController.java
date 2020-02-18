@@ -1,5 +1,7 @@
 package com.moyo.MOYO.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,6 +79,8 @@ public class DailyAccompanyRestController {
 	public ResponseEntity<Map<String, Object>> create(@RequestBody DailyAccompany dailyAccompany) {
 		try {
 			log.trace("DailyAccompanyRestController - create");
+			SimpleDateFormat sdf = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+			dailyAccompany.setRegisterDate(sdf.format(new Date()));
 			return response(dAccompanyService.create(dailyAccompany), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
@@ -98,6 +102,8 @@ public class DailyAccompanyRestController {
 	public ResponseEntity<Map<String, Object>> update(@RequestBody DailyAccompany dailyAccompany) {
 		try {
 			log.trace("DailyAccompanyRestController - update");
+			SimpleDateFormat sdf = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+			dailyAccompany.setUpdateDate(sdf.format(new Date()));
 			return response(dAccompanyService.update(dailyAccompany), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
