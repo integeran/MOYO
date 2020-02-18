@@ -11,7 +11,11 @@ import { useHistory } from 'react-router';
 import axios from '../../api/axios';
 import { Grid, Typography, Divider } from '@material-ui/core';
 import BaseAppBar from '../../components/common/BaseAppBar';
+
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import BorderColorIcon from '@material-ui/icons/BorderColor';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 import styled from 'styled-components';
 import MoyoColor from '../../api/moyoColor';
 
@@ -34,6 +38,9 @@ const CommunityDetail = () => {
   const dispatch = useDispatch();
   const userData = useSelector(state => state.auth.userData);
   const communityData = history.location.state.community;
+
+  const isWriter = () => userData.uid === communityData.uid;
+
   const onChangeCmId = useCallback(cmId => dispatch(changeCmId(cmId)), [
     dispatch,
   ]);
@@ -47,6 +54,7 @@ const CommunityDetail = () => {
   const onChangeType = useCallback(cmTypeId => dispatch(changeType(cmTypeId)), [
     dispatch,
   ]);
+
   const deleteCommunity = async cmId => {
     try {
       return await axios.delete(`community/delete/${cmId}`, {
@@ -56,11 +64,25 @@ const CommunityDetail = () => {
       console.error(error);
     }
   };
+
   const handleDeleteClick = async () => {
     await deleteCommunity(communityData.cmId);
     history.push('/community/');
   };
-  console.log(communityData);
+
+  const handleModifyClick = () => {
+    history.push({
+      pathname: '/community/write/',
+      state: {
+        prevpath: history.location.pathname,
+        communityPutCheck: true,
+      },
+    });
+    onChangeCmId(communityData.cmId);
+    onChangeTitle(communityData.title);
+    onChangeContents(communityData.contents);
+    onChangeType(communityData.cmTypeId);
+  };
 
   const handleBackClick = () => {
     history.goBack();
@@ -73,6 +95,10 @@ const CommunityDetail = () => {
           text="상세보기"
           leftIcon={<ArrowBackIosIcon />}
           leftClick={handleBackClick}
+          rightIcon={isWriter() ? <BorderColorIcon /> : null}
+          rightClick={isWriter() ? handleModifyClick : null}
+          rightExtraIcon={isWriter() ? <DeleteIcon /> : null}
+          rightExtraClick={isWriter() ? handleDeleteClick : null}
         />
       </Grid>
 
@@ -101,33 +127,6 @@ const CommunityDetail = () => {
         <BlackDivider />
 
         <CommunityCommentList cmId={communityData.cmId} userData={userData} />
-
-        {userData.uid === communityData.uid ? (
-          <Typography
-            onClick={() => {
-              history.push({
-                pathname: '/community/write/',
-                state: {
-                  prevpath: history.location.pathname,
-                  communityPutCheck: true,
-                },
-              });
-              onChangeCmId(communityData.cmId);
-              onChangeTitle(communityData.title);
-              onChangeContents(communityData.contents);
-              onChangeType(communityData.cmTypeId);
-            }}
-          >
-            수정하기
-          </Typography>
-        ) : (
-          <></>
-        )}
-        {userData.uid === communityData.uid ? (
-          <Typography onClick={handleDeleteClick}>삭제하기</Typography>
-        ) : (
-          <></>
-        )}
       </InnerContainerGrid>
     </Grid>
   );
