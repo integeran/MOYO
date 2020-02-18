@@ -50,12 +50,6 @@ public class PostmapServiceImpl implements PostmapService{
 	}
 
 	@Override
-	public int updatePostmap(Postmap postmap) {
-		log.trace("PostmapService - updatePostmap: ",postmap);
-		return pRepo.updatePostmap(postmap);
-	}
-
-	@Override
 	public int deletePostmap(int pmId) {
 		log.trace("PostmapService - deletePostmap : ",pmId);
 		return pRepo.deletePostmap(pmId);
