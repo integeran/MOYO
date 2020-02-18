@@ -88,28 +88,33 @@ const OtherProfile = props => {
         container
         direction="column"
         justify="center"
-        spacing={6}
         style={{
           width: 'inherit',
           margin: '0px',
           flexGrow: '1',
         }}
       >
-        <Grid item style={{ display: 'flex', justifyContent: 'center' }}>
+        <Grid
+          item
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginBottom: '1rem',
+          }}
+        >
           <Avatar alt={nickname} src={image} className={classes.large} />
         </Grid>
         <Grid item container>
-          <Grid item xs={2} />
+          <Grid item xs={3} />
           <Grid
             item
             container
             direction="column"
             justify="space-between"
-            spacing={3}
-            xs={8}
+            xs={6}
             style={{ margin: '0px' }}
           >
-            <Grid item>
+            <Grid item style={{ marginBottom: '1rem' }}>
               <TextField
                 fullWidth
                 id="standard-disabled"
@@ -120,7 +125,7 @@ const OtherProfile = props => {
                 }}
               />
             </Grid>
-            <Grid item>
+            <Grid item style={{ marginBottom: '1rem' }}>
               <TextField
                 fullWidth
                 id="standard-disabled"
@@ -131,7 +136,7 @@ const OtherProfile = props => {
                 }}
               />
             </Grid>
-            <Grid item>
+            <Grid item style={{ marginBottom: '1rem' }}>
               <TextField
                 fullWidth
                 id="standard-disabled"
@@ -143,7 +148,7 @@ const OtherProfile = props => {
               />
             </Grid>
           </Grid>
-          <Grid item xs={2} />
+          <Grid item xs={3} />
         </Grid>
       </Grid>
     </Dialog>

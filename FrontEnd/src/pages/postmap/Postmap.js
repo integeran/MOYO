@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import axios from '../../api/axios';
 
 import { getPostListAction, getInfoWindow } from '../../modules/postmap';
+import { openModalAction, closeModalAction } from '../../modules/progressModal';
 
 import Grid from '@material-ui/core/Grid';
 import PostmapGoogle from '../../components/postmap/PostmapGoogle';
@@ -37,6 +38,7 @@ const Postmap = () => {
   const [curTime, setCurTime] = useState('');
 
   useEffect(() => {
+    dispatch(openModalAction());
     onInit();
   }, []);
 
@@ -112,6 +114,7 @@ const Postmap = () => {
     });
 
     setPostListExceptTop(listExceptTop);
+    dispatch(closeModalAction());
   };
 
   const handlePostClick = chat => {

@@ -48,68 +48,70 @@ const Room = ({ roomId, receiverId, lastMessage, timeStamp, read }) => {
 
   return (
     receiver && (
-      <ListItem button onClick={goDmRoom} style={{ padding: '2%' }}>
-        <Grid container alignItems="center">
-          <Grid item xs={2}>
-            <Avatar
-              alt="리시버의 이미지"
-              src={receiver.image}
-              style={{ width: '40px', height: '40px' }}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <Grid container direction="column">
-              <Grid
-                item
-                xs={6}
-                style={{
-                  maxWidth: '100%',
-                  maxHeight: '100%',
-                }}
-              >
-                <Typography
-                  variant="subtitle1"
+      <div style={{ width: '100%' }}>
+        <ListItem button onClick={goDmRoom} style={{ padding: '2%' }}>
+          <Grid container alignItems="center">
+            <Grid item xs={2}>
+              <Avatar
+                alt="리시버의 이미지"
+                src={receiver.image}
+                style={{ width: '40px', height: '40px' }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Grid container direction="column">
+                <Grid
+                  item
+                  xs={6}
                   style={{
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
+                    maxWidth: '100%',
+                    maxHeight: '100%',
                   }}
                 >
-                  {receiver.nickname}
-                </Typography>
-              </Grid>
-              <Grid item xs={6} style={{ maxWidth: '100%' }}>
-                <Typography
-                  variant="body2"
-                  style={{
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
-                >
-                  {lastMessage}
-                </Typography>
+                  <Typography
+                    variant="subtitle1"
+                    style={{
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    {receiver.nickname}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6} style={{ maxWidth: '100%' }}>
+                  <Typography
+                    variant="body2"
+                    style={{
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    {lastMessage}
+                  </Typography>
+                </Grid>
               </Grid>
             </Grid>
+            <Grid item xs={1}>
+              {read === false && (
+                <FiberManualRecordIcon
+                  fontSize="small"
+                  style={{ color: 'red' }}
+                />
+              )}
+            </Grid>
+            <Grid item xs={3}>
+              <Typography variant="caption" style={{ float: 'right' }}>
+                {moment(timeStamp).format('YYYY/MM/DD') ===
+                moment(curTime).format('YYYY/MM/DD')
+                  ? moment(timeStamp).format('LT')
+                  : moment(timeStamp).format('YYYY/MM/DD')}
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid item xs={1}>
-            {read === false && (
-              <FiberManualRecordIcon
-                fontSize="small"
-                style={{ color: 'red' }}
-              />
-            )}
-          </Grid>
-          <Grid item xs={3}>
-            <Typography variant="caption" style={{ float: 'right' }}>
-              {moment(timeStamp).format('YYYY/MM/DD') ===
-              moment(curTime).format('YYYY/MM/DD')
-                ? moment(timeStamp).format('LT')
-                : moment(timeStamp).format('YYYY/MM/DD')}
-            </Typography>
-          </Grid>
-        </Grid>
-      </ListItem>
+        </ListItem>
+      </div>
     )
   );
 };
