@@ -25,7 +25,7 @@ const NewbieGuide = () => {
   return (
     <div style={{ position: 'relative', width: '100%', height: 500 }}>
       <AutoRotatingCarousel
-        label="MOYO 시작!"
+        label="MOYO 시작"
         open={state.open}
         onClose={closeGuide}
         onStart={closeGuide}
@@ -37,36 +37,36 @@ const NewbieGuide = () => {
           media={<img src={GuideMain} />}
           mediaBackgroundStyle={{ backgroundColor: 'white' }}
           style={{ backgroundColor: moyoColor.moyo_navy_1 }}
-          title="1 This is a very cool feature"
-          subtitle="Just using this will blow your mind."
+          title="모여와 함께 하는 모두의 여행"
+          subtitle="모여에서 동행자를 구해보세요. 당신의 여행이 한층 더 즐거워집니다."
         />
         <Slide
           media={<img src={GuideAccompanyList} />}
           mediaBackgroundStyle={{ backgroundColor: 'white' }}
           style={{ backgroundColor: moyoColor.moyo_navy_2 }}
-          title="2 Ever wanted to be popular?"
-          subtitle="Well just mix two colors and your are good to go!"
+          title="동행 글을 확인하세요!"
+          subtitle="도시와 날짜를 선택하세요. 당신의 일정에 맞는 동행자들을 확인할 수 있습니다."
         />
         <Slide
           media={<img src={GuideAccompanyDetail} />}
           mediaBackgroundStyle={{ backgroundColor: 'white' }}
           style={{ backgroundColor: moyoColor.moyo_navy_3 }}
-          title="3 May the force be with you"
-          subtitle="The Force is a metaphysical and ubiquitous power in the Star Wars fictional universe."
+          title="동행 글을 작성해보세요!"
+          subtitle="원하는 동행자가 아직 없나요? 동행 글을 작성하고 원하는 조건을 선택해 보세요."
         />
         <Slide
           media={<img src={GuideAccompanyWrite} />}
           mediaBackgroundStyle={{ backgroundColor: 'white' }}
           style={{ backgroundColor: moyoColor.moyo_navy_4 }}
-          title="4 May the force be with you"
-          subtitle="The Force is a metaphysical and ubiquitous power in the Star Wars fictional universe."
+          title="메시지를 보내세요!"
+          subtitle="마음에 드는 동행자가 있다면 메시지를 보내보세요. 직접 대화해보고 동행 일정까지 등록할 수 있습니다."
         />
         <Slide
           media={<img src={GuideMore} />}
           mediaBackgroundStyle={{ backgroundColor: 'white' }}
           style={{ backgroundColor: moyoColor.moyo_navy_5 }}
-          title="5 May the force be with you"
-          subtitle="The Force is a metaphysical and ubiquitous power in the Star Wars fictional universe."
+          title="포스트맵을 확인하세요!"
+          subtitle="다른 여행자들이 남긴 포스트들을 확인할 수 있습니다. 당신의 위치에 따라 변하는 포스트들을 확인해보세요."
         />
       </AutoRotatingCarousel>
     </div>
