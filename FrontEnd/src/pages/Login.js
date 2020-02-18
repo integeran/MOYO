@@ -6,7 +6,6 @@ import axios from '../api/axios';
 import { Grid, Typography } from '@material-ui/core';
 import kakaoBtnSmall from '../assets/img/kakaoLoginBtnSmall.png';
 import MOYOLogoMixed from '../assets/img/MOYOLogoMixed.svg';
-import styled from 'styled-components';
 
 const Login = () => {
   const history = useHistory();
