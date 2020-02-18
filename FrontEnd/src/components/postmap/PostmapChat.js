@@ -4,10 +4,17 @@ import axios from '../../api/axios';
 
 import { openSnackBarAction } from '../../modules/snackBar';
 
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import IconButton from '@material-ui/core/IconButton';
+import { Grid, TextField, IconButton } from '@material-ui/core';
 import NearMeIcon from '@material-ui/icons/NearMe';
+import styled from 'styled-components';
+
+const InputContainer = styled(Grid)`
+  margin: 0 auto;
+  width: 90% !important;
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 0.3rem 1rem;
+`;
 
 const PostmapChat = memo(({ listFetch }) => {
   const dispatch = useDispatch();
@@ -21,12 +28,6 @@ const PostmapChat = memo(({ listFetch }) => {
   const onChatText = e => {
     if (e.target.value.length < 30) {
       setChatText(e.target.value);
-    }
-  };
-
-  const enterSaveChat = e => {
-    if (e.key === 'Enter') {
-      saveChat();
     }
   };
 
@@ -57,6 +58,7 @@ const PostmapChat = memo(({ listFetch }) => {
       var timer = 5;
 
       const res1 = await insertPost(pos);
+
       if (res1) {
         listFetch(pos);
         setChatText('');
@@ -72,32 +74,24 @@ const PostmapChat = memo(({ listFetch }) => {
   };
 
   return (
-    <div>
-      <Grid
-        container
-        style={{ width: '100%' }}
-        justify="center"
-        alignItems="center"
-      >
-        <Grid item xs={2} />
-        <Grid item xs={7}>
+    <>
+      <InputContainer container justify="center" alignItems="center">
+        <Grid item className="moyo_center_grid" xs={10}>
           <TextField
-            placeholder="포스트맵을 작성하세요."
+            placeholder="포스트맵을 작성하세요"
             onChange={onChatText}
             value={chatText}
-            onKeyPress={enterSaveChat}
             fullWidth
             style={{ marginTop: '5px' }}
           />
         </Grid>
-        <Grid item xs={1}>
+        <Grid className="moyo_center_grid" item xs={2}>
           <IconButton onClick={saveChat}>
             <NearMeIcon color="primary" />
           </IconButton>
         </Grid>
-        <Grid item xs={2}></Grid>
-      </Grid>
-    </div>
+      </InputContainer>
+    </>
   );
 });
 

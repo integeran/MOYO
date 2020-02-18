@@ -20,7 +20,7 @@ const PostmapGoogle = props => {
   const [data, setData] = useState('');
 
   const mapStyles = {
-    height: '300px',
+    height: '35vh',
   };
 
   useEffect(() => {

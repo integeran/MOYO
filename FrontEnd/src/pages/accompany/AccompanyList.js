@@ -15,7 +15,6 @@ import MoyoIcon from '../../assets/icon/icon_moyo_white.svg';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import BorderColorIcon from '@material-ui/icons/BorderColor';
-import meerkatIcon from '../../assets/icon/icon_meerkat.svg';
 
 import {
   accompanyFilterGender,
@@ -27,6 +26,7 @@ import { accompanyDate } from '../../modules/accompanyCondition';
 import AccompanySearchBar from '../../components/accompany/List/AccompanySearchBar';
 import AccompanyListSet from '../../components/accompany/List/AccompanyListSet';
 import AccompanyFilterDialog from '../../components/accompany/List/AccompanyFilterDialog';
+import NoDataPage from '../../components/common/NoDataPage';
 
 const MainGrid = styled(Grid)`
   height: inherit;
@@ -72,26 +72,6 @@ const FloatingFab = styled(Fab)`
 const UnderlineTypo = styled(Typography)`
   text-decoration-line: underline;
   text-underline-position: under;
-`;
-
-const NoDataGrid = styled(Grid)`
-  width: 85% !important;
-  height: 90%;
-  margin: 0 auto !important;
-  border-radius: 1rem;
-  background-color: #e9ebf6;
-  & > div > img {
-    transform: rotateY(180deg);
-    filter: opacity(0.5) grayscale(1);
-    padding: 1rem;
-    width: 40%;
-    max-width: 135px;
-  }
-  & > div > h6 {
-    width: 100%;
-    text-align: center;
-    color: #919394;
-  }
 `;
 
 const AccompanyList = () => {
@@ -278,12 +258,7 @@ const AccompanyList = () => {
 
         <ScrollGrid item>
           {boardData.length === 0 ? (
-            <NoDataGrid container alignItems="center" justify="center">
-              <Grid container item justify="center">
-                <img src={meerkatIcon} />
-                <Typography variant="h6">등록된 동행글이 없어요!</Typography>
-              </Grid>
-            </NoDataGrid>
+            <NoDataPage text={'등록된 동행글이 없어요!'} />
           ) : (
             <AccompanyListSet boardData={boardData} />
           )}
