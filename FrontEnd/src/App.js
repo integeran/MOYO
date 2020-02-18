@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
+import NewbieGuide from './pages/NewbieGuide';
 import Container from '@material-ui/core/Container';
 import DmRoom from './pages/dm/DmRoom';
 import DmRoomList from './pages/dm/DmRoomList';
@@ -75,6 +76,7 @@ const App = () => {
         {isLoggedIn && (
           <>
             <Route path="/profile" component={Profile} />
+            <Route path="/newbieguide" component={NewbieGuide} />
             <Route exact path="/accompany" component={AccompanyMain} />
             <Route
               path="/accompany/accSetLoc"
@@ -115,9 +117,12 @@ const App = () => {
         )}
         <ProgressModal />
       </StyledContainer>
-      {!(location.pathname === '/' || location.pathname === '/profile') && (
-        <CategoryNav />
-      )}
+      {!(
+        location.pathname === '/' ||
+        location.pathname === '/profile' ||
+        location.pathname === '/newbieguide'
+      ) && <CategoryNav />}
+      <ProgressModal />
     </StyledDiv>
   );
 };

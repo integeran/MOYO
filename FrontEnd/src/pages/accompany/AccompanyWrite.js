@@ -213,7 +213,7 @@ const AccompanyWrite = () => {
         rightClick={handleSubmitClick}
       />
       <InnerGrid>
-        <form autoComplete="off">
+        <div>
           <Grid container direction="column">
             <MainForm
               title={title}
@@ -279,7 +279,7 @@ const AccompanyWrite = () => {
               />
             </Grid>
           </Grid>
-        </form>
+        </div>
       </InnerGrid>
     </div>
   );
