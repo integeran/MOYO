@@ -122,7 +122,6 @@ const App = () => {
         location.pathname === '/profile' ||
         location.pathname === '/newbieguide'
       ) && <CategoryNav />}
-      <ProgressModal />
     </StyledDiv>
   );
 };
