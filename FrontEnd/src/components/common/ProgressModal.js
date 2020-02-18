@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Fade from '@material-ui/core/Fade';
 import { Typography } from '@material-ui/core';
-import { useSelector } from 'react-redux';
+
+/*
+  1. open과 close Action을 import한다. 보통 'import { openModalAction, closeModalAction } from '../../modules/progressModal';' 이렇게 import
+  2. dispatch를 설정한다. 보통 const dispatch = useDispatch(); 이렇게 설정
+  3. uesEffect를 통해 페이지 로드가 이루어지기 전 dispatch(openModalAction()); 를 작성
+  4. 모든 페이지 로드가 끝날 시점에 dispatch(closeModalAction()); 을 작성
+*/
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -41,16 +49,8 @@ const useStyles = makeStyles(theme => ({
 const ProgressModal = () => {
   const openProgress = useSelector(state => state.progressModal.progressModal);
 
-  const [showFade, setShowFade] = useState(true);
-
   const classes = useStyles();
   const rootRef = React.useRef(null);
-
-  useEffect(() => {
-    setInterval(() => {
-      setShowFade(prevState => !prevState);
-    }, 1000);
-  }, []);
 
   return openProgress ? (
     <div>
@@ -64,7 +64,7 @@ const ProgressModal = () => {
           container={() => rootRef.current}
         >
           <div className={classes.paper}>
-            <Fade in={showFade} timeout={(1500, 1000)}>
+            <Fade in={true} timeout={2500}>
               <div>
                 <Typography style={{ color: '#4A44A6', marginBottom: '10%' }}>
                   Loading ...

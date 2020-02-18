@@ -13,6 +13,7 @@ import communityComment from './communityComment';
 import postmap from './postmap';
 import baseNavigation from './baseNavigation';
 import progressModal from './progressModal';
+import snackBar from './snackBar';
 
 const rootReducer = combineReducers({
   auth,
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
   postmap,
   baseNavigation,
   progressModal,
+  snackBar,
 });
 
 export default rootReducer;

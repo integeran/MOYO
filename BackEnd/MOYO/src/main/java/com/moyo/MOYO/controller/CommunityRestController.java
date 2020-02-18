@@ -1,5 +1,7 @@
 package com.moyo.MOYO.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -80,6 +82,8 @@ public class CommunityRestController {
 	public ResponseEntity<Map<String, Object>> create(@RequestBody Community community,  @RequestHeader(value="userToken") String userToken) {
 		try {
 			log.trace("CommunityRestController - create");
+			SimpleDateFormat sdf = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+			community.setRegisterDate(sdf.format(new Date()));
 			community.setUId(jwtService.getUser(userToken).getUId());			
 			return response(cService.create(community), HttpStatus.OK, true);
 		} catch(RuntimeException e) {
@@ -101,7 +105,9 @@ public class CommunityRestController {
 	public ResponseEntity<Map<String, Object>> update(@RequestBody Community community, @RequestHeader(value="userToken") String userToken) {
 		try {
 			log.trace("CommunityRestController - update");
-			community.setUId(jwtService.getUser(userToken).getUId());	
+			SimpleDateFormat sdf = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+			community.setUpdateDate(sdf.format(new Date()));
+			community.setUId(jwtService.getUser(userToken).getUId());
 			return response(cService.update(community), HttpStatus.OK, true);
 		} catch(RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);

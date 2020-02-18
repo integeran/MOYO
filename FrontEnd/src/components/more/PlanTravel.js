@@ -183,28 +183,14 @@ const PlanTravel = () => {
   const [deleteItem, setDeleteItem] = useState('');
 
   const newTravelList = planTravelList.map(item => (
+    // selectedDate.diff(item.startDate, 'day') >= 0 && item.endDate.diff(selectedDate, 'day') >= 0
     <Grid container item>
-      <Grid item xs={11}>
-        <TripPaper scheduleInfo={item} />
-      </Grid>
-      <Grid
-        item
-        container
-        xs={1}
-        direction="column"
-        justify="space-evenly"
-        alignItems="center"
-      >
-        <Grid item>
-          <EditIcon onClick={() => handleClickOpenUpdate(item)} />
-        </Grid>
-        <Grid item>
-          <DeleteIcon
-            onClick={() => {
-              handleClickOpenDelete(item.slistId);
-            }}
-          />
-        </Grid>
+      <Grid item xs={12}>
+        <TripPaper
+          scheduleInfo={item}
+          onClickOpenUpdate={handleClickOpenUpdate}
+          onClickOpenDelete={handleClickOpenDelete}
+        />
       </Grid>
     </Grid>
   ));

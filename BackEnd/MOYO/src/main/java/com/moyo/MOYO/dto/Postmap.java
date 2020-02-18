@@ -15,7 +15,7 @@ public class Postmap {
 	private double latitude;
 	private double longitude;
 	private int registerId;
-	private Date registerDate;
+	private String registerDate;
 	
 	private int likes;
 	private int pmLikeId;
