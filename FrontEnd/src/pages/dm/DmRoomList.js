@@ -6,8 +6,9 @@ import * as firebase from 'firebase';
 import Room from '../../components/dm/Room';
 import { openModalAction, closeModalAction } from '../../modules/progressModal';
 import { navigationSelect } from '../../modules/baseNavigation';
-
+import meerkatIcon from '../../assets/icon/icon_meerkat.svg';
 import MoyoIcon from '../../assets/icon/icon_moyo_white.svg';
+
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import AppBar from '@material-ui/core/AppBar';
@@ -151,9 +152,16 @@ const DmRoomList = () => {
         ) : (
           <Grid container justify="center">
             <div>
-              <Typography style={{ textAlign: 'center', marginTop: '20%' }}>
-                <b>데이터가 존재하지 않습니다.</b>
+              <Typography
+                style={{
+                  textAlign: 'center',
+                  marginTop: '20%',
+                  marginBottom: '10%',
+                }}
+              >
+                <b>채팅내역이 존재하지 않습니다.</b>
               </Typography>
+              <img alt="채팅내역이 없는 이미지" src={meerkatIcon} />
             </div>
           </Grid>
         )}
