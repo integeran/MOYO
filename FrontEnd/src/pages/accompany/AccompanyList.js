@@ -79,7 +79,19 @@ const NoDataGrid = styled(Grid)`
   height: 90%;
   margin: 0 auto !important;
   border-radius: 1rem;
-  background-color: lightgray;
+  background-color: #e9ebf6;
+  & > div > img {
+    transform: rotateY(180deg);
+    filter: opacity(0.5) grayscale(1);
+    padding: 1rem;
+    width: 40%;
+    max-width: 135px;
+  }
+  & > div > h6 {
+    width: 100%;
+    text-align: center;
+    color: #919394;
+  }
 `;
 
 const AccompanyList = () => {
@@ -266,10 +278,10 @@ const AccompanyList = () => {
 
         <ScrollGrid item>
           {boardData.length === 0 ? (
-            <NoDataGrid container alignItems="center" justify="center" align>
-              <Grid item>
+            <NoDataGrid container alignItems="center" justify="center">
+              <Grid container item justify="center">
                 <img src={meerkatIcon} />
-                <Typography variant="h6">등록된 동행이 없어요!</Typography>
+                <Typography variant="h6">등록된 동행글이 없어요!</Typography>
               </Grid>
             </NoDataGrid>
           ) : (

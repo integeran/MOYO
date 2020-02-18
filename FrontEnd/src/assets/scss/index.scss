@@ -26,10 +26,17 @@ body {
   height: 100%;
 }
 
+// google map scss
 #googleMap > div {
   position: relative !important;
 }
 
 #googleMap > div > div {
   position: relative !important;
+}
+
+// calender : accompany date selector
+
+.react-calendar__month-view__weekdays__weekday > abbr {
+  text-decoration: none;
 }
