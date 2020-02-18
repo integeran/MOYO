@@ -15,6 +15,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import moment from 'moment';
 import axios from '../../api/axios';
+import moyocolor from '../../api/moyoColor';
 import TripCompanionSet from './schedule/TripCompanionSet';
 
 const Companion = props => {
@@ -109,26 +110,46 @@ const Companion = props => {
   };
 
   const companionList = todayCompanion.map(item => (
-    <Grid container item>
-      <Grid item xs={11}>
-        <TripCompanionSet companionInfo={item} />
+    <Grid
+      container
+      item
+      direction="row"
+      justify="center"
+      alignItems="center"
+      style={{ marginBottom: '1rem' }}
+    >
+      <Grid
+        item
+        xs={8}
+        style={{
+          backgroundColor: 'white',
+          borderRadius: '1rem',
+        }}
+      >
+        <TripCompanionSet
+          companionInfo={item}
+          onClickOpenUpdate={handleClickOpenUpdate}
+          onClickOpenDelete={handleClickOpenDelete}
+        />
       </Grid>
       <Grid
         item
         container
-        xs={1}
-        direction="column"
-        justify="space-evenly"
+        xs={4}
+        direction="row"
+        justify="center"
         alignItems="center"
       >
         <Grid item>
-          <EditIcon onClick={() => handleClickOpenUpdate(item)} />
-        </Grid>
-        <Grid item>
+          <EditIcon
+            onClick={() => handleClickOpenUpdate(item)}
+            style={{ marginRight: '1rem', color: moyocolor.moyo_navy_3 }}
+          />
           <DeleteIcon
             onClick={() => {
               handleClickOpenDelete(item.dacId);
             }}
+            color="error"
           />
         </Grid>
       </Grid>

@@ -5,6 +5,11 @@ import Memo from './Memo';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
 import Divider from '@material-ui/core/Divider';
 
 const PlanDaily = () => {
@@ -18,16 +23,21 @@ const PlanDaily = () => {
 
   const classes = useStyles();
 
-  const selectedDate = useSelector(state => state.planDate.selectedDate);
   const planCompanionList = useSelector(
     state => state.morePlanCompanion.planCompanionList,
   );
 
   const [isCompanion, setIsCompanion] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const handleDateChange = date => {
+    setSelectedDate(date);
+  };
 
   useEffect(() => {
     const checkCompanion = planCompanionList.find(
-      item => item.day.split(' ')[0] === selectedDate.split('T')[0],
+      item =>
+        item.day.split(' ')[0] === selectedDate.toISOString().split('T', 1)[0],
     );
     if (checkCompanion) {
       setIsCompanion(true);
@@ -44,11 +54,21 @@ const PlanDaily = () => {
         justify="center"
         style={{ width: 'inherit', height: 'inherit', margin: '0px' }}
       >
-        <Grid item container justify="space-between">
-          <Grid item className={classes.center} xs={6}>
-            {isCompanion && <Typography variant="h6">오늘의 동행!</Typography>}
-          </Grid>
-        </Grid>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <KeyboardDatePicker
+            format="yyyy/MM/dd"
+            margin="normal"
+            id="date-picker-dialog"
+            label="날짜를 선택하세요"
+            value={selectedDate}
+            onChange={handleDateChange}
+            KeyboardButtonProps={{
+              'aria-label': 'change date',
+            }}
+            style={{ width: '50%', marginBottom: '1.5rem' }}
+          />
+        </MuiPickersUtilsProvider>
+
         {isCompanion && (
           <Grid item>
             <Companion setIsCompanion={setIsCompanion} />
