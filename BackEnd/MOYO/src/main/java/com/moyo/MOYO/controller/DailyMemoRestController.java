@@ -1,5 +1,7 @@
 package com.moyo.MOYO.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,6 +69,9 @@ public class DailyMemoRestController {
 	public ResponseEntity<Map<String, Object>> post(@RequestBody DailyMemo dailyMemo) {
 		try {
 			log.trace("DailyMemoRestController - post");
+			SimpleDateFormat sdf = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+			dailyMemo.setRegisterDate(sdf.format(new Date()));
+			dailyMemo.setUpdateDate(sdf.format(new Date()));
 			if (dMemoService.update(dailyMemo) == 1) {
 				return response(-1, HttpStatus.OK, true);
 			} else {
@@ -81,6 +86,8 @@ public class DailyMemoRestController {
 	public ResponseEntity<Map<String, Object>> create(@RequestBody DailyMemo dailyMemo) {
 		try {
 			log.trace("DailyMemoRestController - create");
+			SimpleDateFormat sdf = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+			dailyMemo.setRegisterDate(sdf.format(new Date()));
 			return response(dMemoService.create(dailyMemo), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
@@ -102,6 +109,8 @@ public class DailyMemoRestController {
 	public ResponseEntity<Map<String, Object>> update(@RequestBody DailyMemo dailyMemo) {
 		try {
 			log.trace("DailyMemoRestController - update");
+			SimpleDateFormat sdf = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+			dailyMemo.setUpdateDate(sdf.format(new Date()));
 			return response(dMemoService.update(dailyMemo), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);

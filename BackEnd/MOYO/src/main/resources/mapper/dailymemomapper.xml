@@ -24,7 +24,7 @@
 	<insert id="createDailyMemo" parameterType="dailyMemo">
 		insert into
 		daily_memo (u_id, contents, day, register_date, update_date)
-		values (#{uId}, #{contents}, #{day}, current_timestamp(), current_timestamp())
+		values (#{uId}, #{contents}, #{day}, #{registerDate}, #{registerDate})
 	</insert>
 	<delete id="deleteDailyMemo" parameterType="map">
 		delete from daily_memo
@@ -32,7 +32,7 @@
 	</delete>
 	<update id="updateDailyMemo" parameterType="dailyMemo">
 		update daily_memo
-		set contents = #{contents}, day = #{day}, update_date = current_timestamp()
+		set contents = #{contents}, day = #{day}, update_date = #{updateDate}
 		where day = #{day} and u_id = #{uId}
 	</update>
 </mapper>
