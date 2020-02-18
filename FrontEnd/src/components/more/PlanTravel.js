@@ -248,8 +248,14 @@ const PlanTravel = () => {
         <Grid item container justify="space-between">
           <Grid item xs={3}></Grid>
           <Grid item className={classes.center} xs={3}>
-            {/* <Typography variant="button">여행 추가</Typography> */}
-            <AddIcon onClick={handleClickOpenCreate} />
+            <Button
+              variant="contained"
+              onClick={handleClickOpenCreate}
+              color="primary"
+              style={{ padding: '0.3rem 0.5rem' }}
+            >
+              일정 추가
+            </Button>
           </Grid>
         </Grid>
         {newTravelList}

@@ -33,7 +33,6 @@ const BannerDateTypo = styled(Typography)`
 `;
 
 const TripPaper = ({ scheduleInfo, onClickOpenUpdate, onClickOpenDelete }) => {
-  console.log(scheduleInfo);
   const dateToStr = date => moment(date).format('YYYY.MM.DD');
 
   return (

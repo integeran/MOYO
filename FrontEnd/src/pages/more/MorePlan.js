@@ -179,7 +179,9 @@ const MorePlan = () => {
             dayRender={data => dayRenderFunction(data)}
           />
         </InnerGrid>
-        <InnerGrid item>{selectedDate && <Planner />}</InnerGrid>
+        <InnerGrid item>
+          <Planner />
+        </InnerGrid>
       </Grid>
     </div>
   );
