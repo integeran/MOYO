@@ -39,7 +39,7 @@
 	<insert id="createCommunity" parameterType="community">
 		insert into
 		community (u_id, cm_type_id, title, contents, views, register_date, update_date)
-		values (#{uId}, #{cmTypeId}, #{title}, #{contents}, #{views}, current_timestamp(), current_timestamp())
+		values (#{uId}, #{cmTypeId}, #{title}, #{contents}, #{views}, #{registerDate}, #{registerDate})
 	</insert>
 	<delete id="deleteCommunity" parameterType="int">
 		delete from community
@@ -47,7 +47,7 @@
 	</delete>
 	<update id="updateCommunity" parameterType="community">
 		update community
-		set cm_type_id = #{cmTypeId}, title = #{title}, contents = #{contents}, update_date = current_timestamp()
+		set cm_type_id = #{cmTypeId}, title = #{title}, contents = #{contents}, update_date = #{updateDate}
 		where cm_id = #{cmId}
 	</update>
 	

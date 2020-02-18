@@ -28,6 +28,7 @@ import CommunityDetail from './pages/community/CommunityDetail';
 import CommunityWrite from './pages/community/CommunityWrite';
 import PersonalGame from './pages/game/PersonalGame';
 import ProgressModal from './components/common/ProgressModal';
+import SnackBar from './components/common/SnackBar';
 
 import { changeBool } from './modules/auth';
 
@@ -116,13 +117,13 @@ const App = () => {
           </>
         )}
         <ProgressModal />
+        <SnackBar />
       </StyledContainer>
       {!(
         location.pathname === '/' ||
         location.pathname === '/profile' ||
         location.pathname === '/newbieguide'
       ) && <CategoryNav />}
-      <ProgressModal />
     </StyledDiv>
   );
 };

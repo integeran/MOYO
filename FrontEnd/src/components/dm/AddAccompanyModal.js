@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from '../../api/axios';
 import moment from 'moment';
+
+import AlertDialog from '../common/AlertDialog';
+import { openSnackBarAction } from '../../modules/snackBar';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
@@ -35,10 +38,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const AddAccompanyModal = ({ isOpen, close, receiver }) => {
+  const dispatch = useDispatch();
+
   const userData = useSelector(state => state.auth.userData);
 
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [openAlert, setOpenAlert] = useState(false);
 
   const classes = useStyles();
   const rootRef = React.useRef(null);
@@ -56,10 +62,10 @@ const AddAccompanyModal = ({ isOpen, close, receiver }) => {
 
     const res = await onAxiosPostAccompany(times);
     if (res) {
-      alert('동행추가가 완료되었습니다.');
       close();
+      dispatch(openSnackBarAction('동행이 등록되었습니다.'));
     } else {
-      alert('동행추가 중 에러가 발생했습니다.');
+      console.log('동행추가 error 발생');
     }
   };
 
@@ -75,6 +81,14 @@ const AddAccompanyModal = ({ isOpen, close, receiver }) => {
         headers: { userToken: userData.userToken },
       },
     );
+  };
+
+  const alertClose = () => {
+    setOpenAlert(false);
+  };
+
+  const alertConfirm = () => {
+    addAccompany();
   };
 
   return isOpen ? (
@@ -134,7 +148,9 @@ const AddAccompanyModal = ({ isOpen, close, receiver }) => {
                         backgroundColor: '#45BFA9',
                         color: 'white',
                       }}
-                      onClick={addAccompany}
+                      onClick={() => {
+                        setOpenAlert(true);
+                      }}
                     >
                       확인
                     </Button>
@@ -153,6 +169,17 @@ const AddAccompanyModal = ({ isOpen, close, receiver }) => {
           </MuiPickersUtilsProvider>
         </div>
       </Modal>
+      <AlertDialog
+        open={openAlert}
+        title={
+          moment(startDate).format('YYYY/MM/DD') +
+          ' ~ ' +
+          moment(endDate).format('YYYY/MM/DD')
+        }
+        contents="해당 날짜에 동행을 추가하시겠습니까?"
+        onConfirm={alertConfirm}
+        onClose={alertClose}
+      />
     </div>
   ) : null;
 };
