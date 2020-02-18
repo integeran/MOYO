@@ -41,7 +41,7 @@ const CommunityContainer = styled(Grid)`
   min-height: 0;
 `;
 
-const CommunityList = () => {
+const CommunityList = props => {
   let history = useHistory();
   const dispatch = useDispatch();
   const userData = useSelector(state => state.auth.userData);
@@ -153,7 +153,10 @@ const CommunityList = () => {
           <AccompanySearchBar onClick={handleSearchClick} />
         </Grid>
         <CommunityContainer item>
-          <CommunityListSet communityData={communityData} />
+          <CommunityListSet
+            communityData={communityData}
+            pathname={props.location.pathname}
+          />
         </CommunityContainer>
       </Grid>
       <FloatingFab
