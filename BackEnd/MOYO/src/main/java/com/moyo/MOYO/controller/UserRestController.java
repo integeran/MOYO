@@ -1,5 +1,7 @@
 package com.moyo.MOYO.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -95,6 +97,8 @@ public class UserRestController {
 			if (nicknameUser != null) {
 				return response("이미 존재하는 닉네임입니다.", HttpStatus.OK, false);
 			}
+			SimpleDateFormat sdf = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+			user.setRegisterDate(sdf.format(new Date()));
 			uService.register(user);
 			User loginUser = uService.selectOneBySocialId(user.getSocialId(), user.getProvider());
 			if (loginUser != null) {
@@ -108,7 +112,6 @@ public class UserRestController {
 	
 	@DeleteMapping("user/delete")
 	public ResponseEntity<Map<String, Object>> delete(@RequestParam("uId") int uId) {
-		System.out.println(uId);
 		try {
 			log.trace("UserRestController - delete");
 			return response(uService.delete(uId), HttpStatus.OK, true);
@@ -122,7 +125,6 @@ public class UserRestController {
 		try {
 			log.trace("UserRestController - update");
 			User originUser = jwtService.getUser(userToken);
-			System.out.println();
 			if (!originUser.getNickname().equals(user.getNickname())) {
 				User nicknameUser = uService.selectOneByNickname(user.getNickname());
 				if (nicknameUser != null) {
@@ -137,6 +139,8 @@ public class UserRestController {
 				fileService.deleteImage(originImageName);
 			}
 			user.setUId(uId);
+			SimpleDateFormat sdf = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+			user.setUpdateDate(sdf.format(new Date()));
 			uService.update(user);
 			User loginUser = uService.selectOne(uId);
 			if (loginUser != null) {

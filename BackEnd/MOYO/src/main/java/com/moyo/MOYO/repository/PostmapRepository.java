@@ -19,8 +19,6 @@ public interface PostmapRepository {
 	
 	public int insertPostmap(Postmap postmap);
 	
-	public int updatePostmap(Postmap postmap);
-	
 	public int deletePostmap(int pmId);
 	
 	public int checkDuration(String today);

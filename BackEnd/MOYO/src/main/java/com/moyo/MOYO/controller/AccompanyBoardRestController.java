@@ -1,5 +1,7 @@
 package com.moyo.MOYO.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.moyo.MOYO.dto.AccompanyBoard;
@@ -37,7 +38,7 @@ public class AccompanyBoardRestController {
 			log.trace("AccompanyBoardRestController - selectAll : ",filter);
 			return response(acService.selectAll(filter), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			log.trace("AccompanyBoardRestController - selectAll : ",filter);
+			log.error("AccompanyBoardRestController - selectAll");
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
@@ -48,19 +49,21 @@ public class AccompanyBoardRestController {
 			log.trace("AccompanyBoardRestController - selectOne : ",acBoardId);
 			return response(acService.selectOne(acBoardId), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			log.error("AccompanyBoardRestController - selectOne : ",acBoardId);
+			log.error("AccompanyBoardRestController - selectOne");
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
 	
 	@PostMapping("accompanyBoard/create")
 	public ResponseEntity<Map<String, Object>> create(@RequestBody AccompanyBoard accompanyBoard) {
-		System.out.println(accompanyBoard);
 		try {
+			SimpleDateFormat sdf = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+			accompanyBoard.setRegisterDate(sdf.format(new Date()));
 			log.trace("AccompanyBoardRestController - create : ",accompanyBoard);
-			return response(acService.create(accompanyBoard), HttpStatus.OK, true);
+			acService.create(accompanyBoard);
+			return response(accompanyBoard.getAcBoardId(), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			log.error("AccompanyBoardRestController - create : ",accompanyBoard);
+			log.error("AccompanyBoardRestController - create");
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
@@ -71,7 +74,7 @@ public class AccompanyBoardRestController {
 			log.trace("AccompanyBoardRestController - delete : ", acBoardId);
 			return response(acService.delete(acBoardId), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			log.error("AccompanyBoardRestController - delete : ", acBoardId);
+			log.error("AccompanyBoardRestController - delete");
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
@@ -79,10 +82,12 @@ public class AccompanyBoardRestController {
 	@PutMapping("accompanyBoard/update")
 	public ResponseEntity<Map<String, Object>> update(@RequestBody AccompanyBoard accompanyBoard) {
 		try {
+			SimpleDateFormat sdf = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+			accompanyBoard.setUpdateDate(sdf.format(new Date()));
 			log.trace("AccompanyBoardRestController - update : ", accompanyBoard);
 			return response(acService.update(accompanyBoard), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			log.error("AccompanyBoardRestController - update : ", accompanyBoard);
+			log.error("AccompanyBoardRestController - update");
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
@@ -93,7 +98,7 @@ public class AccompanyBoardRestController {
 			log.trace("AccompanyBoardRestController - selectNation ");
 			return response(acService.selectNation(), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			log.error("AccompanyBoardRestController - selectNation ");
+			log.error("AccompanyBoardRestController - selectNation");
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
@@ -104,7 +109,7 @@ public class AccompanyBoardRestController {
 			log.trace("AccompanyBoardRestController - selectCity : ",nId);
 			return response(acService.selectCity(nId), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			log.error("AccompanyBoardRestController - selectCity : ",nId);
+			log.error("AccompanyBoardRestController - selectCity");
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
@@ -122,7 +127,6 @@ public class AccompanyBoardRestController {
 	
 	@GetMapping("accompanyBoard/selectAllByUser/{uId}")
 	public ResponseEntity<Map<String, Object>> selectAllByUser(@PathVariable int uId) {
-		System.out.println(uId);
 		try {
 			log.trace("AccompanyBoardRestController - selectAllByUser : ",uId);
 			return response(acService.selectAllByUser(uId), HttpStatus.OK, true);
@@ -141,7 +145,7 @@ public class AccompanyBoardRestController {
 			log.trace("AccompanyBoardRestController - updateDeadlineToggle : ", map);
 			return response(acService.updateDeadlineToggle(map), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
-			log.error("AccompanyBoardRestController - updateDeadlineToggle : ",map);
+			log.error("AccompanyBoardRestController - updateDeadlineToggle");
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
