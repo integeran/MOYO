@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+// import { useDispatch, useSelector } from 'react-redux';
 import { Grid } from '@material-ui/core';
 import MoreTitleContents from '../../components/more/main/MoreTitleContents';
 import MoreButtonContents from '../../components/more/main/MoreButtonContents';
@@ -7,6 +8,8 @@ import CalenderIcon from '../../../src/assets/icon/icon_calender.svg';
 import AccompanyIcon from '../../../src/assets/icon/icon_accompany.svg';
 import CommunityIcon from '../../../src/assets/icon/icon_community.svg';
 import styled from 'styled-components';
+// import { changeField } from '../../modules/auth';
+// import axios from '../../api/axios';
 
 const InnerGrid = styled(Grid)`
   width: 85%;
@@ -16,6 +19,9 @@ const InnerGrid = styled(Grid)`
 
 const MoreMain = () => {
   const history = useHistory();
+  // const dispatch = useDispatch();
+  // const jwtDecode = require('jwt-decode');
+  // const userData = useSelector(state => state.auth.userData);
 
   const handlePlanClick = () => {
     history.push('/more/morePlan');
@@ -27,6 +33,40 @@ const MoreMain = () => {
   const handleCommunityClick = () => {
     history.push('/more/moreCommunity');
   };
+
+  // const pushUserData = (k, v) => {
+  //   dispatch(changeField({ form: 'userData', key: k, value: v }));
+  // };
+
+  // const getTokenRequest = async () => {
+  //   try {
+  //     return await axios.post('user/issueToken', {
+  //       provider: 0,
+  //       socialId: userData.uid,
+  //     });
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
+  // const getToken = async () => {
+  //   const resData = await getTokenRequest();
+  //   console.log(resData);
+  //   if (resData.data.status) {
+  //     const jwtData = jwtDecode(resData.data.data);
+  //     pushUserData('userToken', resData.data.data);
+  //     pushUserData('uid', jwtData.user.uid);
+  //     pushUserData('nickname', jwtData.user.nickname);
+  //     pushUserData('age', jwtData.user.age);
+  //     pushUserData('gender', jwtData.user.gender);
+  //     pushUserData('image', jwtData.user.image);
+  //     localStorage.setItem('token', resData.data.data);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   getToken();
+  // }, []);
 
   return (
     <>

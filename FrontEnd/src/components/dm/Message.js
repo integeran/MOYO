@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 
 import FileMessage from './FileMessage';
+import OtherProfile from '../common/OtherProfile';
 
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
@@ -20,6 +21,9 @@ const Message = ({
   curTime,
 }) => {
   const userData = useSelector(state => state.auth.userData);
+  const goProfileBlock = useSelector(state => state.Dm.goProfileBlock);
+
+  const [openProfile, setOpenProfile] = useState(false);
 
   const showRightMessage = () => {
     return (
@@ -73,16 +77,22 @@ const Message = ({
         moment(lastTimeStamp).format('YYYY/MM/DD LT')
     ) {
       return (
-        <Grid item xs={1} style={{ paddingRight: '1%' }}>
+        <Grid item xs={1} onClick={goProfile} style={{ paddingRight: '1%' }}>
           <Avatar
             alt="메세지 보낸 사람의 프로필"
             src={image}
-            style={{ width: '30px', height: '30px' }}
+            style={{ width: '30px', height: '30px', zIndex: '-1' }}
           />
         </Grid>
       );
     } else {
       return <Grid item xs={1} style={{ paddingRight: '1%' }}></Grid>;
+    }
+  };
+
+  const goProfile = () => {
+    if (!goProfileBlock) {
+      setOpenProfile(true);
     }
   };
 
@@ -96,12 +106,17 @@ const Message = ({
               {moment(timeStamp).format('YYYY/MM/DD') ===
               moment(curTime).format('YYYY/MM/DD')
                 ? moment(timeStamp).format('LT')
-                : moment(timeStamp).format('YYYY/MM/DD')}
+                : moment(timeStamp).format('YYYY/MM/DD LT')}
             </Typography>
           </div>
         )}
 
         {senderId === userData.uid ? showRightMessage() : showLeftMessage()}
+        <OtherProfile
+          openProfile={openProfile}
+          setOpenProfile={setOpenProfile}
+          otherUserId={senderId}
+        />
       </>
     )
   );
