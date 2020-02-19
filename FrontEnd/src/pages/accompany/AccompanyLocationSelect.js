@@ -25,10 +25,6 @@ const HeaderContainer = styled(Grid)`
   color: white;
   padding: 1.5rem 0 2.5rem 0;
 `;
-
-const HeaderTypo = styled(Typography)`
-  padding-left: 0.5rem;
-`;
 const StyledDiv = styled.div`
   width: inherit;
   height: inherit;
@@ -97,13 +93,13 @@ const AccompanyLocationSelect = () => {
             onClick={() => {
               history.goBack();
             }}
-            style={{ paddingLeft: '2rem' }}
+            style={{ paddingLeft: '1.5rem' }}
           >
             <ArrowBackIosIcon />
           </IconButton>
         </Grid>
         <Grid item>
-          <HeaderTypo variant="h4">어디로 여행 가실건가요?</HeaderTypo>
+          <Typography variant="h4">어디로 여행 가실건가요?</Typography>
         </Grid>
       </HeaderContainer>
 

@@ -9,7 +9,6 @@ import { useHistory } from 'react-router';
 import moment from 'moment';
 
 const HeaderTypo = styled(Typography)`
-  padding: 1rem 2rem;
   flex: 0 1 auto;
 `;
 
@@ -83,7 +82,7 @@ const AccompanyDateSelect = () => {
             onClick={() => {
               history.goBack();
             }}
-            style={{ paddingLeft: '2rem' }}
+            style={{ paddingLeft: '1.5rem' }}
           >
             <ArrowBackIosIcon />
           </IconButton>
