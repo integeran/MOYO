@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import Calendar from 'react-calendar';
 import styled from 'styled-components';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import { Button, Grid, Typography, IconButton } from '@material-ui/core';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { useDispatch } from 'react-redux';
 import { accompanyDate } from '../../modules/accompanyCondition';
 import { useHistory } from 'react-router';
@@ -77,8 +76,23 @@ const AccompanyDateSelect = () => {
       justify="space-around"
       style={{ height: 'inherit', backgroundColor: 'white' }}
     >
-      <Grid item>
-        <HeaderTypo variant="h4">언제 동행을 찾고싶나요?</HeaderTypo>
+      <Grid item container alignItems="center">
+        <Grid item>
+          <IconButton
+            color="inherit"
+            onClick={() => {
+              history.goBack();
+            }}
+            style={{ paddingLeft: '2rem' }}
+          >
+            <ArrowBackIosIcon />
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <HeaderTypo variant="h4" style={{ paddingLeft: '0.5rem' }}>
+            언제 동행을 찾고싶나요?
+          </HeaderTypo>
+        </Grid>
       </Grid>
       <Grid item>
         <CalendarStyled onChange={onChange} value={date} minDate={new Date()} />

@@ -204,7 +204,7 @@ const AccompanyWrite = () => {
   };
 
   return (
-    <div>
+    <>
       <BaseAppBar
         text="글 작성하기"
         leftIcon={<ArrowBackIosIcon />}
@@ -281,7 +281,7 @@ const AccompanyWrite = () => {
           </Grid>
         </div>
       </InnerGrid>
-    </div>
+    </>
   );
 };
 
