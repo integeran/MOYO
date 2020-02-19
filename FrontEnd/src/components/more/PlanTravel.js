@@ -22,6 +22,7 @@ import TripPaper from './schedule/TripSchedulePaper';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { getNationList, getCityList } from '../../api/commonData';
+import AlertDialog from '../common/AlertDialog';
 
 const PlanTravel = () => {
   const useStyles = makeStyles(theme => ({
@@ -47,7 +48,10 @@ const PlanTravel = () => {
   const [nationUpdate, setNationUpdate] = useState('');
   const [cityListUpdate, setCityListUpdate] = useState([]);
   const [cityUpdate, setCityUpdate] = useState('');
-  const [selectedStartDate, setSelectedStartDate] = useState(selectedDate);
+
+  let todayDate = Date();
+
+  const [selectedStartDate, setSelectedStartDate] = useState(todayDate);
   const [selectedEndDate, setSelectedEndDate] = useState(selectedStartDate);
   const [openCreate, setOpenCreate] = React.useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
@@ -72,21 +76,22 @@ const PlanTravel = () => {
     setCity(event.target.value);
   };
 
-  useEffect(() => {
-    setSelectedStartDate(selectedDate);
-  }, [selectedDate]);
+  // useEffect(() => {
+  //   setSelectedStartDate(selectedDate);
+  // }, [selectedDate]);
 
   useEffect(() => {
     setSelectedEndDate(selectedStartDate);
   }, [selectedStartDate]);
 
   const handleClickOpenCreate = () => {
+    setSelectedStartDate(todayDate);
     setOpenCreate(true);
   };
 
   const handleCloseCreate = () => {
-    setSelectedStartDate(selectedDate);
-    setSelectedEndDate(selectedDate);
+    setSelectedStartDate(todayDate);
+    setSelectedEndDate(todayDate);
     setNation('');
     setCityList([]);
     setOpenCreate(false);
@@ -143,6 +148,10 @@ const PlanTravel = () => {
       await postPlanTravelServer();
       const schData = await getSchedule();
       dispatch(storeSchedule(schData.data.data));
+      setSelectedStartDate(todayDate);
+      setSelectedEndDate(todayDate);
+      setNation('');
+      setCityList([]);
       setOpenCreate(false);
       setPostClick(false);
       setTimeout(() => {
@@ -227,7 +236,8 @@ const PlanTravel = () => {
   };
 
   const putPlanTravel = async () => {
-    if (selectedStartDateUpdate <= selectedEndDateUpdate) {
+    // 형식이 맞지 않으면 버그 발생
+    if (moment(selectedStartDateUpdate) <= moment(selectedEndDateUpdate)) {
       await putPlanTravelServer();
       const schData = await getSchedule();
       dispatch(storeSchedule(schData.data.data));
@@ -400,7 +410,15 @@ const PlanTravel = () => {
         </DialogActions>
       </Dialog>
 
-      <Dialog
+      <AlertDialog
+        open={openDelete}
+        title="일정 삭제"
+        contents="정말 삭제하시겠습니까?"
+        onConfirm={handleDeleteSchedule}
+        onClose={handleCloseDelete}
+      ></AlertDialog>
+
+      {/* <Dialog
         open={openDelete}
         onClose={handleCloseDelete}
         aria-labelledby="form-dialog-title"
@@ -414,7 +432,7 @@ const PlanTravel = () => {
             삭제
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
     </div>
   );
 };
