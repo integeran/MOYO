@@ -2,22 +2,26 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import * as firebase from 'firebase';
-
-import Room from '../../components/dm/Room';
+import styled from 'styled-components';
 import { openModalAction, closeModalAction } from '../../modules/progressModal';
 import { navigationSelect } from '../../modules/baseNavigation';
-
 import MoyoIcon from '../../assets/icon/icon_moyo_white.svg';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import { IconButton } from '@material-ui/core';
+
+import { Grid } from '@material-ui/core';
+
+import Room from '../../components/dm/Room';
+import BaseAppBar from '../../components/common/BaseAppBar';
+import NoDataPage from '../../components/common/NoDataPage';
+
+const ListContainer = styled(Grid)`
+  flex: 1;
+  width: 95%;
+  margin: 0 auto !important;
+`;
 
 const DmRoomList = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-
   const userData = useSelector(state => state.auth.userData);
 
   const [roomList, setRoomList] = useState([]);
@@ -27,11 +31,8 @@ const DmRoomList = () => {
     onInit();
   }, []);
 
-  /**
-   * 초기 실행
-   */
+  // init
   const onInit = async () => {
-    console.log('onInit');
     dispatch(navigationSelect('DM'));
 
     firebase.database().goOnline();
@@ -39,13 +40,8 @@ const DmRoomList = () => {
     loadRoomList(userData);
   };
 
-  /**
-   * 채팅방 목록리스트 호출
-   */
+  //채팅방 목록리스트 호출
   const loadRoomList = sender => {
-    /**
-     * loadRoomList에서 데이터를 받아왔을 때
-     */
     addLoadRoomList(sender);
     changeLoadRoomList(sender);
   };
@@ -112,32 +108,25 @@ const DmRoomList = () => {
   };
 
   return (
-    <>
-      <div>
-        <AppBar position="static" style={{ backgroundColor: '#4fdbc2' }}>
-          <Toolbar style={{ padding: '0%' }}>
-            <Grid container justify="center" alignItems="center">
-              <Grid item xs={2}>
-                <IconButton color="inherit" onClick={handleHomeClick}>
-                  <img
-                    alt="icon_moyo_white"
-                    src={MoyoIcon}
-                    style={{ height: '2rem' }}
-                  />
-                </IconButton>
-              </Grid>
-              <Grid item xs={8} style={{ textAlign: 'center' }}>
-                <Typography variant="h6">채팅</Typography>
-              </Grid>
-              <Grid item xs={2}></Grid>
-            </Grid>
-          </Toolbar>
-        </AppBar>
-      </div>
-      <div id="roomList">
-        {roomList.length !== 0 ? (
-          roomList.reverse().map((room, index) => {
-            return (
+    <Grid container direction="column" style={{ height: '100%' }}>
+      <Grid item>
+        <BaseAppBar
+          text="채팅목록"
+          leftIcon={
+            <img
+              alt="icon_moyo_white"
+              src={MoyoIcon}
+              style={{ height: '2rem' }}
+            />
+          }
+          leftClick={handleHomeClick}
+        />
+      </Grid>
+      <ListContainer item>
+        {roomList.length > 0 ? (
+          roomList
+            .reverse()
+            .map(room => (
               <Room
                 key={room.roomId}
                 roomId={room.roomId}
@@ -146,19 +135,12 @@ const DmRoomList = () => {
                 timeStamp={room.timeStamp}
                 read={room.read}
               ></Room>
-            );
-          })
+            ))
         ) : (
-          <Grid container justify="center">
-            <div>
-              <Typography style={{ textAlign: 'center', marginTop: '20%' }}>
-                <b>데이터가 존재하지 않습니다.</b>
-              </Typography>
-            </div>
-          </Grid>
+          <NoDataPage text="채팅 내역이 존재하지 않습니다" />
         )}
-      </div>
-    </>
+      </ListContainer>
+    </Grid>
   );
 };
 

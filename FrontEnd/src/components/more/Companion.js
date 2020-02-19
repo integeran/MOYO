@@ -8,6 +8,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Badge,
 } from '@material-ui/core';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
@@ -15,19 +16,26 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import moment from 'moment';
 import axios from '../../api/axios';
+import moyocolor from '../../api/moyoColor';
 import TripCompanionSet from './schedule/TripCompanionSet';
 
 const Companion = props => {
   const setIsCompanion = props.setIsCompanion;
+  const selectedDate = moment(props.selectedDate).format('YYYY-MM-DD');
+
   const dispatch = useDispatch();
 
   const userData = useSelector(state => state.auth.userData);
-  const selectedDate = useSelector(state => state.planDate.selectedDate);
+  // const selectedDate = useSelector(state => state.planDate.selectedDate);
+
   const planCompanionList = useSelector(
     state => state.morePlanCompanion.planCompanionList,
   );
+  // const todayCompanion = planCompanionList.filter(
+  //   item => item.day.split(' ')[0] === selectedDate.split('T')[0],
+  // );
   const todayCompanion = planCompanionList.filter(
-    item => item.day.split(' ')[0] === selectedDate.split('T')[0],
+    item => item.day.split(' ')[0] === selectedDate,
   );
 
   const getCompanion = async () => {
@@ -82,11 +90,13 @@ const Companion = props => {
   };
 
   const putCompanionRequest = async () => {
-    await putCompanion();
-    const comData = await getCompanion();
-    dispatch(storeCompanion(comData.data.data));
+    if (selectedDate !== moment(selectedDateUpdate).format('YYYY-MM-DD')) {
+      await putCompanion();
+      const comData = await getCompanion();
+      await dispatch(storeCompanion(comData.data.data));
+      // setIsCompanion(false);
+    }
     setOpenUpdate(false);
-    setIsCompanion(false);
   };
 
   const handleDeleteCompanion = async () => {
@@ -109,26 +119,46 @@ const Companion = props => {
   };
 
   const companionList = todayCompanion.map(item => (
-    <Grid container item>
-      <Grid item xs={11}>
-        <TripCompanionSet companionInfo={item} />
+    <Grid
+      container
+      item
+      direction="row"
+      justify="center"
+      alignItems="center"
+      style={{ marginBottom: '1rem' }}
+    >
+      <Grid
+        item
+        xs={8}
+        style={{
+          backgroundColor: 'white',
+          borderRadius: '1rem',
+        }}
+      >
+        <TripCompanionSet
+          companionInfo={item}
+          onClickOpenUpdate={handleClickOpenUpdate}
+          onClickOpenDelete={handleClickOpenDelete}
+        />
       </Grid>
       <Grid
         item
         container
-        xs={1}
-        direction="column"
-        justify="space-evenly"
+        xs={4}
+        direction="row"
+        justify="center"
         alignItems="center"
       >
         <Grid item>
-          <EditIcon onClick={() => handleClickOpenUpdate(item)} />
-        </Grid>
-        <Grid item>
+          <EditIcon
+            onClick={() => handleClickOpenUpdate(item)}
+            style={{ marginRight: '1rem', color: moyocolor.moyo_navy_3 }}
+          />
           <DeleteIcon
             onClick={() => {
               handleClickOpenDelete(item.dacId);
             }}
+            color="error"
           />
         </Grid>
       </Grid>

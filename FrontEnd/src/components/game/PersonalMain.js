@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
+
+import { navigationSelect } from '../../modules/baseNavigation';
+import MoyoIcon from '../../assets/icon/icon_moyo_white.svg';
 
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
+import { AppBar, IconButton, Toolbar } from '@material-ui/core';
 
 const PersonalMain = ({ round, topindex, bottomindex, onClickImage }) => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+
   const [topClick, setTopClick] = useState(false);
   const [bottomClick, setBottomClick] = useState(false);
 
@@ -70,20 +79,35 @@ const PersonalMain = ({ round, topindex, bottomindex, onClickImage }) => {
     }
   };
 
+  const handleHomeClick = () => {
+    dispatch(navigationSelect('accompany'));
+    history.push({
+      pathname: '/accompany',
+    });
+  };
+
   return (
     <div>
-      <div
-        id="showRound"
-        style={{
-          textAlign: 'center',
-          marginBottom: '5%',
-          marginTop: '5%',
-          backgroundColor: '#45BFA9',
-          color: 'white',
-        }}
-      >
-        <Typography variant="h4">{round}강</Typography>
-      </div>
+      <AppBar position="static" style={{ backgroundColor: '#4fdbc2' }}>
+        <Toolbar style={{ padding: '0%' }}>
+          <Grid container justify="center" alignItems="center">
+            <Grid item xs={2}>
+              <IconButton color="inherit" onClick={handleHomeClick}>
+                <img
+                  alt="icon_moyo_white"
+                  src={MoyoIcon}
+                  style={{ height: '2rem' }}
+                />
+              </IconButton>
+            </Grid>
+            <Grid item xs={8} style={{ textAlign: 'center' }}>
+              <Typography variant="h4">{round}강</Typography>
+            </Grid>
+            <Grid item xs={2}></Grid>
+          </Grid>
+        </Toolbar>
+      </AppBar>
+
       <div id="showImage">
         <Grid
           container
@@ -102,7 +126,7 @@ const PersonalMain = ({ round, topindex, bottomindex, onClickImage }) => {
               }}
               style={{
                 padding: '5%',
-                border: topClick ? '6px solid red' : '',
+                border: topClick ? '6px solid #ccdff1' : '',
               }}
             >
               <Grid item xs={6}>
@@ -149,7 +173,7 @@ const PersonalMain = ({ round, topindex, bottomindex, onClickImage }) => {
               }}
               style={{
                 padding: '5%',
-                border: bottomClick ? '6px solid red' : '',
+                border: bottomClick ? '6px solid #ccdff1' : '',
               }}
             >
               <Grid item xs={6} style={{ textAlign: 'center' }}>

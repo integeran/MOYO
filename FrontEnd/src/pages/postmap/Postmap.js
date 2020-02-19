@@ -3,16 +3,28 @@ import { useSelector, useDispatch } from 'react-redux';
 import axios from '../../api/axios';
 
 import { getPostListAction, getInfoWindow } from '../../modules/postmap';
+import { openModalAction, closeModalAction } from '../../modules/progressModal';
 
-import Typography from '@material-ui/core/Typography';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import Grid from '@material-ui/core/Grid';
 import PostmapGoogle from '../../components/postmap/PostmapGoogle';
 import PostmapChat from '../../components/postmap/PostmapChat';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import { typography } from '@material-ui/system';
+import PostmapListPaper from '../../components/postmap/PostmapListPaper';
+import styled from 'styled-components';
+import NoDataPage from '../../components/common/NoDataPage';
+import { Typography } from '@material-ui/core';
+
+const PostTypo = styled(Typography)`
+  font-size: 0.95rem !important;
+  margin: 0.3rem 1.5rem !important;
+`;
+
+const ScrollGrid = styled(Grid)`
+  flex: 1;
+  overflow: auto;
+`;
+const MapGrid = styled(Grid)`
+  padding: 1rem;
+`;
 
 const Postmap = () => {
   const dispatch = useDispatch();
@@ -26,6 +38,7 @@ const Postmap = () => {
   const [curTime, setCurTime] = useState('');
 
   useEffect(() => {
+    dispatch(openModalAction());
     onInit();
   }, []);
 
@@ -101,171 +114,62 @@ const Postmap = () => {
     });
 
     setPostListExceptTop(listExceptTop);
+    dispatch(closeModalAction());
   };
 
-  const calcTime = time => {
-    var distanceTime = (new Date(curTime) - new Date(time)) / (1000 * 60);
-    if (distanceTime >= 60) {
-      distanceTime = distanceTime / 60;
-      if (distanceTime >= 24) {
-        distanceTime = Math.ceil(distanceTime / 24);
-        return distanceTime + '일 전';
-      } else {
-        distanceTime = Math.ceil(distanceTime);
-        return distanceTime + '시간 전';
-      }
-    } else {
-      distanceTime = Math.ceil(distanceTime);
-      return distanceTime + '분 전';
+  const handlePostClick = chat => {
+    dispatch(getInfoWindow(chat));
+    listFetch(pos);
+  };
+
+  const handleLikeClick = async chat => {
+    const res = await likePost(chat.pmId);
+    if (res) {
+      listFetch(pos);
     }
   };
 
   return (
-    <>
-      <div style={{ padding: '4%' }}>
+    <Grid container direction="column" style={{ height: '100%' }}>
+      <MapGrid item>
         <PostmapGoogle listFetch={listFetch} />
+      </MapGrid>
+      <Grid item style={{ marginBottom: '0.5rem' }}>
         <PostmapChat listFetch={listFetch} />
-        {postListTop.length > 0 ? (
+      </Grid>
+      <ScrollGrid item>
+        {postListTop.length > 0 || postListExceptTop.length > 0 ? (
           <div id="chatList">
-            <>{console.log(postListTop)}</>
             <div id="chatListTop">
-              <div>
-                {postListTop.map((chat, index) => {
-                  return (
-                    <div>
-                      <Grid
-                        container
-                        alignItems="center"
-                        style={{ padding: '2%' }}
-                      >
-                        <Grid
-                          item
-                          xs={10}
-                          onClick={async () => {
-                            dispatch(getInfoWindow(chat));
-
-                            listFetch(pos);
-                          }}
-                        >
-                          <Grid container direction="column">
-                            <Grid item xs={6} style={{ maxWidth: '100%' }}>
-                              <Typography>{chat.contents}</Typography>
-                            </Grid>
-                            <Typography variant="caption">
-                              {calcTime(chat.registerDate)}
-                            </Typography>
-                            <Grid
-                              item
-                              xs={6}
-                              style={{ maxWidth: '100%' }}
-                            ></Grid>
-                          </Grid>
-                        </Grid>
-                        <Grid
-                          item
-                          xs={2}
-                          onClick={async () => {
-                            const res = await likePost(chat.pmId);
-                            if (res) {
-                              listFetch(pos);
-                            }
-                          }}
-                        >
-                          <Typography style={{ float: 'right' }}>
-                            x{chat.likes}
-                          </Typography>
-                          {chat.pmLikeId !== 0 ? (
-                            <FavoriteIcon
-                              style={{
-                                float: 'right',
-                                cursor: 'pointer',
-                                color: 'red',
-                              }}
-                            />
-                          ) : (
-                            <FavoriteBorderIcon
-                              style={{ float: 'right', cursor: 'pointer' }}
-                            />
-                          )}
-                        </Grid>
-                      </Grid>
-                      <Divider />
-                    </div>
-                  );
-                })}
-              </div>
+              <PostTypo variant="subtitle2">베스트 포스트맵</PostTypo>
+              {postListTop.map(chat => (
+                <PostmapListPaper
+                  key={chat.pmId}
+                  curTime={curTime}
+                  chat={chat}
+                  onPostClick={() => handlePostClick(chat)}
+                  onLikeClick={() => handleLikeClick(chat)}
+                />
+              ))}
             </div>
-
-            <div id="chatListBottom" style={{ overflow: 'auto' }}>
-              {postListExceptTop.map((chat, index) => {
-                return (
-                  <>
-                    <Grid
-                      container
-                      alignItems="center"
-                      style={{ padding: '2%' }}
-                    >
-                      <Grid
-                        item
-                        xs={10}
-                        onClick={async () => {
-                          dispatch(getInfoWindow(chat));
-
-                          listFetch(pos);
-                        }}
-                      >
-                        <Grid container direction="column">
-                          <Grid item xs={6} style={{ maxWidth: '100%' }}>
-                            <Typography>{chat.contents}</Typography>
-                          </Grid>
-                          <Typography variant="caption">
-                            {calcTime(chat.registerDate)}
-                          </Typography>
-                          <Grid item xs={6} style={{ maxWidth: '100%' }}></Grid>
-                        </Grid>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <Typography style={{ float: 'right' }}>
-                          x{chat.likes}
-                        </Typography>
-                        {chat.pmLikeId !== 0 ? (
-                          <FavoriteIcon
-                            style={{
-                              float: 'right',
-                              cursor: 'pointer',
-                              color: 'red',
-                            }}
-                            onClick={async () => {
-                              const res = await likePost(chat.pmId);
-                              if (res) {
-                                listFetch(pos);
-                              }
-                            }}
-                          />
-                        ) : (
-                          <FavoriteBorderIcon
-                            style={{ float: 'right', cursor: 'pointer' }}
-                            onClick={async () => {
-                              const res = await likePost(chat.pmId);
-                              if (res) {
-                                listFetch(pos);
-                              }
-                            }}
-                          />
-                        )}
-                      </Grid>
-                    </Grid>
-                    <Divider />
-                  </>
-                );
-              })}
+            <div id="chatListBottom">
+              <PostTypo variant="subtitle2">주변 포스트맵 리스트</PostTypo>
+              {postListExceptTop.map(chat => (
+                <PostmapListPaper
+                  key={chat.pmId}
+                  curTime={curTime}
+                  chat={chat}
+                  onPostClick={() => handlePostClick(chat)}
+                  onLikeClick={() => handleLikeClick(chat)}
+                />
+              ))}
             </div>
           </div>
         ) : (
-          <Typography>주변 포스트맵이 없네요? 등록해보시겠어요?</Typography>
+          <NoDataPage text="등록된 포스트맵이 없어요!" />
         )}
-      </div>
-    </>
+      </ScrollGrid>
+    </Grid>
   );
 };
 

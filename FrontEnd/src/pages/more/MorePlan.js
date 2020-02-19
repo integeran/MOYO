@@ -158,7 +158,7 @@ const MorePlan = () => {
         style={{ margin: '0px' }}
         wrap="nowrap"
       >
-        <InnerGrid item>
+        {/* <InnerGrid item>
           <FullCalendar
             defaultView="dayGridMonth"
             plugins={[dayGridPlugin, interactionPlugin]}
@@ -178,8 +178,10 @@ const MorePlan = () => {
             displayEventTime={false}
             dayRender={data => dayRenderFunction(data)}
           />
+        </InnerGrid> */}
+        <InnerGrid item>
+          <Planner />
         </InnerGrid>
-        <InnerGrid item>{selectedDate && <Planner />}</InnerGrid>
       </Grid>
     </div>
   );
