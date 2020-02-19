@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import PlanTravel from './PlanTravel';
 import PlanDaily from './PlanDaily';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Paper, Tabs, Tab, Grid, Divider } from '@material-ui/core';
+import { Grid, Divider, Menu, MenuItem, Button } from '@material-ui/core';
 import { useSelector } from 'react-redux';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
 const useStyles = makeStyles({
   root: {
@@ -14,16 +15,23 @@ const useStyles = makeStyles({
 const Planner = () => {
   const classes = useStyles();
   const selectedDate = useSelector(state => state.planDate.selectedDate);
-  const [tabsValue, setTabsValue] = React.useState('');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [menuTitle, setMenuTitle] = useState('여행 일정');
 
-  const handleChangeTabs = (event, newValue) => {
-    setTabsValue(newValue);
+  const handleMenuClick = event => {
+    setAnchorEl(event.currentTarget);
   };
 
-  const [schedule, setSchedule] = useState('none');
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
 
-  const handleChangeSchedule = value => {
+  const [schedule, setSchedule] = useState('travel');
+
+  const handleChangeSchedule = (value, title) => {
     setSchedule(value);
+    setMenuTitle(title);
+    handleMenuClose();
   };
 
   let planPage = '';
@@ -51,28 +59,32 @@ const Planner = () => {
             marginTop: '1em',
           }}
         >
-          <Typography variant="h6">{selectedDate.split('T')[0]}</Typography>
-        </Grid>
-        <Grid item>
-          <Paper className={classes.root} elevation={0}>
-            <Tabs
-              value={tabsValue}
-              onChange={handleChangeTabs}
-              indicatorColor="primary"
-              textColor="primary"
-              centered
-              variant="fullWidth"
+          <Button
+            aria-controls="simple-menu"
+            aria-haspopup="true"
+            onClick={handleMenuClick}
+            style={{ backgroundColor: 'white' }}
+          >
+            {menuTitle} <ArrowDropDownIcon style={{ color: 'black' }} />
+          </Button>
+          <Menu
+            id="simple-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+          >
+            <MenuItem
+              onClick={() => handleChangeSchedule('travel', '여행 일정')}
             >
-              <Tab
-                label="여행 일정"
-                onClick={() => handleChangeSchedule('travel')}
-              />
-              <Tab
-                label="동행자 / 메모"
-                onClick={() => handleChangeSchedule('daily')}
-              />
-            </Tabs>
-          </Paper>
+              여행 일정
+            </MenuItem>
+            <MenuItem
+              onClick={() => handleChangeSchedule('daily', '동행자 목록')}
+            >
+              동행자 목록
+            </MenuItem>
+          </Menu>
         </Grid>
         <Grid item>{planPage}</Grid>
       </Grid>

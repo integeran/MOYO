@@ -2,10 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Companion from './Companion';
 import Memo from './Memo';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
+import { Grid, Badge, Typography, Divider } from '@material-ui/core/';
 import { makeStyles } from '@material-ui/core/styles';
-import Divider from '@material-ui/core/Divider';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
+import moment from 'moment';
 
 const PlanDaily = () => {
   const useStyles = makeStyles(theme => ({
@@ -18,16 +22,21 @@ const PlanDaily = () => {
 
   const classes = useStyles();
 
-  const selectedDate = useSelector(state => state.planDate.selectedDate);
   const planCompanionList = useSelector(
     state => state.morePlanCompanion.planCompanionList,
   );
 
   const [isCompanion, setIsCompanion] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const handleDateChange = date => {
+    setSelectedDate(date);
+  };
 
   useEffect(() => {
     const checkCompanion = planCompanionList.find(
-      item => item.day.split(' ')[0] === selectedDate.split('T')[0],
+      item =>
+        item.day.split(' ')[0] === selectedDate.toISOString().split('T', 1)[0],
     );
     if (checkCompanion) {
       setIsCompanion(true);
@@ -35,6 +44,31 @@ const PlanDaily = () => {
       setIsCompanion(false);
     }
   }, [selectedDate]);
+
+  const [companionDays, setCompanionDays] = useState(
+    planCompanionList.map(item => item.day.split(' ')[0]),
+  );
+
+  const renderDialogDay = (
+    day,
+    selectedDate,
+    isInCurrentMonth,
+    dayComponent,
+  ) => {
+    const date = new Date(day);
+    const momentDate = moment(date).format('YYYY-MM-DD');
+    console.log(companionDays);
+    const isSelected = isInCurrentMonth && companionDays.includes(momentDate);
+    return (
+      <Badge color="secondary" variant={isSelected ? 'dot' : undefined}>
+        {dayComponent}
+      </Badge>
+    );
+  };
+
+  useEffect(() => {
+    setCompanionDays(planCompanionList.map(item => item.day.split(' ')[0]));
+  }, [planCompanionList]);
 
   return (
     <>
@@ -44,22 +78,37 @@ const PlanDaily = () => {
         justify="center"
         style={{ width: 'inherit', height: 'inherit', margin: '0px' }}
       >
-        <Grid item container justify="space-between">
-          <Grid item className={classes.center} xs={6}>
-            {isCompanion && <Typography variant="h6">오늘의 동행!</Typography>}
-          </Grid>
-        </Grid>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <KeyboardDatePicker
+            format="yyyy/MM/dd"
+            margin="normal"
+            id="date-picker-dialog"
+            label="날짜를 선택하세요"
+            value={selectedDate}
+            onChange={handleDateChange}
+            KeyboardButtonProps={{
+              'aria-label': 'change date',
+            }}
+            style={{ width: '50%', marginBottom: '1.5rem' }}
+            renderDay={renderDialogDay}
+          />
+        </MuiPickersUtilsProvider>
+
         {isCompanion && (
           <Grid item>
-            <Companion setIsCompanion={setIsCompanion} />
+            <Companion
+              setIsCompanion={setIsCompanion}
+              selectedDate={selectedDate}
+              renderDialogDay={renderDialogDay}
+            />
           </Grid>
         )}
         {/* <Grid item>
           <Divider variant="fullWidth" />
         </Grid> */}
-        <Grid item>
+        {/* <Grid item>
           <Memo />
-        </Grid>
+        </Grid> */}
       </Grid>
     </>
   );

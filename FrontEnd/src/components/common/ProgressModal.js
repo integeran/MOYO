@@ -73,7 +73,7 @@ const ProgressModal = () => {
             </Fade>
             <CircularProgress
               size="3.5rem"
-              thickness="4.2"
+              thickness={4.2}
               style={{ color: '#4A44A6' }}
             />
           </div>
