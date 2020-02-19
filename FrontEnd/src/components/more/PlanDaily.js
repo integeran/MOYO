@@ -2,15 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Companion from './Companion';
 import Memo from './Memo';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
+import { Grid, Badge, Typography, Divider } from '@material-ui/core/';
 import { makeStyles } from '@material-ui/core/styles';
 import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
-import Divider from '@material-ui/core/Divider';
+import moment from 'moment';
 
 const PlanDaily = () => {
   const useStyles = makeStyles(theme => ({
@@ -46,6 +45,31 @@ const PlanDaily = () => {
     }
   }, [selectedDate]);
 
+  const [companionDays, setCompanionDays] = useState(
+    planCompanionList.map(item => item.day.split(' ')[0]),
+  );
+
+  const renderDialogDay = (
+    day,
+    selectedDate,
+    isInCurrentMonth,
+    dayComponent,
+  ) => {
+    const date = new Date(day);
+    const momentDate = moment(date).format('YYYY-MM-DD');
+    console.log(companionDays);
+    const isSelected = isInCurrentMonth && companionDays.includes(momentDate);
+    return (
+      <Badge color="secondary" variant={isSelected ? 'dot' : undefined}>
+        {dayComponent}
+      </Badge>
+    );
+  };
+
+  useEffect(() => {
+    setCompanionDays(planCompanionList.map(item => item.day.split(' ')[0]));
+  }, [planCompanionList]);
+
   return (
     <>
       <Grid
@@ -66,20 +90,25 @@ const PlanDaily = () => {
               'aria-label': 'change date',
             }}
             style={{ width: '50%', marginBottom: '1.5rem' }}
+            renderDay={renderDialogDay}
           />
         </MuiPickersUtilsProvider>
 
         {isCompanion && (
           <Grid item>
-            <Companion setIsCompanion={setIsCompanion} />
+            <Companion
+              setIsCompanion={setIsCompanion}
+              selectedDate={selectedDate}
+              renderDialogDay={renderDialogDay}
+            />
           </Grid>
         )}
         {/* <Grid item>
           <Divider variant="fullWidth" />
         </Grid> */}
-        <Grid item>
+        {/* <Grid item>
           <Memo />
-        </Grid>
+        </Grid> */}
       </Grid>
     </>
   );
