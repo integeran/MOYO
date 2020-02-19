@@ -26,7 +26,7 @@ const Planner = () => {
     setAnchorEl(null);
   };
 
-  const [schedule, setSchedule] = useState('none');
+  const [schedule, setSchedule] = useState('travel');
 
   const handleChangeSchedule = (value, title) => {
     setSchedule(value);
