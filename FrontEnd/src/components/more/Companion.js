@@ -8,6 +8,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Badge,
 } from '@material-ui/core';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
@@ -20,15 +21,21 @@ import TripCompanionSet from './schedule/TripCompanionSet';
 
 const Companion = props => {
   const setIsCompanion = props.setIsCompanion;
+  const selectedDate = moment(props.selectedDate).format('YYYY-MM-DD');
+
   const dispatch = useDispatch();
 
   const userData = useSelector(state => state.auth.userData);
-  const selectedDate = useSelector(state => state.planDate.selectedDate);
+  // const selectedDate = useSelector(state => state.planDate.selectedDate);
+
   const planCompanionList = useSelector(
     state => state.morePlanCompanion.planCompanionList,
   );
+  // const todayCompanion = planCompanionList.filter(
+  //   item => item.day.split(' ')[0] === selectedDate.split('T')[0],
+  // );
   const todayCompanion = planCompanionList.filter(
-    item => item.day.split(' ')[0] === selectedDate.split('T')[0],
+    item => item.day.split(' ')[0] === selectedDate,
   );
 
   const getCompanion = async () => {
@@ -83,11 +90,13 @@ const Companion = props => {
   };
 
   const putCompanionRequest = async () => {
-    await putCompanion();
-    const comData = await getCompanion();
-    dispatch(storeCompanion(comData.data.data));
+    if (selectedDate !== moment(selectedDateUpdate).format('YYYY-MM-DD')) {
+      await putCompanion();
+      const comData = await getCompanion();
+      await dispatch(storeCompanion(comData.data.data));
+      // setIsCompanion(false);
+    }
     setOpenUpdate(false);
-    setIsCompanion(false);
   };
 
   const handleDeleteCompanion = async () => {

@@ -39,7 +39,7 @@ const TripPaper = ({ scheduleInfo, onClickOpenUpdate, onClickOpenDelete }) => {
     <CustomCard elevation={0} style={{ width: '100%', marginBottom: '1rem' }}>
       <CardActionArea>
         <CardMedia
-          image={`https://storage.cloud.google.com/moyo-cloud-storage/city/${scheduleInfo.cid}.svg`}
+          image={`https://storage.googleapis.com/moyo-cloud-storage/city/${scheduleInfo.cid}.svg`}
           alt="city image"
           style={{ height: '6rem' }}
         />
@@ -60,7 +60,7 @@ const TripPaper = ({ scheduleInfo, onClickOpenUpdate, onClickOpenDelete }) => {
             {dateToStr(scheduleInfo.startDate)} ~{' '}
             {dateToStr(scheduleInfo.endDate)}
           </BannerDateTypo>
-          {/* <Typography
+          <Typography
             align="left"
             color="textSecondary"
             style={{
@@ -70,7 +70,7 @@ const TripPaper = ({ scheduleInfo, onClickOpenUpdate, onClickOpenDelete }) => {
             component="span"
           >
             {scheduleInfo.nation}
-          </Typography> */}
+          </Typography>
           <Typography
             align="left"
             style={{ fontSize: '1rem' }}
