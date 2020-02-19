@@ -1,8 +1,3 @@
-export const initialState = {
-  snackBarOpen: false,
-  snackBarMessage: '',
-};
-
 export const SNACKBAR_OPENSNACKBAR = 'SNACKBAR_OPENSNACKBAR';
 export const SNACKBAR_CLOSESNACKBAR = 'SNACKBAR_CLOSESNACKBAR';
 
@@ -19,13 +14,24 @@ export const closeSnackBarAction = () => {
   };
 };
 
+const initialState = {
+  snackBarOpen: false,
+  snackBarMessage: '',
+  snackBarType: '',
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case SNACKBAR_OPENSNACKBAR: {
       return {
         ...state,
         snackBarOpen: true,
-        snackBarMessage: action.payload,
+        snackBarMessage:
+          typeof action.payload === 'object'
+            ? action.payload.message
+            : action.payload,
+        snackBarType:
+          typeof action.payload === 'object' ? action.payload.type : '',
       };
     }
 
@@ -33,7 +39,6 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         snackBarOpen: false,
-        snackBarMessage: '',
       };
     }
 
