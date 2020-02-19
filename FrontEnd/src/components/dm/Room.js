@@ -98,14 +98,6 @@ const Room = ({ roomId, receiverId, lastMessage, timeStamp, read }) => {
                 {lastMessage}
               </TextTypo>
             </Grid>
-            <Grid item xs={1}>
-              {read === false && (
-                <FiberManualRecordIcon
-                  fontSize="small"
-                  style={{ color: 'red' }}
-                />
-              )}
-            </Grid>
           </Grid>
         </Grid>
         <Grid item xs={1}>

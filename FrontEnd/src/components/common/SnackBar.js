@@ -1,4 +1,5 @@
 import React from 'react';
+import MuiAlert from '@material-ui/lab/Alert';
 import { Snackbar, IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { useSelector, useDispatch } from 'react-redux';
@@ -15,39 +16,57 @@ const SnackBar = () => {
 
   const message = useSelector(state => state.snackBar.snackBarMessage);
   const open = useSelector(state => state.snackBar.snackBarOpen);
+  const type = useSelector(state => state.snackBar.snackBarType);
 
   const closeSnackBar = () => {
     dispatch(closeSnackBarAction());
   };
 
-  return (
-    open && (
-      <>
-        <Snackbar
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
-          open={open}
-          autoHideDuration={2000}
-          onClose={closeSnackBar}
-          message={message}
-          action={
-            <React.Fragment>
-              <IconButton
-                size="small"
-                aria-label="close"
-                color="inherit"
-                onClick={closeSnackBar}
-              >
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            </React.Fragment>
-          }
-          style={{ bottom: '4rem' }}
-        />
-      </>
-    )
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+
+  const NoTypeSnackBar = () => (
+    <Snackbar
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'center',
+      }}
+      open={open}
+      autoHideDuration={2000}
+      onClose={closeSnackBar}
+      message={message}
+      action={
+        <IconButton
+          size="small"
+          aria-label="close"
+          color="inherit"
+          onClick={closeSnackBar}
+        >
+          <CloseIcon fontSize="small" />
+        </IconButton>
+      }
+      style={{ bottom: '4rem' }}
+    />
   );
+
+  const TypeSnackBar = () => (
+    <Snackbar
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'center',
+      }}
+      open={open}
+      autoHideDuration={2000}
+      onClose={closeSnackBar}
+      style={{ bottom: '4rem' }}
+    >
+      <Alert severity={type} onClose={closeSnackBar}>
+        {message}
+      </Alert>
+    </Snackbar>
+  );
+
+  return open && (type ? <TypeSnackBar /> : <NoTypeSnackBar />);
 };
 export default SnackBar;

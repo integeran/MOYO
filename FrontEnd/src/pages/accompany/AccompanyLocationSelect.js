@@ -7,7 +7,9 @@ import {
   Typography,
   Grid,
   Divider,
+  IconButton,
 } from '@material-ui/core';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import { getNationList, getCityList } from '../../api/commonData';
@@ -16,13 +18,16 @@ import {
   accompanyCity,
 } from '../../modules/accompanyCondition';
 
-const HeaderTypo = styled(Typography)`
+const HeaderContainer = styled(Grid)`
   position: static;
-  padding: 1.5rem 2rem 2.5rem 2rem;
-  color: white;
   background: linear-gradient(to bottom, #4ac8d9, #4fdbc2);
   background-size: 100% 100%;
-  flex-grow: 0;
+  color: white;
+  padding: 1.5rem 0 2.5rem 0;
+`;
+
+const HeaderTypo = styled(Typography)`
+  padding-left: 0.5rem;
 `;
 const StyledDiv = styled.div`
   width: inherit;
@@ -85,7 +90,23 @@ const AccompanyLocationSelect = () => {
 
   return (
     <StyledDiv>
-      <HeaderTypo variant="h4">어디로 여행 가실건가요?</HeaderTypo>
+      <HeaderContainer container alignItems="center">
+        <Grid item>
+          <IconButton
+            color="inherit"
+            onClick={() => {
+              history.goBack();
+            }}
+            style={{ paddingLeft: '2rem' }}
+          >
+            <ArrowBackIosIcon />
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <HeaderTypo variant="h4">어디로 여행 가실건가요?</HeaderTypo>
+        </Grid>
+      </HeaderContainer>
+
       <ListContainer>
         <ScrollGrid item xs={5}>
           <List component="nav" disablePadding={true}>
