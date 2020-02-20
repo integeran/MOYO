@@ -95,13 +95,18 @@ const CommunityWrite = () => {
       const fetchCommunity = async () => {
         await postCommunity(communityData);
         history.push('/community');
+        dispatch(
+          openSnackBarAction({
+            message: '글이 등록되었습니다.',
+            type: 'success',
+          }),
+        );
       };
       fetchCommunity();
-      dispatch(openSnackBarAction('글이 등록되었습니다.'));
     } else {
       dispatch(
         openSnackBarAction({
-          message: '제목, 내용, 타입이 모두 입력해야 합니다.',
+          message: '제목, 내용, 타입이 모두 입력되야 합니다.',
           type: 'error',
         }),
       );
@@ -115,21 +120,40 @@ const CommunityWrite = () => {
       title: title,
       contents: contents,
     };
+    const communityDataWithType = {
+      cmId: cmId,
+      uId: userData.uid,
+      cmTypeId: cmTypeId,
+      title: title,
+      contents: contents,
+      communityType: communityTypeList.find(item => item.cmTypeId === cmTypeId)
+        .name,
+    };
     if (cmTypeId && title.trim() && contents.trim()) {
       const fetchPutCommunity = async () => {
         await putCommunity(communityData);
         history.push({
           pathname: `/community/communityList/${communityData.cmId}`,
           state: {
-            community: communityData,
+            community: communityDataWithType,
             pathname: pathname,
           },
         });
+        dispatch(
+          openSnackBarAction({
+            message: '글이 수정되었습니다.',
+            type: 'success',
+          }),
+        );
       };
       fetchPutCommunity();
-      dispatch(openSnackBarAction('글이 수정되었습니다.'));
     } else {
-      dispatch(openSnackBarAction('제목, 내용, 타입이 모두 입력해야 합니다.'));
+      dispatch(
+        openSnackBarAction({
+          message: '제목, 내용, 타입이 모두 입력되야 합니다.',
+          type: 'error',
+        }),
+      );
     }
   };
 
