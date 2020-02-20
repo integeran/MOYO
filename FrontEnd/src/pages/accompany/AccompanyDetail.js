@@ -70,6 +70,8 @@ const AccompanyListDetail = () => {
   const [isModify, setIsModify] = useState(false);
   const [openProfile, setOpenProfile] = useState(false);
 
+  console.log('Detail', history);
+
   useEffect(() => {
     setIsModify(history.location.state.board.uid === userData.uid);
   }, []);
@@ -121,24 +123,29 @@ const AccompanyListDetail = () => {
   };
 
   const handleGoBack = () => {
-    history.goBack();
+    history.push({
+      pathname: history.location.state.prevpath,
+    });
   };
+
   const handleMoveChat = () => {
     dispatch(navigationSelect('DM'));
     history.push(`/dmroom/${boardData.uid}`);
   };
+
   const handleModifyAccompany = () => {
     history.push({
       pathname: '/more/accompanyWrite',
       state: {
-        prevpath: history.location.pathname,
+        nowpath: history.location.pathname,
+        prevpath: history.location.state.prevpath,
         board: boardData,
       },
     });
   };
   const handleDeleteClick = async () => {
     await deleteBoard().then(() => {
-      history.goBack();
+      handleGoBack();
     });
   };
 

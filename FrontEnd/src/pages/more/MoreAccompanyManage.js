@@ -61,8 +61,10 @@ const MoreAccompanyManage = () => {
     });
   };
 
-  const handleLeftClick = () => {
-    history.goBack();
+  const handleBackClick = () => {
+    history.push({
+      pathname: '/more',
+    });
   };
 
   return (
@@ -70,7 +72,7 @@ const MoreAccompanyManage = () => {
       <BaseAppBar
         text="내 동행 글"
         leftIcon={<ArrowBackIosIcon />}
-        leftClick={handleLeftClick}
+        leftClick={handleBackClick}
       />
       <Grid container style={{ marginTop: '0.8rem' }}>
         <MoreAccompanyListSet

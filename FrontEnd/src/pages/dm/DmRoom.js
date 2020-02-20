@@ -92,8 +92,6 @@ const DmRoom = ({ match }) => {
    * 초기 실행
    */
   const onInit = async () => {
-    console.log('onInit');
-
     firebase.database().goOnline();
 
     firebase
@@ -115,7 +113,6 @@ const DmRoom = ({ match }) => {
   };
 
   const waitReceiverRoomChange = (roomId, receiver, roomexist) => {
-    console.log('waitReceiverRoomChange');
     const callback = snapshot => {
       if (snapshot.val().read === true) {
         firebase
@@ -155,7 +152,6 @@ const DmRoom = ({ match }) => {
    * 방 로드하기
    */
   const loadRoom = (sender, receiver) => {
-    console.log('loadRoom');
     setTitle(receiver.nickname);
 
     var roomInfo = {};
@@ -180,8 +176,6 @@ const DmRoom = ({ match }) => {
    * 메세지 로드
    */
   const loadMessageList = async (roomId, receiver, roomexist) => {
-    console.log('loadMessageList');
-
     var loadMessageFirebase = firebase.database().ref('Messages/' + roomId);
     loadMessageFirebase.off();
     if (roomId) {
@@ -216,7 +210,6 @@ const DmRoom = ({ match }) => {
         if (count > 1) {
           count = count - 1;
         } else {
-          console.log('closeModalAction');
           dispatch(closeModalAction());
         }
         var list = document.getElementById('messageList');
@@ -356,19 +349,16 @@ const DmRoom = ({ match }) => {
 
       const callbackProgress = snapshot => {
         // 진행과정
-        console.log('onAttachFile, callbackProgress, snapshot: ', snapshot);
       };
 
       const callbackError = error => {
         // 에러발생
-        console.log('onAttachFile, callbackError, error: ', error);
         closeModal();
         alert('업로드 중 에러가 발생했습니다.');
       };
 
       const callbackComplete = () => {
         // 완료
-        console.log('onAttachFile, callbackComplete');
         // 프로그레스바 닫기
         closeModal();
         // 완료 다운로드 링크 메세지 보내기

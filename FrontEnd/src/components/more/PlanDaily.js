@@ -57,7 +57,6 @@ const PlanDaily = () => {
   ) => {
     const date = new Date(day);
     const momentDate = moment(date).format('YYYY-MM-DD');
-    console.log(companionDays);
     const isSelected = isInCurrentMonth && companionDays.includes(momentDate);
     return (
       <Badge color="secondary" variant={isSelected ? 'dot' : undefined}>

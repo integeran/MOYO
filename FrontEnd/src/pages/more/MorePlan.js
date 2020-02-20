@@ -2,24 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
-import Divider from '@material-ui/core/Divider';
 import Planner from '../../components/more/Planner';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
 import './styles.scss';
-import '@fullcalendar/core/main.css';
-import '@fullcalendar/daygrid/main.css';
-import { changeField } from '../../modules/planDate';
 import { storeSchedule } from '../../modules/morePlanTravel';
 import { storeCompanion } from '../../modules/morePlanCompanion';
 import { storeMemo } from '../../modules/morePlanMemo';
-import Typography from '@material-ui/core/Typography';
 import axios from '../../api/axios';
 import BaseAppBar from '../../components/common/BaseAppBar';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import ChatIcon from '@material-ui/icons/Chat';
-import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
 import Grid from '@material-ui/core/Grid';
 import styled from 'styled-components';
 
@@ -33,29 +23,6 @@ const InnerGrid = styled(Grid)`
 const MorePlan = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const pushSelectedDate = d => {
-    dispatch(changeField({ key: 'selectedDate', value: d }));
-  };
-
-  const [selectedDate, setSelectedDate] = useState('');
-
-  const handleChangeSelectedDate = value => {
-    // console.log(props);
-    setSelectedDate(value);
-    pushSelectedDate(moment(value.date).format());
-    // console.log(props.eventBackgroundColor);
-
-    // document.getElementsByClassName()
-    // console.log(value.jsEvent.target);
-    // console.log(value.dayEl.style.backgroundColor);
-    // // value.dayEl.style = { color: 'red' };
-    // value.jsEvent.target.className = 'fc-state-highlight';
-    // // t.addClass);
-    // // (jsEvent.target).addClass("fc-state-highlight")
-    // console.log(value);
-    // value.dayEl.classList.push('fc-state-highlight');
-    // value.dayEl.className += ' fc-state-highlight';
-  };
 
   const userData = useSelector(state => state.auth.userData);
 
@@ -158,27 +125,6 @@ const MorePlan = () => {
         style={{ margin: '0px' }}
         wrap="nowrap"
       >
-        {/* <InnerGrid item>
-          <FullCalendar
-            defaultView="dayGridMonth"
-            plugins={[dayGridPlugin, interactionPlugin]}
-            header={{
-              left: 'prev, customPrevButton',
-              center: 'title',
-              right: 'next',
-            }}
-            titleFormat={{
-              month: 'short',
-              year: 'numeric',
-            }}
-            fixedWeekCount={false}
-            contentHeight={'auto'}
-            dateClick={date => handleChangeSelectedDate(date)}
-            events={events}
-            displayEventTime={false}
-            dayRender={data => dayRenderFunction(data)}
-          />
-        </InnerGrid> */}
         <InnerGrid item>
           <Planner />
         </InnerGrid>
