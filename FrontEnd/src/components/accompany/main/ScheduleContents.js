@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import Carousel from 'nuka-carousel';
 import { Typography, Grid, Avatar } from '@material-ui/core';
 import { navigationSelect } from '../../../modules/baseNavigation';
-import TempImage from '../../../assets/img/banner_paris.svg';
 import meerkatIcon from '../../../assets/icon/icon_meerkat.svg';
 
 const HeaderDiv = styled.div`

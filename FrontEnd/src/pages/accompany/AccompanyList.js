@@ -27,6 +27,7 @@ import AccompanySearchBar from '../../components/accompany/List/AccompanySearchB
 import AccompanyListSet from '../../components/accompany/List/AccompanyListSet';
 import AccompanyFilterDialog from '../../components/accompany/List/AccompanyFilterDialog';
 import NoDataPage from '../../components/common/NoDataPage';
+import { openModalAction, closeModalAction } from '../../modules/progressModal';
 
 const MainGrid = styled(Grid)`
   height: inherit;
@@ -140,6 +141,7 @@ const AccompanyList = () => {
   };
 
   useEffect(() => {
+    dispatch(openModalAction());
     const getBoards = async () => {
       const result = await getAccompanyBoardList();
       const resData = result.data.data.map(board => ({
@@ -147,6 +149,7 @@ const AccompanyList = () => {
         validDate: true,
       }));
       setBoardData(resData);
+      dispatch(closeModalAction());
     };
     getBoards();
   }, [filterCondition]);

@@ -2,16 +2,15 @@ import React from 'react';
 import Carousel from 'nuka-carousel';
 import { Typography, Grid } from '@material-ui/core';
 import { useHistory } from 'react-router';
-import ad1 from '../../../assets/img/promotion_prague.svg';
-import ad2 from '../../../assets/img/promotion_dubrovnik.svg';
 import styled from 'styled-components';
 
 const AdvertisingImage = styled.img`
   border-radius: 1rem;
 `;
 
-const AdvertisingContents = () => {
+const AdvertisingContents = ({ promotions }) => {
   const history = useHistory();
+  console.log(promotions);
   return (
     <Grid container direction="column">
       <Grid item>
@@ -32,8 +31,14 @@ const AdvertisingContents = () => {
           renderCenterLeftControls={() => null}
           renderCenterRightControls={() => null}
         >
-          <AdvertisingImage alt="ad1" src={ad1} />
-          <AdvertisingImage alt="ad2" src={ad2} />
+          {promotions &&
+            promotions.map((promotion, index) => (
+              <AdvertisingImage
+                key={index}
+                alt={`ad_image_${index}`}
+                src={promotion}
+              />
+            ))}
         </Carousel>
       </Grid>
     </Grid>

@@ -219,7 +219,12 @@ const AccompanyListDetail = () => {
 
   return (
     <>
-      <Grid container direction="column" style={{ height: '100%' }}>
+      <Grid
+        container
+        direction="column"
+        wrap="nowrap"
+        style={{ height: '100%' }}
+      >
         <BaseAppBar
           text="상세보기"
           leftIcon={<ArrowBackIosIcon />}
@@ -315,7 +320,10 @@ const AccompanyListDetail = () => {
           </ContentsGrid>
         </InnerContainerGrid>
         {!isModify ? (
-          <Grid item style={{ width: '85%', margin: '0 auto' }}>
+          <Grid
+            item
+            style={{ width: '85%', margin: '0 auto', marginBottom: '1rem' }}
+          >
             <Button
               fullWidth
               variant="contained"
