@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AutoRotatingCarousel } from 'material-auto-rotating-carousel';
 import { Slide } from 'material-auto-rotating-carousel';
-import GuideMain from '../assets/img/GuideMain.PNG';
-import GuideAccompanyList from '../assets/img/GuideAccompanyList.PNG';
-import GuideAccompanyWrite from '../assets/img/GuideAccompanyWrite.PNG';
-import GuideMessage from '../assets/img/GuideMessage.PNG';
-import GuidePostmap from '../assets/img/GuidePostmap.PNG';
+import GuideMain from '../assets/img/GuideMain.png';
+import GuideAccompanyList from '../assets/img/GuideAccompanyList.png';
+import GuideAccompanyWrite from '../assets/img/GuideAccompanyWrite.png';
+import GuideMessage from '../assets/img/GuideMessage.png';
+import GuidePostmap from '../assets/img/GuidePostmap.png';
 import moyoColor from '../api/moyoColor';
 
 const NewbieGuide = props => {
