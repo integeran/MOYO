@@ -39,7 +39,7 @@
 	<insert id="createCommunity" parameterType="community">
 		insert into
 		community (u_id, cm_type_id, title, contents, views, register_date, update_date)
-		values (#{uId}, #{cmTypeId}, #{title}, #{contents}, #{views}, #{registerDate}, #{registerDate})
+		values (#{uId}, #{cmTypeId}, #{title}, #{contents}, #{views}, current_timestamp(), current_timestamp())
 	</insert>
 	<delete id="deleteCommunity" parameterType="int">
 		delete from community

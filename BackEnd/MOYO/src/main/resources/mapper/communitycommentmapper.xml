@@ -18,7 +18,7 @@
 	<insert id="createComment" parameterType="communityComment">
 		insert into
 		community_comment (cm_id, u_id, contents, register_date, update_date)
-		values (#{cmId}, #{uId}, #{contents}, #{registerDate}, #{registerDate})
+		values (#{cmId}, #{uId}, #{contents}, current_timestamp(), current_timestamp())
 	</insert>
 	<delete id="deleteComment" parameterType="int">
 		delete from community_comment
@@ -26,7 +26,7 @@
 	</delete>
 	<update id="updateComment" parameterType="communityComment">
 		update community_comment
-		set contents = #{contents}, update_date = #{updateDate}
+		set contents = #{contents}, update_date = current_timestamp()
 		where cm_comment_id = #{cmCommentId}
 	</update>
 	

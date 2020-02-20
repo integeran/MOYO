@@ -25,7 +25,7 @@
 	<insert id="registerUser" parameterType="user" >
 	    insert into
 	    user (nickname, age, gender, image, before_ps_id, after_ps_id, social_id, provider, level, register_date, update_date)
-	    values (#{nickname}, #{age}, #{gender}, #{image}, #{beforePsId}, #{afterPsId}, #{socialId}, #{provider}, #{level}, #{registerDate}, #{registerDate})
+	    values (#{nickname}, #{age}, #{gender}, #{image}, #{beforePsId}, #{afterPsId}, #{socialId}, #{provider}, #{level}, current_timestamp(), current_timestamp())
 	</insert>
 	
 	<delete id="deleteUser" parameterType="int">
@@ -34,13 +34,13 @@
 	
 	<update id="updateUser" parameterType="user">
 	    update user
-	    set nickname = #{nickname}, age = #{age}, gender = #{gender}, image = #{image}, image_name = #{imageName}, update_date = #{updateDate}
+	    set nickname = #{nickname}, age = #{age}, gender = #{gender}, image = #{image}, image_name = #{imageName}, update_date = current_timestamp()
 	    where u_id = #{uId}
 	</update>
 	
 	<update id="updateUserImage" parameterType="map">
 		update user
-		set image = #{image}, image_name = #{imageName}, update_date = #{updateDate}
+		set image = #{image}, image_name = #{imageName}, update_date = current_timestamp()
 		where u_id = #{uId}
 	</update>
 	
