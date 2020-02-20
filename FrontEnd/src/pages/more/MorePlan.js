@@ -142,7 +142,7 @@ const MorePlan = () => {
   };
 
   const handleBackIcon = () => {
-    history.push('/more');
+    history.goBack();
   };
 
   return (

@@ -13,10 +13,12 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  DialogContentText,
   Button,
   Avatar,
   Badge,
   Grid,
+  Typography,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
@@ -284,7 +286,6 @@ const Profile = props => {
     reader.onloadend = () => {
       const base64 = reader.result;
       if (base64) {
-        console.log(base64);
         setUserDialogImage(base64);
       }
     };
@@ -472,6 +473,9 @@ const Profile = props => {
             name="file"
             onChange={e => handleChangeImage(e.target.files[0])}
           ></input>
+          <Typography style={{ fontSize: 'small' }}>
+            5MB 가 넘는 파일은 업로드 속도가 느릴 수 있습니다.
+          </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog} color="primary">
