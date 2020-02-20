@@ -28,6 +28,7 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     width: '100%',
     transform: 'translateZ(0)',
+    zIndex: '1',
     position: 'absolute',
     '@media all and (-ms-high-contrast: none)': {
       display: 'none',
@@ -72,7 +73,12 @@ const AddAccompanyModal = ({ isOpen, close, receiver }) => {
     const res = await onAxiosPostAccompany(times);
     if (res) {
       close();
-      dispatch(openSnackBarAction('동행이 등록되었습니다.'));
+      dispatch(
+        openSnackBarAction({
+          message: '동행이 등록되었습니다.',
+          type: 'success',
+        }),
+      );
     } else {
       console.error('동행추가 error 발생');
     }
