@@ -152,7 +152,9 @@ const CommunityDetail = () => {
           <BlackDivider />
 
           <Grid item style={{ margin: '0.4rem' }}>
-            {communityData.contents}
+            <Typography variant="body2" style={{ whiteSpace: 'pre-line' }}>
+              {communityData.contents}
+            </Typography>
           </Grid>
 
           <BlackDivider />
