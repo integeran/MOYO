@@ -71,7 +71,7 @@ const BaseAppBar = ({
           <ItemContainer icon={leftIcon} text={leftText} onClick={leftClick} />
         </CenterGrid>
         {isExtraSize() ? (
-          <CenterGrid item xs={2} justify="flex-start">
+          <CenterGrid item container xs={2} justify="flex-start">
             <ItemContainer
               style={{ padding: '12px 12px 12px 0' }}
               icon={leftExtraIcon}

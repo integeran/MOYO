@@ -84,15 +84,17 @@ const AccompanyLocationSelect = () => {
     });
   };
 
+  const handleBackClick = () => {
+    history.goBack();
+  };
+
   return (
     <StyledDiv>
       <HeaderContainer container alignItems="center">
         <Grid item>
           <IconButton
             color="inherit"
-            onClick={() => {
-              history.goBack();
-            }}
+            onClick={handleBackClick}
             style={{ paddingLeft: '1.5rem' }}
           >
             <ArrowBackIosIcon />

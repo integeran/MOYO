@@ -191,7 +191,7 @@ const AccompanyListDetail = () => {
           <Typography variant="subtitle1">{boardData.nickname}</Typography>
         </Grid>
         {isModify && (
-          <Grid item xs={4} alignContent="right">
+          <Grid item xs={4}>
             <CustomFormControlLabel
               value="top"
               control={
