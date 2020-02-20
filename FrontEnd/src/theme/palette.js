@@ -19,9 +19,7 @@ export default {
   },
   success: {
     contrastText: white,
-    dark: colors.green[900],
-    main: moyocolor.moyo_biscay_4,
-    light: colors.green[400],
+    main: moyocolor.moyo_green_3,
   },
   info: {
     contrastText: white,
@@ -29,15 +27,11 @@ export default {
   },
   warning: {
     contrastText: black,
-    dark: colors.yellow[900],
     main: colors.yellow[600],
-    light: colors.yellow[400],
   },
   error: {
     contrastText: white,
-    dark: colors.red[900],
     main: colors.red[600],
-    light: colors.red[400],
   },
   text: {
     primary: black,

@@ -171,7 +171,6 @@ const Profile = props => {
 
   const postData = async () => {
     const resData = await postRequest();
-    console.log(resData);
     if (resData.data.status) {
       const jwtData = jwtDecode(resData.data.data);
       pushUserData('userToken', resData.data.data);
