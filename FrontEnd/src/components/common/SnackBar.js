@@ -61,9 +61,19 @@ const SnackBar = () => {
       onClose={closeSnackBar}
       style={{ bottom: '4rem' }}
     >
-      <Alert severity={type} onClose={closeSnackBar}>
-        {message}
-      </Alert>
+      {type === 'warning' ? (
+        <Alert
+          severity={type}
+          style={{ color: 'black', fontWeight: '700' }}
+          onClose={closeSnackBar}
+        >
+          {message}
+        </Alert>
+      ) : (
+        <Alert severity={type} onClose={closeSnackBar}>
+          {message}
+        </Alert>
+      )}
     </Snackbar>
   );
 

@@ -65,7 +65,7 @@ const AddAccompanyModal = ({ isOpen, close, receiver }) => {
       close();
       dispatch(openSnackBarAction('동행이 등록되었습니다.'));
     } else {
-      console.log('동행추가 error 발생');
+      console.error('동행추가 error 발생');
     }
   };
 

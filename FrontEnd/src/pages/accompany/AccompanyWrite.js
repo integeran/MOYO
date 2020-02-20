@@ -164,9 +164,9 @@ const AccompanyWrite = () => {
     fetchBoard();
 
     history.push({
-      pathname: history.location.state.prevpath,
+      pathname: history.location.state.nowpath,
       state: {
-        prevpath: history.location.pathname,
+        prevpath: history.location.state.prevpath,
         board: boardData,
       },
     });

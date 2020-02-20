@@ -162,8 +162,6 @@ const CommunityCommentList = ({ cmId, userData }) => {
     setEditComment(e.target.value);
   };
 
-  console.log(comments);
-
   return (
     <>
       <div>
