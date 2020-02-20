@@ -1,7 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Modal from '@material-ui/core/Modal';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import { Modal, LinearProgress, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -9,6 +8,7 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     width: '100%',
     transform: 'translateZ(0)',
+    zIndex: 1,
     position: 'absolute',
     // The position fixed scoping doesn't work in IE 11.
     // Disable this demo to preserve the others.
@@ -23,11 +23,10 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
   },
   paper: {
-    width: 400,
+    width: '80%',
     backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
     boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
+    padding: theme.spacing(1, 4, 3),
   },
 }));
 
@@ -48,7 +47,14 @@ const UploadModal = ({ isOpen, close }) => {
         container={() => rootRef.current}
       >
         <div className={classes.paper}>
-          <h2 id="server-modal-title">Uploading...</h2>
+          <Typography
+            variant="h6"
+            align="center"
+            id="server-modal-title"
+            style={{ margin: '1rem 0' }}
+          >
+            Uploading...
+          </Typography>
           <p id="server-modal-description">
             <LinearProgress />
           </p>
