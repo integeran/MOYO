@@ -23,6 +23,13 @@ const MoreSettings = () => {
     history.push('/more');
   };
 
+  const handleGuide = () => {
+    history.push({
+      pathname: '/newbieguide',
+      state: { prevpath: '/more/moreSettings' },
+    });
+  };
+
   return (
     <>
       <div
@@ -39,13 +46,25 @@ const MoreSettings = () => {
         />
         <Grid
           item
+          direction="column"
           style={{
             display: 'flex',
-            justifyContent: 'center',
+            justifyContent: 'space-evenly',
             alignItems: 'center',
             height: 'inherit',
           }}
         >
+          <Typography
+            variant="h6"
+            onClick={handleGuide}
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            가이드 보기
+          </Typography>
           <Typography
             variant="h6"
             onClick={handleLogOut}
