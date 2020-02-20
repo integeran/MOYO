@@ -97,6 +97,7 @@ const ScheduleContents = ({ tripSchedule, tripCompanion }) => {
     dispatch(navigationSelect('more'));
     history.push({
       pathname: '/more/morePlan',
+      state: { prevpath: '/accompany' },
     });
   };
 
