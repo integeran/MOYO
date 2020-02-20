@@ -14,6 +14,7 @@ import { Tabs, Tab, Fab, Grid } from '@material-ui/core/';
 import moyoColor from '../../api/moyoColor';
 import CreateIcon from '@material-ui/icons/Create';
 import styled from 'styled-components';
+import { openModalAction, closeModalAction } from '../../modules/progressModal';
 
 const HeaderTabs = styled(Tabs)`
   .MuiTabs-indicator {
@@ -95,6 +96,7 @@ const CommunityList = props => {
   }, []);
 
   useEffect(() => {
+    dispatch(openModalAction());
     const getCommunity = async () => {
       const result = await getCommunityList();
       const resData = result.data.data.map(item => {
@@ -103,6 +105,7 @@ const CommunityList = props => {
         };
       });
       setCommunityData(resData);
+      dispatch(closeModalAction());
     };
     getCommunity();
   }, [communityType, searchWord]);
