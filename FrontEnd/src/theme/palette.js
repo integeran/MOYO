@@ -20,7 +20,7 @@ export default {
   success: {
     contrastText: white,
     dark: colors.green[900],
-    main: moyocolor.moyo_biscay_2,
+    main: moyocolor.moyo_biscay_4,
     light: colors.green[400],
   },
   info: {
