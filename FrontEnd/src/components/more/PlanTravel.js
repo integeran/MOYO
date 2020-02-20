@@ -23,6 +23,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { getNationList, getCityList } from '../../api/commonData';
 import AlertDialog from '../common/AlertDialog';
+import { openSnackBarAction } from '../../modules/snackBar';
 
 const PlanTravel = () => {
   const useStyles = makeStyles(theme => ({
@@ -154,6 +155,12 @@ const PlanTravel = () => {
       setCityList([]);
       setOpenCreate(false);
       setPostClick(false);
+      dispatch(
+        openSnackBarAction({
+          message: '일정이 생성되었습니다.',
+          type: 'success',
+        }),
+      );
       setTimeout(() => {
         setPostClick(true);
       }, 1000);
@@ -242,8 +249,19 @@ const PlanTravel = () => {
       const schData = await getSchedule();
       dispatch(storeSchedule(schData.data.data));
       setOpenUpdate(false);
+      dispatch(
+        openSnackBarAction({
+          message: '일정이 수정되었습니다.',
+          type: 'success',
+        }),
+      );
     } else {
-      alert('날짜를 변경해주세요!');
+      dispatch(
+        openSnackBarAction({
+          message: '날짜를 변경해주세요.',
+          type: 'error',
+        }),
+      );
     }
   };
 
