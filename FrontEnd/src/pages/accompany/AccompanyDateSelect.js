@@ -61,13 +61,18 @@ const AccompanyDateSelect = () => {
     weekdaysShort: ['일', '월', '화', '수', '목', '금', '토'],
   });
 
-  const HandleClick = () => {
+  const handleListClick = () => {
     dispatch(accompanyDate(date));
     history.push({
       pathname: '/accompany/accList',
       state: { prevpath: history.location.pathname },
     });
   };
+
+  const handleBackClick = () => {
+    history.goBack();
+  };
+
   return (
     <Grid
       container
@@ -79,9 +84,7 @@ const AccompanyDateSelect = () => {
         <Grid item>
           <IconButton
             color="inherit"
-            onClick={() => {
-              history.goBack();
-            }}
+            onClick={handleBackClick}
             style={{ paddingLeft: '1.5rem' }}
           >
             <ArrowBackIosIcon />
@@ -108,7 +111,7 @@ const AccompanyDateSelect = () => {
             color="secondary"
             fullWidth
             disabled={date === null}
-            onClick={HandleClick}
+            onClick={handleListClick}
           >
             동행 찾기
           </Button>

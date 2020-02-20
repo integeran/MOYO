@@ -121,22 +121,27 @@ const ScheduleContents = ({ tripSchedule, tripCompanion }) => {
     </OuterGrid>
   );
 
-  const TripScheduleItem = ({ item }) => (
-    <HeaderDiv>
-      {item !== null ? (
-        <>
-          <img alt="innerImg" src={TempImage} onLoad={_handleLoadImage} />
-          <div className="headerTextDiv">
-            <Typography variant="h6" style={{ color: 'white' }}>
-              {item.nation}/{item.city}
-            </Typography>
-          </div>
-        </>
-      ) : (
-        <CustomNoDataPage />
-      )}
-    </HeaderDiv>
-  );
+  const TripScheduleItem = ({ item }) => {
+    const ImgUrl = item
+      ? `https://storage.googleapis.com/moyo-cloud-storage/city/${item.cid}.svg`
+      : null;
+    return (
+      <HeaderDiv>
+        {item !== null ? (
+          <>
+            <img alt="innerImg" src={ImgUrl} onLoad={_handleLoadImage} />
+            <div className="headerTextDiv">
+              <Typography variant="h6" style={{ color: 'white' }}>
+                {item.nation}/{item.city}
+              </Typography>
+            </div>
+          </>
+        ) : (
+          <CustomNoDataPage />
+        )}
+      </HeaderDiv>
+    );
+  };
 
   return (
     <>

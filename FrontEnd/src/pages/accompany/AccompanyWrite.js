@@ -124,7 +124,10 @@ const AccompanyWrite = () => {
   };
 
   const handleBackClick = () => {
-    history.goBack();
+    history.push({
+      pathname: history.location.state.prevpath,
+      state: { prevpath: history.location.pathname },
+    });
   };
 
   const handleSubmitClick = () => {
@@ -147,7 +150,11 @@ const AccompanyWrite = () => {
         : await postAccompanyBoard(boardData);
     };
     fetchBoard();
-    history.goBack();
+
+    history.push({
+      pathname: history.location.state.prevpath,
+      state: { prevpath: history.location.pathname },
+    });
   };
 
   // main form event
