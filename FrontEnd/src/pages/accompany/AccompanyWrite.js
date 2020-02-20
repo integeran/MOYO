@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   Typography,
   TextField,
@@ -15,6 +15,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import BaseAppBar from '../../components/common/BaseAppBar';
 import MainForm from '../../components/accompany/write/MainForm';
 import SubForm from '../../components/accompany/write/SubForm';
+import { openSnackBarAction } from '../../modules/snackBar';
 import moment from 'moment';
 import axios from '../../api/axios';
 import {
@@ -56,8 +57,9 @@ const CustomExpansionPanel = styled(ExpansionPanel)`
 `;
 
 const AccompanyWrite = () => {
-  const userData = useSelector(state => state.auth.userData, []);
+  const dispatch = useDispatch();
   const history = useHistory();
+  const userData = useSelector(state => state.auth.userData, []);
   const isModify = history.location.pathname.indexOf('more') > -1;
   const modifyBoard = history.location.state.board;
 
@@ -123,11 +125,41 @@ const AccompanyWrite = () => {
     }
   };
 
+  const validateInput = () => {
+    const openSnackbar = (text, textOption = '입력') => {
+      dispatch(
+        openSnackBarAction({
+          message: `${text}를 ${textOption}해주세요.`,
+          type: 'warning',
+        }),
+      );
+    };
+    if (title.trim() === '') {
+      openSnackbar('제목');
+      return false;
+    }
+    if (endDate === null) {
+      openSnackbar('날짜', '선택');
+      return false;
+    }
+    if (nation.trim() === '' || city.trim() === '') {
+      openSnackbar('나라 및 도시', '선택');
+      return false;
+    }
+    if (content.trim() === '') {
+      openSnackbar('내용');
+      return false;
+    }
+  };
+
   const handleBackClick = () => {
     history.goBack();
   };
 
   const handleSubmitClick = () => {
+    if (!validateInput()) {
+      return;
+    }
     const boardData = isModify
       ? {
           ...modifyBoard,
@@ -163,6 +195,12 @@ const AccompanyWrite = () => {
     };
     fetchBoard();
 
+    dispatch(
+      openSnackBarAction({
+        message: `동행 글이 등록되었습니다.`,
+        type: 'success',
+      }),
+    );
     history.push({
       pathname: history.location.state.nowpath,
       state: {
