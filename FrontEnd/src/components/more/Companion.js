@@ -18,6 +18,8 @@ import moment from 'moment';
 import axios from '../../api/axios';
 import moyocolor from '../../api/moyoColor';
 import TripCompanionSet from './schedule/TripCompanionSet';
+import { openSnackBarAction } from '../../modules/snackBar';
+import AlertDialog from '../../components/common/AlertDialog';
 
 const Companion = props => {
   const setIsCompanion = props.setIsCompanion;
@@ -95,6 +97,12 @@ const Companion = props => {
       const comData = await getCompanion();
       await dispatch(storeCompanion(comData.data.data));
       // setIsCompanion(false);
+      dispatch(
+        openSnackBarAction({
+          message: '동행 일정이 변경되었습니다.',
+          type: 'success',
+        }),
+      );
     }
     setOpenUpdate(false);
   };
@@ -105,7 +113,13 @@ const Companion = props => {
     dispatch(storeCompanion(comData.data.data));
     setSelectedId('');
     setOpenDelete(false);
-    setIsCompanion(false);
+    // setIsCompanion(false);
+    dispatch(
+      openSnackBarAction({
+        message: '동행 일정이 삭제되었습니다.',
+        type: 'success',
+      }),
+    );
   };
 
   const handleClickOpenDelete = dId => {
@@ -194,7 +208,16 @@ const Companion = props => {
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog
+
+      <AlertDialog
+        open={openDelete}
+        title="동행 일정 삭제"
+        contents="정말 삭제하시겠습니까?"
+        onConfirm={handleDeleteCompanion}
+        onClose={handleCloseDelete}
+      ></AlertDialog>
+
+      {/* <Dialog
         open={openDelete}
         onClose={handleCloseDelete}
         aria-labelledby="form-dialog-title"
@@ -208,7 +231,7 @@ const Companion = props => {
             삭제
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
     </div>
   );
 };

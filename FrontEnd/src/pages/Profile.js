@@ -23,6 +23,7 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
+import { openSnackBarAction } from '../modules/snackBar';
 
 const Profile = props => {
   const jwtDecode = require('jwt-decode');
@@ -202,11 +203,23 @@ const Profile = props => {
       pushUserData('gender', jwtData.user.gender);
       pushUserData('image', jwtData.user.image);
       localStorage.setItem('token', resPutData.data.data);
+      dispatch(
+        openSnackBarAction({
+          message: '프로필이 수정되었습니다.',
+          type: 'success',
+        }),
+      );
       history.push('/more');
     } else {
       setUserNicknameOut('');
       setNickNameError(true);
       setNickNamePlaceHolder('닉네임이 중복됩니다!');
+      dispatch(
+        openSnackBarAction({
+          message: '닉네임을 변경해주세요.',
+          type: 'warning',
+        }),
+      );
     }
   };
 
@@ -379,7 +392,7 @@ const Profile = props => {
                   error={nickNameError}
                   placeholder={nickNamePlaceHolder}
                   id="standard-full-width"
-                  label="Nickname"
+                  label="닉네임"
                   defaultValue={userNicknameOut}
                   value={userNicknameOut}
                   onChange={handleChangeNickname}
@@ -399,7 +412,7 @@ const Profile = props => {
                   id="standard-select-currency"
                   select={isMe}
                   fullWidth
-                  label="AgeRange"
+                  label="나이대"
                   value={
                     isMe
                       ? age
@@ -422,7 +435,7 @@ const Profile = props => {
                   id="standard-select-currency"
                   select={isMe}
                   fullWidth
-                  label="Gender"
+                  label="성별"
                   value={
                     isMe
                       ? gender

@@ -142,7 +142,7 @@ const PlanTravel = () => {
   const [postClick, setPostClick] = useState(true);
 
   const postPlanTravel = async () => {
-    if (postClick) {
+    if (postClick && city && nation) {
       await postPlanTravelServer();
       const schData = await getSchedule();
       dispatch(storeSchedule(schData.data.data));
@@ -161,6 +161,13 @@ const PlanTravel = () => {
       setTimeout(() => {
         setPostClick(true);
       }, 1000);
+    } else {
+      dispatch(
+        openSnackBarAction({
+          message: '나라와 도시를 선택해주세요.',
+          type: 'warning',
+        }),
+      );
     }
   };
 
@@ -180,6 +187,12 @@ const PlanTravel = () => {
     dispatch(storeSchedule(schData.data.data));
     setDeleteItem('');
     setOpenDelete(false);
+    dispatch(
+      openSnackBarAction({
+        message: '일정이 삭제되었습니다.',
+        type: 'success',
+      }),
+    );
   };
 
   const handleClickOpenDelete = sId => {
@@ -241,7 +254,11 @@ const PlanTravel = () => {
 
   const putPlanTravel = async () => {
     // 형식이 맞지 않으면 버그 발생
-    if (moment(selectedStartDateUpdate) <= moment(selectedEndDateUpdate)) {
+    if (
+      moment(selectedStartDateUpdate) <= moment(selectedEndDateUpdate) &&
+      cityUpdate &&
+      nationUpdate
+    ) {
       await putPlanTravelServer();
       const schData = await getSchedule();
       dispatch(storeSchedule(schData.data.data));
@@ -252,11 +269,20 @@ const PlanTravel = () => {
           type: 'success',
         }),
       );
+    } else if (
+      moment(selectedStartDateUpdate) > moment(selectedEndDateUpdate)
+    ) {
+      dispatch(
+        openSnackBarAction({
+          message: '날짜를 확인해주세요.',
+          type: 'warning',
+        }),
+      );
     } else {
       dispatch(
         openSnackBarAction({
-          message: '날짜를 변경해주세요.',
-          type: 'error',
+          message: '나라와 도시를 선택해주세요.',
+          type: 'warning',
         }),
       );
     }

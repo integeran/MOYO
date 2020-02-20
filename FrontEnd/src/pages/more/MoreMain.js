@@ -24,7 +24,10 @@ const MoreMain = () => {
   // const userData = useSelector(state => state.auth.userData);
 
   const handlePlanClick = () => {
-    history.push('/more/morePlan');
+    history.push({
+      pathname: '/more/morePlan',
+      state: { prevpath: '/more' },
+    });
   };
   const handleAccompanyManageClick = () => {
     history.push('/more/accompanyManage');

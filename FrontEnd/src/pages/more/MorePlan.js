@@ -20,7 +20,8 @@ const InnerGrid = styled(Grid)`
   margin-bottom: 1.2rem !important;
 `;
 
-const MorePlan = () => {
+const MorePlan = props => {
+  const prevPath = props.location.state.prevpath;
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -109,7 +110,7 @@ const MorePlan = () => {
   };
 
   const handleBackIcon = () => {
-    history.goBack();
+    history.push(`${prevPath}`);
   };
 
   return (
