@@ -9,6 +9,8 @@ import moment from '../../api/moment';
 import styled from 'styled-components';
 import BaseAppBar from '../../components/common/BaseAppBar';
 import OtherProfile from '../../components/common/OtherProfile';
+import AlertDialog from '../../components/common/AlertDialog';
+import { openSnackBarAction } from '../../modules/snackBar';
 import { navigationSelect } from '../../modules/baseNavigation';
 import {
   Switch,
@@ -69,8 +71,7 @@ const AccompanyListDetail = () => {
   const [boardData, setBoardData] = useState(history.location.state.board);
   const [isModify, setIsModify] = useState(false);
   const [openProfile, setOpenProfile] = useState(false);
-
-  console.log('Detail', history);
+  const [openDialog, setOpenDialog] = useState(false);
 
   useEffect(() => {
     setIsModify(history.location.state.board.uid === userData.uid);
@@ -128,6 +129,22 @@ const AccompanyListDetail = () => {
     });
   };
 
+  const handleDialogConfirm = async () => {
+    setOpenDialog(false);
+    await deleteBoard().then(() => {
+      dispatch(
+        openSnackBarAction({
+          message: '동행글이 삭제되었습니다.',
+          type: 'success',
+        }),
+      );
+      handleGoBack();
+    });
+  };
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+  };
+
   const handleMoveChat = () => {
     dispatch(navigationSelect('DM'));
     history.push(`/dmroom/${boardData.uid}`);
@@ -143,10 +160,8 @@ const AccompanyListDetail = () => {
       },
     });
   };
-  const handleDeleteClick = async () => {
-    await deleteBoard().then(() => {
-      handleGoBack();
-    });
+  const handleDeleteClick = () => {
+    setOpenDialog(true);
   };
 
   const handleShowProfile = () => {
@@ -340,6 +355,13 @@ const AccompanyListDetail = () => {
         setOpenProfile={setOpenProfile}
         otherUserId={boardData.uid}
       />
+      <AlertDialog
+        open={openDialog}
+        title="일정 삭제"
+        contents="정말 삭제하시겠습니까?"
+        onConfirm={handleDialogConfirm}
+        onClose={handleDialogClose}
+      ></AlertDialog>
     </>
   );
 };
