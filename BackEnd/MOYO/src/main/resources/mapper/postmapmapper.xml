@@ -30,7 +30,7 @@
 	
 	<insert id="insertPostmap" parameterType="postmap">
 		insert into postmap(contents, latitude, longitude, register_id, register_date)
-		values(#{contents}, #{latitude}, #{longitude}, #{registerId}, #{registerDate})
+		values(#{contents}, #{latitude}, #{longitude}, #{registerId}, current_timestamp())
 	</insert>
 
 	<delete id="deletePostmap" parameterType="int">

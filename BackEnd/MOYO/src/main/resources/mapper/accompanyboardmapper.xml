@@ -68,7 +68,7 @@
 	    values (#{title}, #{uId}, #{nId}, #{cId}, 
 	    <if test="tTypeId!=null">#{tTypeId},</if> #{contents}, #{startDate}, #{endDate},
 	    <if test="wantAge!=null">#{wantAge},</if> 
-	     <if test="wantGender!=null">#{wantGender},</if> #{registerDate}, #{registerDate})
+	     <if test="wantGender!=null">#{wantGender},</if> current_timestamp(), current_timestamp())
 	</insert>
 	
 	<delete id="deleteAccompanyBoard" parameterType="int">
@@ -83,7 +83,7 @@
 		    <if test="wantAge!=null">want_age = #{wantAge},</if> 
 		    <if test="wantGender!=null">want_gender = #{wantGender},</if> 
 		    <if test="deadlineToggle!=null">deadline_toggle = #{deadlineToggle},</if>
-		    update_date = #{updateDate}
+		    update_date = current_timestamp()
 	    where ac_board_id = #{acBoardId}
 	</update>
 	

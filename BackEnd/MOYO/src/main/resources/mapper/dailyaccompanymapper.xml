@@ -33,7 +33,7 @@
 	<insert id="createDailyAccompany" parameterType="dailyAccompany">
 		insert into 
 		daily_accompany (u_id, accompany_id, day, register_date, update_date)
-		values (#{uId}, #{accompanyId}, #{day}, #{registerDate}, #{registerDate})	
+		values (#{uId}, #{accompanyId}, #{day}, current_timestamp(), current_timestamp())	
 	</insert>
 	<delete id="deleteDailyAccompany" parameterType="map">
 		delete from daily_accompany
@@ -41,7 +41,7 @@
 	</delete>
 	<update id="updateDailyAccompany" parameterType="dailyAccompany">
 		update daily_accompany
-		set day = #{day}, update_date = #{updateDate}
+		set day = #{day}, update_date = current_timestamp()
 		where d_ac_id = #{dAcId} and u_id = #{uId}
 	</update>
 </mapper>
