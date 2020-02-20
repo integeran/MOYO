@@ -12,6 +12,7 @@ import axios from '../../api/axios';
 import { Grid, Typography, Divider } from '@material-ui/core';
 import BaseAppBar from '../../components/common/BaseAppBar';
 import AlertDialog from '../../components/common/AlertDialog';
+import { openSnackBarAction } from '../../modules/snackBar';
 
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import BorderColorIcon from '@material-ui/icons/BorderColor';
@@ -79,7 +80,13 @@ const CommunityDetail = () => {
 
   const handleDeleteClick = async () => {
     await deleteCommunity(communityData.cmId);
-    history.goBack();
+    history.push(`${pathname}`);
+    dispatch(
+      openSnackBarAction({
+        message: '글이 삭제되었습니다.',
+        type: 'success',
+      }),
+    );
   };
 
   const handleModifyClick = () => {
@@ -127,6 +134,12 @@ const CommunityDetail = () => {
               style={{ color: MoyoColor.moyo_biscay_3 }}
             >
               {communityData.communityType}
+
+              {/* {
+                communityType.find(
+                  item => item.cmTypeId === communityData.cmTypeId,
+                ).name
+              } */}
             </Typography>
           </Grid>
           <Grid item>
