@@ -53,10 +53,21 @@ const AccompanyMain = () => {
     }
   };
 
+  const getPromotions = async () => {
+    try {
+      return await axios.get('/accompanyBoard/getPromotionImages', {
+        headers: { userToken: userData.userToken },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     const fetchTripInfo = async () => {
       const sRes = await getTripSchedule();
       const cRes = await getTripCompanion();
+      // const aRes = await
       if (sRes && sRes.data && sRes.data.data) {
         setTripSchedule(sRes.data.data);
       }

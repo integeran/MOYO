@@ -34,40 +34,6 @@ const MoreMain = () => {
     history.push('/more/moreCommunity');
   };
 
-  // const pushUserData = (k, v) => {
-  //   dispatch(changeField({ form: 'userData', key: k, value: v }));
-  // };
-
-  // const getTokenRequest = async () => {
-  //   try {
-  //     return await axios.post('user/issueToken', {
-  //       provider: 0,
-  //       socialId: userData.uid,
-  //     });
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
-  // const getToken = async () => {
-  //   const resData = await getTokenRequest();
-  //   console.log(resData);
-  //   if (resData.data.status) {
-  //     const jwtData = jwtDecode(resData.data.data);
-  //     pushUserData('userToken', resData.data.data);
-  //     pushUserData('uid', jwtData.user.uid);
-  //     pushUserData('nickname', jwtData.user.nickname);
-  //     pushUserData('age', jwtData.user.age);
-  //     pushUserData('gender', jwtData.user.gender);
-  //     pushUserData('image', jwtData.user.image);
-  //     localStorage.setItem('token', resData.data.data);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getToken();
-  // }, []);
-
   return (
     <>
       <Grid container direction="column">
