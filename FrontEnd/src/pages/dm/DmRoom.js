@@ -26,7 +26,6 @@ const CustomIconButton = styled(IconButton)`
   & > span > svg {
     color: white;
   }
-  z-index: -1;
 `;
 
 const MessageTextField = styled(TextField)`
