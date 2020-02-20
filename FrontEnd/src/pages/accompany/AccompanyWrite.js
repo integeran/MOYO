@@ -124,27 +124,39 @@ const AccompanyWrite = () => {
   };
 
   const handleBackClick = () => {
-    history.push({
-      pathname: history.location.state.prevpath,
-      state: { prevpath: history.location.pathname },
-    });
+    history.goBack();
   };
 
   const handleSubmitClick = () => {
+    const boardData = isModify
+      ? {
+          ...modifyBoard,
+          nid: nation,
+          cid: city,
+          contents: content,
+          startDate: moment(startDate).format('YYYY-MM-DD'),
+          endDate: moment(endDate).format('YYYY-MM-DD'),
+          title: title,
+          ttypeId: type,
+          type: typeList.find(item => item.ttypeId === type).name,
+          uid: userData.uid,
+          wantAge: age.toLowerCase(),
+          wantGender: gender,
+        }
+      : {
+          nid: nation,
+          cid: city,
+          contents: content,
+          startDate: moment(startDate).format('YYYY-MM-DD'),
+          endDate: moment(endDate).format('YYYY-MM-DD'),
+          title: title,
+          ttypeId: type,
+          uid: userData.uid,
+          wantAge: age.toLowerCase(),
+          wantGender: gender,
+        };
+
     const fetchBoard = async () => {
-      const boardData = {
-        acBoardId: isModify ? modifyBoard.acBoardId : 0,
-        nid: nation,
-        cid: city,
-        contents: content,
-        startDate: moment(startDate).format('YYYY-MM-DD'),
-        endDate: moment(endDate).format('YYYY-MM-DD'),
-        title: title,
-        ttypeId: type,
-        uid: userData.uid,
-        wantAge: age.toLowerCase(),
-        wantGender: gender,
-      };
       isModify
         ? await putAccompanyBoard(boardData)
         : await postAccompanyBoard(boardData);
@@ -153,7 +165,10 @@ const AccompanyWrite = () => {
 
     history.push({
       pathname: history.location.state.prevpath,
-      state: { prevpath: history.location.pathname },
+      state: {
+        prevpath: history.location.pathname,
+        board: boardData,
+      },
     });
   };
 
