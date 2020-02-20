@@ -74,7 +74,7 @@ const TripCompanionSet = ({
         <OtherProfile
           openProfile={openProfile}
           setOpenProfile={setOpenProfile}
-          otherUserId={profileId}
+          otherUserId={companionInfo.accompanyId}
         />
       )}
     </>

@@ -35,7 +35,7 @@ const AlertDialog = ({ open, title, contents, onConfirm, onClose }) => {
       >
         <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText id="alert-dialog-description" color="error">
             {contents}
           </DialogContentText>
         </DialogContent>

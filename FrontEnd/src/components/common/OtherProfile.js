@@ -64,7 +64,7 @@ const OtherProfile = props => {
       setNickname(userData.nickname);
     };
     fetchData();
-  }, []);
+  }, [otherUserId]);
 
   return (
     <Dialog
