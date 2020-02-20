@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from '../../api/axios';
 import moment from 'moment';
@@ -106,6 +106,10 @@ const AddAccompanyModal = ({ isOpen, close, receiver }) => {
     addAccompany();
   };
 
+  useEffect(() => {
+    setEndDate(startDate);
+  }, [startDate]);
+
   return isOpen ? (
     <div className={classes.root} ref={rootRef}>
       <Modal
@@ -134,6 +138,7 @@ const AddAccompanyModal = ({ isOpen, close, receiver }) => {
               <Grid item style={{ marginBottom: '10%' }}>
                 <DatePicker
                   disablePast
+                  minDate={startDate}
                   format="yyyy/MM/dd"
                   label="종료날짜"
                   value={endDate}

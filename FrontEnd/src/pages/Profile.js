@@ -184,6 +184,7 @@ const Profile = props => {
       dispatch(changeBool({ key: 'isLoggedIn', value: true }));
       history.push({
         pathname: '/newbieguide',
+        state: { prevpath: '/profile' },
       });
     } else {
       setUserNicknameOut('');
