@@ -11,7 +11,6 @@ import {
   DialogContent,
   DialogTitle,
   MenuItem,
-  Typography,
   Grid,
 } from '@material-ui/core';
 import { storeSchedule } from '../../modules/morePlanTravel';
@@ -19,8 +18,6 @@ import axios from '../../api/axios';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import TripPaper from './schedule/TripSchedulePaper';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
 import { getNationList, getCityList } from '../../api/commonData';
 import AlertDialog from '../common/AlertDialog';
 import { openSnackBarAction } from '../../modules/snackBar';
@@ -435,22 +432,6 @@ const PlanTravel = () => {
         onConfirm={handleDeleteSchedule}
         onClose={handleCloseDelete}
       ></AlertDialog>
-
-      {/* <Dialog
-        open={openDelete}
-        onClose={handleCloseDelete}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">정말 삭제하시겠습니까?</DialogTitle>
-        <DialogActions>
-          <Button onClick={handleCloseDelete} color="primary">
-            취소
-          </Button>
-          <Button onClick={handleDeleteSchedule} color="secondary">
-            삭제
-          </Button>
-        </DialogActions>
-      </Dialog> */}
     </div>
   );
 };

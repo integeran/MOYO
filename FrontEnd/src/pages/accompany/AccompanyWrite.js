@@ -134,6 +134,7 @@ const AccompanyWrite = () => {
         }),
       );
     };
+
     if (title.trim() === '') {
       openSnackbar('제목');
       return false;
@@ -142,7 +143,7 @@ const AccompanyWrite = () => {
       openSnackbar('날짜', '선택');
       return false;
     }
-    if (nation.trim() === '' || city.trim() === '') {
+    if (nation === '' || city === '') {
       openSnackbar('나라 및 도시', '선택');
       return false;
     }
@@ -150,6 +151,8 @@ const AccompanyWrite = () => {
       openSnackbar('내용');
       return false;
     }
+
+    return true;
   };
 
   const handleBackClick = () => {
@@ -193,11 +196,14 @@ const AccompanyWrite = () => {
         ? await putAccompanyBoard(boardData)
         : await postAccompanyBoard(boardData);
     };
+
     fetchBoard();
 
     dispatch(
       openSnackBarAction({
-        message: `동행 글이 등록되었습니다.`,
+        message: isModify
+          ? `동행 글이 수정되었습니다.`
+          : `동행 글이 등록되었습니다.`,
         type: 'success',
       }),
     );

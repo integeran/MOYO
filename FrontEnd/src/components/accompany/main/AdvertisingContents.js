@@ -10,7 +10,6 @@ const AdvertisingImage = styled.img`
 
 const AdvertisingContents = ({ promotions }) => {
   const history = useHistory();
-  console.log(promotions);
   return (
     <Grid container direction="column">
       <Grid item>
