@@ -44,13 +44,12 @@ const PostmapListPaper = ({ curTime, chat, onPostClick, onLikeClick }) => {
     <PaperGrid container alignItems="center">
       <Grid item xs={10} onClick={onPostClick}>
         <Grid container direction="column">
-          <Grid item xs={6}>
+          <Grid item>
             <Typography variant="body2">{chat.contents}</Typography>
           </Grid>
           <Typography variant="caption">
             {calcTime(chat.registerDate)}
           </Typography>
-          <Grid item xs={6}></Grid>
         </Grid>
       </Grid>
       <Grid

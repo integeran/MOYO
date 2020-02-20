@@ -37,7 +37,7 @@ const FileMessage = ({ fileName, url, timeStamp }) => {
   };
 
   return (
-    <div>
+    <>
       {extensionCheck() ? (
         <img
           alt="미리보기"
@@ -47,12 +47,17 @@ const FileMessage = ({ fileName, url, timeStamp }) => {
           height="100%"
         ></img>
       ) : (
-        <Grid container justify="center" alignItems="center">
-          <Grid
-            item
-            xs={2}
-            style={{ backgroundColor: '#e0e0e0', borderRadius: '8px' }}
-          >
+        <Grid
+          container
+          justify="center"
+          alignItems="center"
+          style={{
+            backgroundColor: 'white',
+            padding: '0.5rem',
+            borderRadius: '0.8rem',
+          }}
+        >
+          <Grid item xs={2}>
             <VerticalAlignBottomIcon
               onClick={fileDownload}
               style={{ width: '100%', height: '50%' }}
@@ -86,7 +91,7 @@ const FileMessage = ({ fileName, url, timeStamp }) => {
           </Grid>
         </Grid>
       )}
-    </div>
+    </>
   );
 };
 
