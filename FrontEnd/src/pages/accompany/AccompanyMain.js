@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import axios from '../../api/axios';
 import moment from 'moment';
-
+import { openModalAction, closeModalAction } from '../../modules/progressModal';
 import ButtonContents from '../../components/accompany/main/ButtonContents';
 import ScheduleContents from '../../components/accompany/main/ScheduleContents';
 import AdvertisingContents from '../../components/accompany/main/AdvertisingContents';
@@ -21,9 +21,11 @@ const InnerGrid = styled(Grid)`
 
 const AccompanyMain = () => {
   const history = useHistory();
+  const dispatch = useDispatch();
   const userData = useSelector(state => state.auth.userData);
   const [tripSchedule, setTripSchedule] = useState([]);
   const [tripCompanion, setTripCompanion] = useState([]);
+  const [promotions, setPromotions] = useState([]);
 
   const getTripSchedule = async () => {
     try {
@@ -64,18 +66,22 @@ const AccompanyMain = () => {
   };
 
   useEffect(() => {
+    dispatch(openModalAction());
     const fetchTripInfo = async () => {
       const sRes = await getTripSchedule();
       const cRes = await getTripCompanion();
-      // const aRes = await
+      const aRes = await getPromotions();
       if (sRes && sRes.data && sRes.data.data) {
         setTripSchedule(sRes.data.data);
       }
       if (cRes && cRes.data && cRes.data.data) {
         setTripCompanion(cRes.data.data);
       }
+      if (aRes && aRes.data && aRes.data.data) {
+        setPromotions(aRes.data.data);
+      }
+      dispatch(closeModalAction());
     };
-
     fetchTripInfo();
   }, []);
 
@@ -109,7 +115,7 @@ const AccompanyMain = () => {
         />
       </InnerGrid>
       <InnerGrid item>
-        <AdvertisingContents />
+        <AdvertisingContents promotions={promotions} />
       </InnerGrid>
     </Grid>
   );
