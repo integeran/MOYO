@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.moyo.MOYO.dto.AccompanyBoard;
 import com.moyo.MOYO.dto.Filter;
 import com.moyo.MOYO.service.AccompanyBoardService;
+import com.moyo.MOYO.service.FileService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,6 +32,9 @@ public class AccompanyBoardRestController {
 	
 	@Autowired
 	AccompanyBoardService acService;
+	
+	@Autowired
+	FileService fileService;
 	
 	@GetMapping("accompanyBoard/selectAll")
 	public ResponseEntity<Map<String, Object>> selectAll(@ModelAttribute Filter filter) {
@@ -146,6 +150,17 @@ public class AccompanyBoardRestController {
 			return response(acService.updateDeadlineToggle(map), HttpStatus.OK, true);
 		} catch (RuntimeException e) {
 			log.error("AccompanyBoardRestController - updateDeadlineToggle");
+			return response(e.getMessage(), HttpStatus.CONFLICT, false);
+		}
+	}
+	
+	@GetMapping("accompanyBoard/getPromotionImages")
+	public ResponseEntity<Map<String, Object>> getPromotionImages() {
+		try {
+			log.trace("AccompanyBoardRestController - getPromotionImages");
+			return response(fileService.getPromotionImages(), HttpStatus.OK, true);
+		} catch (Exception e) {
+			log.trace("AccompanyBoardRestController - getPromotionImages");
 			return response(e.getMessage(), HttpStatus.CONFLICT, false);
 		}
 	}
