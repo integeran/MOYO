@@ -12,6 +12,15 @@ import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import styled from 'styled-components';
+
+const CustomButton = styled(Button)`
+  background-color: #45bfa9 !important;
+  color: white !important;
+  & + & {
+    margin-left: 1rem;
+  }
+`;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -106,64 +115,35 @@ const AddAccompanyModal = ({ isOpen, close, receiver }) => {
         <div className={classes.paper}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <Grid container direction="column" alignItems="center">
-              <Grid item xs={3} style={{ maxWidth: '100%' }}>
-                <Grid container>
-                  <Grid item xs={12}>
-                    <DatePicker
-                      disablePast
-                      openTo="year"
-                      format="yyyy/MM/dd"
-                      label="시작날짜"
-                      value={startDate}
-                      onChange={setStartDate}
-                    />
-                  </Grid>
-                </Grid>
+              <Grid item style={{ marginBottom: '10%' }}>
+                <DatePicker
+                  disablePast
+                  format="yyyy/MM/dd"
+                  label="시작날짜"
+                  value={startDate}
+                  onChange={setStartDate}
+                />
               </Grid>
 
-              <Grid item xs={2} style={{ marginBottom: '10%' }}></Grid>
-
-              <Grid item xs={3} style={{ maxWidth: '100%' }}>
-                <Grid container>
-                  <Grid item xs={12}>
-                    <DatePicker
-                      disablePast
-                      openTo="year"
-                      format="yyyy/MM/dd"
-                      label="종료날짜"
-                      value={endDate}
-                      onChange={setEndDate}
-                    />
-                  </Grid>
-                </Grid>
+              <Grid item style={{ marginBottom: '10%' }}>
+                <DatePicker
+                  disablePast
+                  format="yyyy/MM/dd"
+                  label="종료날짜"
+                  value={endDate}
+                  onChange={setEndDate}
+                />
               </Grid>
 
-              <Grid item xs={2} style={{ marginBottom: '10%' }}></Grid>
-
-              <Grid item xs={2} style={{ maxWidth: '100%' }}>
-                <Grid container>
-                  <Grid item xs={6}>
-                    <Button
-                      style={{
-                        backgroundColor: '#45BFA9',
-                        color: 'white',
-                      }}
-                      onClick={() => {
-                        setOpenAlert(true);
-                      }}
-                    >
-                      확인
-                    </Button>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Button
-                      style={{ backgroundColor: '#45BFA9', color: 'white' }}
-                      onClick={close}
-                    >
-                      취소
-                    </Button>
-                  </Grid>
-                </Grid>
+              <Grid item>
+                <CustomButton onClick={close}>취소</CustomButton>
+                <CustomButton
+                  onClick={() => {
+                    setOpenAlert(true);
+                  }}
+                >
+                  확인
+                </CustomButton>
               </Grid>
             </Grid>
           </MuiPickersUtilsProvider>

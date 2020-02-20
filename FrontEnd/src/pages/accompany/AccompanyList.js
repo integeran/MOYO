@@ -195,7 +195,10 @@ const AccompanyList = () => {
   const handleAccompanyWriteClick = () => {
     history.push({
       pathname: '/accompany/write',
-      state: { prevpath: history.location.pathname },
+      state: {
+        prevpath: history.location.pathname,
+        nowpath: history.location.pathname,
+      },
     });
   };
   const handlePreDayClick = () => {
